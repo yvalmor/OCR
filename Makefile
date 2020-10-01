@@ -1,7 +1,6 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -std=c99
-LDFLAGS=
-LIBFLAGS=$(pkg-config --libs --cflags gtk+-2.0)
+CFLAGS=-Wall -Wextra -std=c99 $(shell pkg-config --libs --cflags gtk+-2.0)
+LDFLAGS=$
 SRC=$(wildcard *.c)
 OBJ=$(SRC:.c=.o)
 HDR=
