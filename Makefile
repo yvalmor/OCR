@@ -1,3 +1,8 @@
+CC=gcc
+CFLAGS=-Wall -Wextra -std=c99
+LIBFLAGS=(pkg-config --libs --cflags gtk+-2.0)
+EXEC=OCR.exe
+
 all:
 	@echo "Beginning compilation..."
 	@echo "Done!"
