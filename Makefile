@@ -1,6 +1,7 @@
 CC=gcc
-CFLAGS=$(shell pkg-config --libs --cflags gtk+-2.0) -Wall -Wextra -std=c99
-LDFLAGS=$
+CFLAGS=-Wall -Wextra -std=c99
+LDFLAGS=
+LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-2.0)
 SRC=$(wildcard *.c)
 OBJ=$(SRC:.c=.o)
 HDR=
@@ -10,13 +11,13 @@ all: $(EXEC)
 
 $(EXEC): $(OBJ)
 	@echo "Beginning compilation..."
-	@$(CC) $(LIBFLAGS) -o $@ $^ $(LDFLAGS)
+	@$(CC) -o $@ $^ $(LDFLAGS)
 	@echo "Done!"
 
 main.o: $(HDR)
 
 %.o: %.c
-	@$(CC) $(LIBFLAGS) -o $@ -c $< $(CFLAGS)
+	@$(CC) -o $@ -c $< $(CFLAGS) $(LIBFLAGS)
 
 .PHONY: clean mrproper
 
