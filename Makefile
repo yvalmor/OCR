@@ -7,9 +7,9 @@ OBJ=$(SRC:.c=.o)
 HDR=
 EXEC=OCR.exe
 
-all: ocr
+all: $(EXEC)
 
-ocr: $(OBJ)
+$(EXEC): $(OBJ)
 	@echo "Beginning compilation..."
 	@$(CC) $(LIBFLAGS) -o $@ $^ $(LDFLAGS)
 	@echo "Done!"
