@@ -11,7 +11,7 @@ all: $(EXEC)
 
 $(EXEC): $(OBJ)
 	@echo "Beginning compilation..."
-	@$(CC) -o $@ $^ $(LDFLAGS)
+	@$(CC) -o $@ $^ $(LDFLAGS) $(LIBFLAGS)
 	@echo "Done!"
 
 main.o: $(HDR)
