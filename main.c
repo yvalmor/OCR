@@ -28,14 +28,14 @@ int main(int argc, char **argv)
     gtk_container_add(GTK_CONTAINER(MainWindow), ChooseImage);
 
     // Main loop + showing main window
-    gtk_widget_show_all(GTK_CONTAINER(MainWindow));
+    gtk_widget_show_all(MainWindow);
     gtk_main();
 
     return EXIT_SUCCESS;
 }
 
 //TODO
-void analyse(char path[])
+void analyse(/*char path[]*/)
 {
     /* pre-treatment
      * treatment
@@ -44,7 +44,7 @@ void analyse(char path[])
 }
 
 //TODO
-void choose_image(GtkWidget *fileChooser)
+void choose_image(/*GtkWidget *fileChooser*/)
 {
     /* choice of image
      * loading */
