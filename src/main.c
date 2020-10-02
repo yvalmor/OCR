@@ -18,9 +18,6 @@ int main(int argc, char **argv)
     // Windows
     GtkWidget *main_window;
 
-    // File chooser
-    GtkWidget *file_selection;
-
     // Separator
     GtkWidget *vSeparator;
     GtkWidget *hSeparator;
@@ -50,12 +47,12 @@ int main(int argc, char **argv)
 
     // Event binding
     choose_button = gtk_button_new_with_label("Choose an image");
-    g_signal_connect(G_OBJECT(choose_button),
-                     "clicked", G_CALLBACK(Choose_image));
+    g_signal_connect_swapped(G_OBJECT(choose_button),
+                     "clicked", G_CALLBACK(Choose_image), NULL);
 
     analyse_image = gtk_button_new_with_label("Analyse");
-    g_signal_connect(G_OBJECT(analyse_image),
-                     "clicked", G_CALLBACK(Analyse), path);
+    /*g_signal_connect_swapped(G_OBJECT(analyse_image),
+                     "clicked", G_CALLBACK(Analyse), path);*/
 
     // Image initialisation
     Image = gtk_image_new();
@@ -99,7 +96,7 @@ int main(int argc, char **argv)
 }
 
 //TODO
-void Analyse(GtkWidget *button, GtkWidget *file_selection)
+void Analyse(GtkWidget *file_selection)
 {
     // Variables
     const gchar *path;
@@ -112,6 +109,8 @@ void Analyse(GtkWidget *button, GtkWidget *file_selection)
      * display */
 
     // Set_text("generated.txt");
+
+    printf("%s", path);
 }
 
 void Choose_image()
@@ -127,7 +126,7 @@ void Choose_image()
                              "clicked", G_CALLBACK(gtk_widget_destroy), file_selection);
 }
 
-void Set_image(GtkWidget *button, GtkWidget *file_selection)
+void Set_image(GtkWidget *file_selection)
 {
     // Variables
     const gchar *path;
