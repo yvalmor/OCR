@@ -5,7 +5,7 @@ LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-2.0)
 SRC_DIR=src
 OBJ_DIR=obj
 SRC=$(SRC_DIR)/$(wildcard *.c)
-OBJ=$(SRC:src/%.c=obj/%.o)
+OBJ=$(SRC:%.c=../obj/%.o)
 HDR=
 
 EXEC=bin/ocr.exe
