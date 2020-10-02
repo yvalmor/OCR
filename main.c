@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     gtk_window_set_position(GTK_WINDOW(MainWindow), GTK_WIN_POS_CENTER);
 
     // Main loop + showing main window
-    gtk_widget_show(MainWindow);
+    gtk_widget_show_all();
     gtk_main();
 
     return EXIT_SUCCESS;
