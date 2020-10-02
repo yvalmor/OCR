@@ -4,8 +4,8 @@ LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-2.0)
 
 SRC_DIR=src
 OBJ_DIR=obj
-SRC=$(SRC_DIR)/$(wildcard *.c)
-OBJ=$(SRC:%.c=../obj/%.o)
+
+OBJ=$(patsubst %,$(OBJ_DIR)/%,$(SRC:.c=.o))
 HDR=
 
 EXEC=bin/ocr.exe
@@ -26,7 +26,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	@echo "Cleaning in process..."
-	@rm -rf *.o
+	@rm -rf $(OBJS)
 	@echo "Done!"
 	@echo "Removing executable"
 	@rm -f $(EXEC)
