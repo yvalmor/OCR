@@ -2,7 +2,7 @@
 #include <gtk/gtk.h>
 
 void analyse(char path[]);
-char[] choose_image(GtkWidget *fileChooser);
+void choose_image(GtkWidget *fileChooser);
 
 int main(int argc, char **argv)
 {
@@ -44,7 +44,7 @@ void analyse(char path[])
 }
 
 //TODO
-char[] choose_image(GtkWidget *fileChooser)
+void choose_image(GtkWidget *fileChooser)
 {
     fileChooser = gtk_window_new(GTK_WINDOW_POPUP);
 
