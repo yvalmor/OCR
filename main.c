@@ -19,6 +19,7 @@ int main(int argc, char **argv)
     // Separator
     GtkWidget *VSeparator;
     // Containers
+    GtkWidget *ScrollText;
     GtkWidget *MainHBox;
     GtkWidget *ImageVBox;
     GtkWidget *ImageButtonHBox;
@@ -58,6 +59,7 @@ int main(int argc, char **argv)
     MainHBox = gtk_hbox_new(TRUE, 0);
     ImageVBox = gtk_vbox_new(FALSE, 0);
     ImageButtonHBox = gtk_hbox_new(TRUE, 0);
+    ScrollText = gtk_scrolled_window_new(NULL, NULL);
 
     gtk_box_pack_start(GTK_BOX(MainHBox), ImageVBox, TRUE, TRUE, 0);
 
@@ -69,7 +71,9 @@ int main(int argc, char **argv)
 
     gtk_box_pack_start(GTK_BOX(MainHBox), VSeparator, FALSE, FALSE, 1);
 
-    gtk_box_pack_start(GTK_BOX(MainHBox), TextView, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(MainHBox), ScrollText, TRUE, TRUE, 0);
+
+    gtk_container_add(GTK_CONTAINER(ScrollText), TextView, TRUE, TRUE, 0);
 
     gtk_container_add(GTK_CONTAINER(MainWindow), MainHBox);
 
