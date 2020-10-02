@@ -85,5 +85,5 @@ void choose_image()
 {
     /* choice of image
      * loading */
-    Image = gtk_image_set_from_file("path")
+    //Image = gtk_image_set_from_file("path")
 }
