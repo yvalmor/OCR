@@ -120,7 +120,7 @@ void Choose_image()
             g_locale_to_utf8("Choose an image", -1, NULL, NULL, NULL));
     gtk_widget_show(file_selection);
 
-    g_signal_connect(G_OBJECT(GTK_FILE_SELECTION(file_selection)->ok_button),
+    g_signal_connect_swapped(G_OBJECT(GTK_FILE_SELECTION(file_selection)->ok_button),
                      "clicked", G_CALLBACK(Set_image), file_selection);
 
     g_signal_connect_swapped(G_OBJECT(GTK_FILE_SELECTION(file_selection)->cancel_button),
