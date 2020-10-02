@@ -46,11 +46,6 @@ void analyse(char path[])
 //TODO
 void choose_image(GtkWidget *fileChooser)
 {
-    fileChooser = gtk_window_new(GTK_WINDOW_POPUP);
-
-    char path[] = "";
-
-    fileChooser = NULL;
-
-    return "";
+    /* choice of image
+     * loading */
 }
