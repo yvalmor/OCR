@@ -16,13 +16,17 @@ int main(int argc, char **argv)
 {
     // Windows
     GtkWidget *MainWindow;
+
     // Separator
     GtkWidget *VSeparator;
+    GtkWidget *HSeparator;
+
     // Containers
     GtkWidget *ScrollText;
     GtkWidget *MainHBox;
     GtkWidget *ImageVBox;
     GtkWidget *ImageButtonHBox;
+
     // Buttons
     GtkWidget *AnalyseImage;
     GtkWidget *ChooseImage;
@@ -32,7 +36,8 @@ int main(int argc, char **argv)
 
     // Main window creation
     MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    g_signal_connect(G_OBJECT(MainWindow), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(
+            G_OBJECT(MainWindow), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
 
     // Main window settings
     gtk_window_set_title(GTK_WINDOW(MainWindow), "OCR");
@@ -41,10 +46,12 @@ int main(int argc, char **argv)
 
     // Event binding
     ChooseImage = gtk_button_new_with_label("Choose image");
-    g_signal_connect(G_OBJECT(ChooseImage), "clicked", G_CALLBACK(choose_image), FileChooser);
+    g_signal_connect(
+            G_OBJECT(ChooseImage), "clicked", G_CALLBACK(choose_image), FileChooser);
 
     AnalyseImage = gtk_button_new_with_label("Analyse");
-    g_signal_connect(G_OBJECT(AnalyseImage), "clicked", G_CALLBACK(analyse), "path");
+    g_signal_connect(
+            G_OBJECT(AnalyseImage), "clicked", G_CALLBACK(analyse), "path");
 
     // Image initialisation
     Image = gtk_image_new();
@@ -54,31 +61,33 @@ int main(int argc, char **argv)
 
     // Separator initialisation
     VSeparator = gtk_vseparator_new();
+    HSeparator = gtk_hseparator_new();
 
-    // Containers binding
+    // Containers initialisation
     MainHBox = gtk_hbox_new(FALSE, 0);
     ImageVBox = gtk_vbox_new(FALSE, 0);
     ImageButtonHBox = gtk_hbox_new(TRUE, 0);
     ScrollText = gtk_scrolled_window_new(NULL, NULL);
 
+    // Containers binding
     gtk_box_pack_start(GTK_BOX(MainHBox), ImageVBox, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(MainHBox), VSeparator, FALSE, FALSE, 7);
+    gtk_box_pack_start(GTK_BOX(MainHBox), ScrollText, TRUE, TRUE, 0);
 
     gtk_box_pack_start(GTK_BOX(ImageVBox), Image, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(ImageVBox), HSeparator, FALSE, FALSE, 7);
     gtk_box_pack_start(GTK_BOX(ImageVBox), ImageButtonHBox, FALSE, TRUE, 0);
 
     gtk_box_pack_start(GTK_BOX(ImageButtonHBox), ChooseImage, TRUE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(ImageButtonHBox), AnalyseImage, TRUE, FALSE, 0);
 
-    gtk_box_pack_start(GTK_BOX(MainHBox), VSeparator, FALSE, FALSE, 0);
-
-    gtk_box_pack_start(GTK_BOX(MainHBox), ScrollText, TRUE, TRUE, 0);
-
     gtk_container_add(GTK_CONTAINER(ScrollText), TextView);
-
     gtk_container_add(GTK_CONTAINER(MainWindow), MainHBox);
 
-    // Main loop + showing main window
+    // Showing main window
     gtk_widget_show_all(MainWindow);
+
+    // Main loop
     gtk_main();
 
     return EXIT_SUCCESS;
