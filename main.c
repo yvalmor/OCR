@@ -16,6 +16,8 @@ int main(int argc, char **argv)
 {
     // Windows
     GtkWidget *MainWindow;
+    // Separator
+    GtkWidget *VSeparator;
     // Containers
     GtkWidget *MainHBox;
     GtkWidget *ImageVBox;
@@ -49,18 +51,23 @@ int main(int argc, char **argv)
     // Text view initialisation
     TextView = gtk_text_view_new();
 
+    // Separator initialisation
+    VSeparator = gtk_vseparator_new()
+
     // Containers binding
     MainHBox = gtk_hbox_new(TRUE, 2);
-    ImageVBox = gtk_vbox_new(FALSE, 0);
+    ImageVBox = gtk_vbox_new(FALSE, 5);
     ImageButtonHBox = gtk_hbox_new(TRUE, 0);
 
     gtk_box_pack_start(GTK_BOX(MainHBox), ImageVBox, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(ImageVBox), Image, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(ImageVBox), ImageButtonHBox, TRUE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(ImageVBox), Image, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(ImageVBox), ImageButtonHBox, FALSE, TRUE, 0);
 
     gtk_box_pack_start(GTK_BOX(ImageButtonHBox), ChooseImage, TRUE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(ImageButtonHBox), AnalyseImage, TRUE, FALSE, 0);
+
+    gtk_box_pack_start(GTK_BOX(MainHBox), VSeparator, FALSE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(MainHBox), TextView, TRUE, TRUE, 0);
 
