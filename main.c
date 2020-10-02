@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     VSeparator = gtk_vseparator_new();
 
     // Containers binding
-    MainHBox = gtk_hbox_new(TRUE, 0);
+    MainHBox = gtk_hbox_new(FALSE, 0);
     ImageVBox = gtk_vbox_new(FALSE, 0);
     ImageButtonHBox = gtk_hbox_new(TRUE, 0);
     ScrollText = gtk_scrolled_window_new(NULL, NULL);
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
     gtk_box_pack_start(GTK_BOX(ImageButtonHBox), ChooseImage, TRUE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(ImageButtonHBox), AnalyseImage, TRUE, FALSE, 0);
 
-    gtk_box_pack_start(GTK_BOX(MainHBox), VSeparator, FALSE, FALSE, 1);
+    gtk_box_pack_start(GTK_BOX(MainHBox), VSeparator, FALSE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(MainHBox), ScrollText, TRUE, TRUE, 0);
 
