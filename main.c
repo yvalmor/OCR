@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     TextView = gtk_text_view_new();
 
     // Separator initialisation
-    VSeparator = gtk_vseparator_new()
+    VSeparator = gtk_vseparator_new();
 
     // Containers binding
     MainHBox = gtk_hbox_new(TRUE, 2);
