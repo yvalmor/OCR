@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 }
 
 //TODO
-void analyse(char path[])
+void analyse()
 {
     /* pre-treatment
      * treatment
