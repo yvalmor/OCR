@@ -7,9 +7,9 @@ static GtkWidget *Image;
 static GtkWidget *TextView;
 
 // Prototypes
-void Analyse(GtkWidget *button, GtkWidget *file_selection);
+void Analyse(GtkWidget *file_selection);
 void Choose_image();
-void Set_image(GtkWidget *button, GtkWidget *file_selection);
+void Set_image(GtkWidget *file_selection);
 void Set_text(const gchar *path);
 int Check_file(const gchar *path, FILE *file);
 
@@ -133,7 +133,7 @@ void Set_image(GtkWidget *file_selection)
 
     // Getting the path of the image and setting it
     path = gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_selection));
-    Image = gtk_image_set_from_file(path);
+    gtk_image_set_from_file(GTK_IMAGE(Image), path);
 
     gtk_widget_destroy(file_selection);
 }
