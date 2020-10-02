@@ -115,14 +115,16 @@ void Analyse(GtkWidget *file_selection)
 
 void Choose_image()
 {
+    GtkWidget *file_selection;
+
     file_selection = gtk_file_selection_new(
-            gtk_locale_to_utf8("Choose an image", -1, NULL, NULL, NULL));
+            g_locale_to_utf8("Choose an image", -1, NULL, NULL, NULL));
     gtk_widget_show(file_selection);
 
     g_signal_connect(G_OBJECT(GTK_FILE_SELECTION(file_selection)->ok_button),
                      "clicked", G_CALLBACK(Set_image), file_selection);
 
-    g_signal_connect_swapped(G_OBJECT(GTK_FILE_SELECTION(selection)->cancel_button),
+    g_signal_connect_swapped(G_OBJECT(GTK_FILE_SELECTION(file_selection)->cancel_button),
                              "clicked", G_CALLBACK(gtk_widget_destroy), file_selection);
 }
 
