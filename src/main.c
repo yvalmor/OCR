@@ -5,6 +5,8 @@
 static GtkWidget *Image;
 // Text view;
 static GtkWidget *TextView;
+// Windows
+static GtkWidget *Main_window;
 
 // Prototypes
 void Analyse(GtkWidget *file_selection);
@@ -15,9 +17,6 @@ int Check_file(const gchar *path, FILE *file);
 
 int main(int argc, char **argv)
 {
-    // Windows
-    GtkWidget *main_window;
-
     // Separator
     GtkWidget *vSeparator;
     GtkWidget *hSeparator;
@@ -36,14 +35,14 @@ int main(int argc, char **argv)
     gtk_init(&argc, &argv);
 
     // Main window creation
-    main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    g_signal_connect(G_OBJECT(main_window),
+    Main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    g_signal_connect(G_OBJECT(Main_window),
             "delete-event", G_CALLBACK(gtk_main_quit), NULL);
 
     // Main window settings
-    gtk_window_set_title(GTK_WINDOW(main_window), "OCR");
-    gtk_window_set_default_size(GTK_WINDOW(main_window), 1280, 720);
-    gtk_window_set_position(GTK_WINDOW(main_window), GTK_WIN_POS_CENTER);
+    gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
+    gtk_window_set_default_size(GTK_WINDOW(Main_window), 1280, 720);
+    gtk_window_set_position(GTK_WINDOW(Main_window), GTK_WIN_POS_CENTER);
 
     // Event binding
     choose_button = gtk_button_new_with_label("Choose an image");
@@ -84,10 +83,10 @@ int main(int argc, char **argv)
     gtk_box_pack_start(GTK_BOX(image_button_hBox), analyse_image, TRUE, FALSE, 0);
 
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
-    gtk_container_add(GTK_CONTAINER(main_window), main_hBox);
+    gtk_container_add(GTK_CONTAINER(Main_window), main_hBox);
 
     // Showing main window
-    gtk_widget_show_all(main_window);
+    gtk_widget_show_all(Main_window);
 
     // Main loop
     gtk_main();
@@ -179,11 +178,11 @@ int Check_file(const gchar *path, FILE *file)
 {
     if (file == NULL)
     {
-        GtkWidget *Dialog;
+        GtkWidget *dialog;
 
         // Opening of a dialog to signal the user a problem
-        dialog = gtk_message_dialogue_new(
-                GTK_WINDOW(file_selection),
+        dialog = gtk_message_dialog_new(
+                GTK_WINDOW(Main_window),
                 GTK_DIALOG_MODAL,
                 GTK_MESSAGE_ERROR,
                 GTK_BUTTONS_OK,
