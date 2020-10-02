@@ -9,7 +9,7 @@ static GtkWidget *TextView;
 // Prototypes
 void Analyse(GtkWidget *button, GtkWidget *file_selection);
 void Choose_image();
-void Set_image(GtkWidget *button, GtkWidget *file_selection)
+void Set_image(GtkWidget *button, GtkWidget *file_selection);
 void Set_text(const gchar *path);
 int Check_file(const gchar *path, FILE *file);
 
