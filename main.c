@@ -36,8 +36,8 @@ int main(int argc, char **argv)
 
     // Main window creation
     MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    g_signal_connect(
-            G_OBJECT(MainWindow), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(G_OBJECT(MainWindow),
+            "delete-event", G_CALLBACK(gtk_main_quit), NULL);
 
     // Main window settings
     gtk_window_set_title(GTK_WINDOW(MainWindow), "OCR");
@@ -46,12 +46,12 @@ int main(int argc, char **argv)
 
     // Event binding
     ChooseImage = gtk_button_new_with_label("Choose image");
-    g_signal_connect(
-            G_OBJECT(ChooseImage), "clicked", G_CALLBACK(choose_image), FileChooser);
+    g_signal_connect(G_OBJECT(ChooseImage),
+                     "clicked", G_CALLBACK(choose_image), FileChooser);
 
     AnalyseImage = gtk_button_new_with_label("Analyse");
-    g_signal_connect(
-            G_OBJECT(AnalyseImage), "clicked", G_CALLBACK(analyse), "path");
+    g_signal_connect(G_OBJECT(AnalyseImage),
+                     "clicked", G_CALLBACK(analyse), "path");
 
     // Image initialisation
     Image = gtk_image_new();
