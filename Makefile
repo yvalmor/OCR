@@ -1,11 +1,12 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -std=c99
-LDFLAGS=
+CFLAGS=-Wall -Wextra -std=c99 -pedantic -Werror
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-2.0)
-SRC=$(wildcard *.c)
-OBJ=$(SRC:.c=.o)
-HDR=
-EXEC=OCR.exe
+
+SRC=src/$(wildcard *.c)
+OBJ=obj/$(SRC:.c=.o)
+HDR=src/$(wildcard *.h)
+
+EXEC=bin/ocr.exe
 
 all: $(EXEC)
 
@@ -19,14 +20,12 @@ main.o: $(HDR)
 %.o: %.c
 	@$(CC) -o $@ -c $< $(CFLAGS) $(LIBFLAGS)
 
-.PHONY: clean mrproper
+.PHONY: clean
 
 clean:
 	@echo "Cleaning in process..."
 	@rm -rf *.o
 	@echo "Done!"
-
-mrproper: clean
 	@echo "Removing executable"
 	@rm -rf $(EXEC)
 	@echo "Done!"
