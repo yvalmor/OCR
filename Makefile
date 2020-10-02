@@ -3,7 +3,8 @@ CFLAGS=-Wall -Wextra -std=c99 -pedantic -Werror
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-2.0)
 
 SRC=src/$(wildcard *.c)
-OBJ=obj/$(SRC:.c=.o)
+OBJ=$(SRC:.c=.o)
+OBJ_DIR=obj/
 HDR=src/$(wildcard *.h)
 
 EXEC=bin/ocr.exe
@@ -18,7 +19,7 @@ $(EXEC): $(OBJ)
 main.o: $(HDR)
 
 %.o: %.c
-	@$(CC) -o $@ -c $< $(CFLAGS) $(LIBFLAGS)
+	@$(CC) -o $(OBJ_DIR)$@ -c $< $(CFLAGS) $(LIBFLAGS)
 
 .PHONY: clean
 
