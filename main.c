@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 }
 
 //TODO
-void analyse(/*char path[]*/)
+void analyse(char path[])
 {
     /* pre-treatment
      * treatment
@@ -44,7 +44,7 @@ void analyse(/*char path[]*/)
 }
 
 //TODO
-void choose_image(/*GtkWidget *fileChooser*/)
+void choose_image(GtkWidget *fileChooser)
 {
     /* choice of image
      * loading */
