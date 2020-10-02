@@ -1,15 +1,28 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 
-void analyse(char path[]);
-void choose_image(GtkWidget *fileChooser);
+// Prototypes
+void analyse();
+void choose_image();
+
+// Image
+GtkWidget *Image;
+// Text view;
+GtkWidget *TextView;
+// File chooser
+GtkWidget *FileChooser;
 
 int main(int argc, char **argv)
 {
-    // Variables
-    GtkWidget *MainWindow = NULL;
-    GtkWidget *FileChooser = NULL;
-    GtkWidget *ChooseImage = NULL;
+    // Windows
+    GtkWidget *MainWindow;
+    // Containers
+    GtkWidget *MainHBox;
+    GtkWidget *ImageVBox;
+    GtkWidget *ImageButtonHBox;
+    // Buttons
+    GtkWidget *AnalyseImage;
+    GtkWidget *ChooseImage;
 
     // GTK+ initialisation
     gtk_init(&argc, &argv);
@@ -23,9 +36,33 @@ int main(int argc, char **argv)
     gtk_window_set_default_size(GTK_WINDOW(MainWindow), 1280, 720);
     gtk_window_set_position(GTK_WINDOW(MainWindow), GTK_WIN_POS_CENTER);
 
+    // Event binding
     ChooseImage = gtk_button_new_with_label("Choose image");
     g_signal_connect(G_OBJECT(ChooseImage), "clicked", G_CALLBACK(choose_image), FileChooser);
-    gtk_container_add(GTK_CONTAINER(MainWindow), ChooseImage);
+
+    AnalyseImage = gtk_button_new_with_label("Analyse");
+    g_signal_connect(G_OBJECT(AnalyseImage), "clicked", G_CALLBACK(analyse), "path");
+
+    // Image initialisation
+    Image = gtk_image_new();
+
+    // Text view initialisation
+    TextView = gtk_text_view_new();
+
+    // Containers binding
+    MainHBox = gtk_hbox_new(TRUE, 2);
+    ImageVBox = gtk_vbox_new(FALSE, 0);
+    ImageButtonHBox = gtk_hbox_new(TRUE, 0);
+
+    gtk_box_pack_start(GTK_BOX(MainHBox), ImageVBox, TRUE, TRUE, 0);
+
+    gtk_box_pack_start(GTK_BOX(ImageVBox), Image, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(ImageVBox), ImageButtonHBox, TRUE, FALSE, 0);
+
+    gtk_box_pack_start(GTK_BOX(ImageButtonHBox), ChooseImage, TRUE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(ImageButtonHBox), AnalyseImage, TRUE, FALSE, 0);
+
+    gtk_box_pack_start(GTK_BOX(MainHBox), TextView, TRUE, TRUE, 0);
 
     // Main loop + showing main window
     gtk_widget_show_all(MainWindow);
@@ -44,8 +81,9 @@ void analyse(char path[])
 }
 
 //TODO
-void choose_image(GtkWidget *fileChooser)
+void choose_image()
 {
     /* choice of image
      * loading */
+    Image = gtk_image_set_from_file("path")
 }
