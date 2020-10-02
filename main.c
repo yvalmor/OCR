@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     gtk_container_add(GTK_CONTAINER(MainWindow), ChooseImage);
 
     // Main loop + showing main window
-    gtk_widget_show(MainWindow);
+    gtk_widget_show_all(GTK_CONTAINER(MainWindow));
     gtk_main();
 
     return EXIT_SUCCESS;
@@ -48,7 +48,7 @@ void choose_image(GtkWidget *fileChooser)
 {
     fileChooser = gtk_window_new(GTK_WINDOW_POPUP);
 
-    char path[] = 0;
+    char path[] = "";
 
     fileChooser = NULL;
 
