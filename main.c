@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
     gtk_box_pack_start(GTK_BOX(MainHBox), ScrollText, TRUE, TRUE, 0);
 
-    gtk_container_add(GTK_CONTAINER(ScrollText), TextView, TRUE, TRUE, 0);
+    gtk_container_add(GTK_CONTAINER(ScrollText), TextView);
 
     gtk_container_add(GTK_CONTAINER(MainWindow), MainHBox);
 
