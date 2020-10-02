@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -std=c99 -pedantic -Werror
+CFLAGS=-Wall -Wextra -std=c99
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-2.0)
 
 SRC_DIR=src
