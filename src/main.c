@@ -114,29 +114,43 @@ void Analyse(GtkWidget *file_selection)
 
 void Choose_image()
 {
-    GtkWidget *file_selection;
+    GtkWidget *file_chooser;
+    GtkFileChooserAction action;
+    GtkFileFilter *filter;
+    gint res;
 
-    file_selection = gtk_file_selection_new(
-            g_locale_to_utf8("Choose an image", -1, NULL, NULL, NULL));
-    gtk_widget_show(file_selection);
+    action = GTK_FILE_CHOOSER_ACTION_OPEN;
+    filter = gtk_file_filter_new();
+    gtk_file_filter_add_pixbuf_formats(filter);
 
-    g_signal_connect_swapped(G_OBJECT(GTK_FILE_SELECTION(file_selection)->ok_button),
-                     "clicked", G_CALLBACK(Set_image), file_selection);
+    file_chooser = gtk_file_chooser_dialog_new ("Open File",
+                                          Main_window,
+                                          action,
+                                          _("_Cancel"),
+                                          GTK_RESPONSE_CANCEL,
+                                          _("_Open"),
+                                          GTK_RESPONSE_ACCEPT,
+                                          NULL);
 
-    g_signal_connect_swapped(G_OBJECT(GTK_FILE_SELECTION(file_selection)->cancel_button),
-                             "clicked", G_CALLBACK(gtk_widget_destroy), file_selection);
+    gtk_file_chooser_dialog_add_filter(file_chooser, filter);
+
+    res = gtk_dialog_run(GTK_DIALOG(file_chooser));
+    if (res == GTK_RESPONSE_ACCEPT)
+        Set_image(file_chooser);
+    else
+        gtk_widget_destroy(file_chooser);
 }
 
-void Set_image(GtkWidget *file_selection)
+void Set_image(GtkWidget *file_chooser)
 {
     // Variables
     const gchar *path;
 
     // Getting the path of the image and setting it
-    path = gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_selection));
+    path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser));
     gtk_image_set_from_file(GTK_IMAGE(Image), path);
 
-    gtk_widget_destroy(file_selection);
+    gtk_widget_destroy(file_chooser);
 }
 
 void Set_text(const gchar *path)
