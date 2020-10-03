@@ -7,7 +7,7 @@ static void Window_setup(void);
 static void Image_setup(void);
 static void TextView_setup(void);
 
-static void Check_size(void);
+static void Check_size(GtkWidget *image);
 
 static void Separator_setup(void);
 static void Button_setup(void);
@@ -64,9 +64,6 @@ static void Image_setup(void)
 {
     // Image initialisation
     Image = gtk_image_new();
-
-    g_signal_connect_swapped(G_OBJECT(Image),
-                     "size-allocate", G_CALLBACK(Check_size), NULL);
 }
 
 static void TextView_setup(void)
@@ -76,11 +73,11 @@ static void TextView_setup(void)
     gtk_text_view_set_editable(GTK_TEXT_VIEW(TextView), FALSE);
 }
 
-static void Check_size(void)
+static void Check_size(GtkWidget *image)
 {
     // If the size of the image is too big we resize it
-    if (Image->allocation.height > 600 || Image->allocation.width > 600)
-        gtk_widget_set_size_request(Image, 600, 600);
+    if (image->allocation.height > 600 || image->allocation.width > 600)
+        gtk_widget_set_size_request(image, 600, 600);
 }
 
 static void Separator_setup()
@@ -122,6 +119,9 @@ static void Container_setup()
             GTK_SCROLLED_WINDOW(image_scroll), GTK_POLICY_AUTOMATIC,
             GTK_POLICY_AUTOMATIC
         );
+
+    g_signal_connect_swapped(G_OBJECT(image_scroll),
+                             "size-allocate", G_CALLBACK(Check_size), image_scroll);
 
     // Containers binding
     gtk_box_pack_start(GTK_BOX(main_hBox), image_vBox, TRUE, TRUE, 7);
