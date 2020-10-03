@@ -49,7 +49,7 @@ void Setup(void)
 static void Window_setup(void)
 {
     // Constraints
-    GdkGeometry hints;
+    GdkGeometry *hints;
     hints.base_width = 1280;
     hints.base_height = 720;
     hints.max_width = 1280;
