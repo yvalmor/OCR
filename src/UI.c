@@ -58,7 +58,7 @@ static void Window_setup(void)
     // Main window creation
     Main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     g_signal_connect(G_OBJECT(Main_window),
-                     "delete-event", G_CALLBACK(gtk_main_quit), NULL);
+                     "delete-event", G_CALLBACK(gtk_main_quit), GDK_GEOMETRY_HINTS(NULL));
 
     // Main window settings
     gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
