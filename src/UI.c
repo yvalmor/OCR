@@ -65,12 +65,12 @@ static void Image_setup(void)
 
     // Constraints
     GdkGeometry hints;
-    hints.base_width = Image->857;
-    hints.base_height = Image->843;
-    hints.max_width = Image->857;
-    hints.max_height = Image->843;
+    hints.base_width = 857;
+    hints.base_height = 843;
+    hints.max_width = 857;
+    hints.max_height = 843;
 
-    gtk_window_set_geometry_hints(GTK_WINDOW(Main_window), GTK_WIDGET(Image), hints, GDK_WINDOW_HINTS(NULL));
+    gtk_window_set_geometry_hints(GTK_WINDOW(Main_window), GTK_WIDGET(Image), *hints, GDK_WINDOW_HINTS(NULL));
 }
 
 static void TextView_setup(void)
