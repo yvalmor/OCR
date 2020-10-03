@@ -108,7 +108,7 @@ static void Container_setup()
     gtk_box_pack_start(GTK_BOX(main_hBox), vSeparator, FALSE, FALSE, 7);
     gtk_box_pack_start(GTK_BOX(main_hBox), scroll_bar, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(image_vBox), Image, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(image_vBox), Image, TRUE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(image_vBox), hSeparator, FALSE, FALSE, 7);
     gtk_box_pack_start(GTK_BOX(image_vBox), image_button_hBox, FALSE, TRUE, 0);
 
@@ -124,11 +124,6 @@ static void Container_setup()
 //TODO
 static void Analyse(GtkWidget *file_selection)
 {
-    // Variables
-    const gchar *path;
-
-    path = gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_selection));
-
     /* pre-treatment
      * treatment
      * analysis
@@ -136,6 +131,7 @@ static void Analyse(GtkWidget *file_selection)
 
     // Set_text("generated.txt");
 
+    printf("%s", path);
     Set_text("");
 }
 
@@ -169,6 +165,8 @@ static void Set_image(GtkWidget *file_chooser)
 {
     // Getting the path of the image and setting it
     path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser));
+
+    gtk_image_clear(GTK_IMAGE(Image));
     gtk_image_set_from_file(GTK_IMAGE(Image), path);
 
     gtk_widget_destroy(file_chooser);
