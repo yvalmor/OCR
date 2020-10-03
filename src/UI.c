@@ -7,6 +7,8 @@ static void Window_setup(void);
 static void Image_setup(void);
 static void TextView_setup(void);
 
+static void Check_size(void);
+
 static void Separator_setup(void);
 static void Button_setup(void);
 static void Container_setup(void);
@@ -63,14 +65,8 @@ static void Image_setup(void)
     // Image initialisation
     Image = gtk_image_new();
 
-    // Constraints
-    GdkGeometry hints;
-    hints.base_width = 857;
-    hints.base_height = 843;
-    hints.max_width = 857;
-    hints.max_height = 843;
-
-    gtk_window_set_geometry_hints(GTK_WINDOW(Main_window), GTK_WIDGET(Image), GDK_GEOMETRY(hints), GDK_WINDOW_HINTS(NULL));
+    g_signal_connect_swapped(G_OBJECT(Image),
+                     "size-allocate", G_CALLBACK(Check_size), NULL);
 }
 
 static void TextView_setup(void)
@@ -78,6 +74,13 @@ static void TextView_setup(void)
     // Text view initialisation
     TextView = gtk_text_view_new();
     gtk_text_view_set_editable(GTK_TEXT_VIEW(TextView), FALSE);
+}
+
+static void Check_size(void)
+{
+    // If the size of the image is too big we resize it
+    if (Image->allocation.height > 843 || Image->allocation.width > 857)
+        gtk_widget_set_size_request(Image, 857, 843);
 }
 
 static void Separator_setup()
