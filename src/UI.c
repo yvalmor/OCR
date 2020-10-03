@@ -105,6 +105,7 @@ static void Button_setup()
 static void Container_setup()
 {
     GtkWidget *scroll_bar;
+    GtkWidget *image_scroll;
     GtkWidget *main_hBox;
     GtkWidget *image_vBox;
     GtkWidget *image_button_hBox;
@@ -114,13 +115,20 @@ static void Container_setup()
     image_vBox = gtk_vbox_new(FALSE, 0);
     image_button_hBox = gtk_hbox_new(TRUE, 0);
     scroll_bar = gtk_scrolled_window_new(NULL, NULL);
+    image_scroll = gtk_scrolled_window_new(NULL, NULL);
+
+    gtk_scrolled_window_set_policy
+        (
+            GTK_SCROLLED_WINDOW(image_scroll), GTK_POLICY_AUTOMATIC,
+            GTK_POLICY_AUTOMATIC
+        );
 
     // Containers binding
     gtk_box_pack_start(GTK_BOX(main_hBox), image_vBox, TRUE, TRUE, 7);
     gtk_box_pack_start(GTK_BOX(main_hBox), vSeparator, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(main_hBox), scroll_bar, TRUE, TRUE, 7);
 
-    gtk_box_pack_start(GTK_BOX(image_vBox), Image, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(image_vBox), image_scroll, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(image_vBox), hSeparator, FALSE, FALSE, 7);
     gtk_box_pack_start(GTK_BOX(image_vBox), image_button_hBox, FALSE, TRUE, 0);
 
@@ -129,6 +137,7 @@ static void Container_setup()
     gtk_box_pack_start(
             GTK_BOX(image_button_hBox), analyse_image, TRUE, FALSE, 0);
 
+    gtk_container_add(GTK_CONTAINER(image_scroll), Image);
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
     gtk_container_add(GTK_CONTAINER(Main_window), main_hBox);
 }
