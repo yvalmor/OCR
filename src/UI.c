@@ -24,6 +24,8 @@ static GtkWidget *Image;
 static GtkWidget *TextView;
 // Windows
 static GtkWidget *Main_window;
+// Path
+static const gchar *path;
 
 void Setup(void)
 {
@@ -48,17 +50,14 @@ void Setup(void)
 
 static void Window_setup(void)
 {
-    GObject window_obj = Main_window;
-    GtkWindow window = Main_window;
-
     // Main window creation
     Main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    g_signal_connect(window_obj, "delete-event", gtk_main_quit, NULL);
+    g_signal_connect(G_OBJECT(window_obj), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
 
     // Main window settings
-    gtk_window_set_title(window, "OCR");
-    gtk_window_set_default_size(window, 1280, 720);
-    gtk_window_set_position(window, GTK_WIN_POS_CENTER);
+    gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
+    gtk_window_set_default_size(GTK_WINDOW(Main_window), 1280, 720);
+    gtk_window_set_position(GTK_WINDOW(Main_window), GTK_WIN_POS_CENTER);
 }
 
 static void Image_setup(void)
@@ -83,17 +82,14 @@ static void Separator_setup(GtkWidget *vSep, GtkWidget *hSep)
 
 static void Button_setup(GtkWidget *choose_button, GtkWidget *analyse_image)
 {
-    GObject choose_obj = choose_button;
-    //GObject analyse_obj = analyse_image;
-
     // Event binding
     choose_button = gtk_button_new_with_label("Choose an image");
-    g_signal_connect_swapped(choose_obj,
-                             "clicked", Choose_image, NULL);
+    g_signal_connect_swapped(G_OBJECT(choose_button),
+                             "clicked", G_CALLBACK(Choose_image), NULL);
 
     analyse_image = gtk_button_new_with_label("Analyse");
-    /*g_signal_connect_swapped(analyse_obj,
-                     "clicked", Analyse, path);*/
+    g_signal_connect_swapped(G_OBJECT(analyse_image),
+                     "clicked", G_CALLBACK(Analyse), NULL);
 }
 
 static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
@@ -104,12 +100,6 @@ static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
     GtkWidget *image_vBox;
     GtkWidget *image_button_hBox;
 
-    GtkBox hBox = main_hBox;
-    GtkBox vBox = image_vBox;
-    GtkBox button_hBox = image_button_hBox;
-    GtkContainer scroll_container = scroll_bar;
-    GtkContainer window = Main_window;
-
     // Containers initialisation
     main_hBox = gtk_hbox_new(FALSE, 0);
     image_vBox = gtk_vbox_new(FALSE, 0);
@@ -117,19 +107,19 @@ static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
     scroll_bar = gtk_scrolled_window_new(NULL, NULL);
 
     // Containers binding
-    gtk_box_pack_start(hBox, image_vBox, TRUE, TRUE, 0);
-    gtk_box_pack_start(hBox, vSep, FALSE, FALSE, 7);
-    gtk_box_pack_start(hBox, scroll_bar, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hBox), image_vBox, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hBox), vSep, FALSE, FALSE, 7);
+    gtk_box_pack_start(GTK_BOX(hBox), scroll_bar, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(vBox, Image, TRUE, TRUE, 0);
-    gtk_box_pack_start(vBox, hSep, FALSE, FALSE, 7);
-    gtk_box_pack_start(vBox, image_button_hBox, FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vBox), Image, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vBox), hSep, FALSE, FALSE, 7);
+    gtk_box_pack_start(GTK_BOX(vBox), image_button_hBox, FALSE, TRUE, 0);
 
-    gtk_box_pack_start(button_hBox, btn, TRUE, FALSE, 0);
-    gtk_box_pack_start(button_hBox, img_btn, TRUE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(button_hBox), btn, TRUE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(button_hBox), img_btn, TRUE, FALSE, 0);
 
-    gtk_container_add(scroll_container, TextView);
-    gtk_container_add(window, main_hBox);
+    gtk_container_add(GTK_CONTAINER(scroll_container), TextView);
+    gtk_container_add(GTK_CONTAINER(window), main_hBox);
 }
 
 //TODO
@@ -152,7 +142,6 @@ static void Analyse(GtkWidget *file_selection)
 
 static void Choose_image()
 {
-    GtkWindow window = Main_window;
     GtkWidget *file_chooser;
     GtkFileChooserAction action;
     GtkFileFilter *filter;
@@ -183,9 +172,6 @@ static void Choose_image()
 
 static void Set_image(GtkWidget *file_chooser)
 {
-    // Variables
-    const gchar *path;
-
     // Getting the path of the image and setting it
     path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser));
     gtk_image_set_from_file(GTK_IMAGE(Image), path);
