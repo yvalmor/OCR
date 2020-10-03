@@ -140,7 +140,9 @@ static void Container_setup()
     gtk_box_pack_start(
             GTK_BOX(image_button_hBox), analyse_image, TRUE, FALSE, 0);
 
-    gtk_container_add(GTK_CONTAINER(image_scroll), Image);
+    gtk_scrolled_window_add_with_viewport(
+            GTK_SCROLLED_WINDOW(image_scroll), Image);
+
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
     gtk_container_add(GTK_CONTAINER(Main_window), main_hBox);
 }
