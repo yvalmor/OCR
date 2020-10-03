@@ -7,10 +7,9 @@ static void Window_setup(void);
 static void Image_setup(void);
 static void TextView_setup(void);
 
-static void Separator_setup(GtkWidget *vSep, GtkWidget *hSep);
-static void Button_setup(GtkWidget *choose_button, GtkWidget *analyse_image);
-static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
-                     GtkWidget *btn, GtkWidget *img_btn);
+static void Separator_setup(void);
+static void Button_setup(void);
+static void Container_setup(void);
 
 static void Analyse(GtkWidget *file_selection);
 static void Choose_image();
@@ -24,26 +23,25 @@ static GtkWidget *Image;
 static GtkWidget *TextView;
 // Windows
 static GtkWidget *Main_window;
+// Separators
+static GtkWidget *vSeparator;
+static GtkWidget *hSeparator;
+// Buttons
+static GtkWidget *choose_button;
+static GtkWidget *analyse_image;
 // Path
 static const gchar *path;
 
 void Setup(void)
 {
-    // Variables
-    GtkWidget *vSeparator;
-    GtkWidget *hSeparator;
-
-    GtkWidget *choose_button;
-    GtkWidget *analyse_image;
-
     Window_setup();
     Image_setup();
     TextView_setup();
 
-    Separator_setup(vSeparator, hSeparator);
-    Button_setup(choose_button, analyse_image);
+    Separator_setup();
+    Button_setup();
 
-    Container_setup(vSeparator, hSeparator, choose_button, analyse_image);
+    Container_setup();
 
     gtk_widget_show_all(Main_window);
 }
@@ -73,14 +71,14 @@ static void TextView_setup(void)
     gtk_text_view_set_editable(GTK_TEXT_VIEW(TextView), FALSE);
 }
 
-static void Separator_setup(GtkWidget *vSeparator, GtkWidget *hSeparator)
+static void Separator_setup()
 {
     // Separator initialisation
     vSeparator = gtk_vseparator_new();
     hSeparator = gtk_hseparator_new();
 }
 
-static void Button_setup(GtkWidget *choose_button, GtkWidget *analyse_image)
+static void Button_setup()
 {
     // Event binding
     choose_button = gtk_button_new_with_label("Choose an image");
@@ -92,8 +90,7 @@ static void Button_setup(GtkWidget *choose_button, GtkWidget *analyse_image)
                      "clicked", G_CALLBACK(Analyse), NULL);
 }
 
-static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
-                     GtkWidget *btn, GtkWidget *img_btn)
+static void Container_setup()
 {
     GtkWidget *scroll_bar;
     GtkWidget *main_hBox;
@@ -108,15 +105,17 @@ static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
 
     // Containers binding
     gtk_box_pack_start(GTK_BOX(main_hBox), image_vBox, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(main_hBox), vSep, FALSE, FALSE, 7);
+    gtk_box_pack_start(GTK_BOX(main_hBox), vSeparator, FALSE, FALSE, 7);
     gtk_box_pack_start(GTK_BOX(main_hBox), scroll_bar, TRUE, TRUE, 0);
 
     gtk_box_pack_start(GTK_BOX(image_vBox), Image, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(image_vBox), hSep, FALSE, FALSE, 7);
+    gtk_box_pack_start(GTK_BOX(image_vBox), hSeparator, FALSE, FALSE, 7);
     gtk_box_pack_start(GTK_BOX(image_vBox), image_button_hBox, FALSE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(image_button_hBox), btn, TRUE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(image_button_hBox), img_btn, TRUE, FALSE, 0);
+    gtk_box_pack_start(
+            GTK_BOX(image_button_hBox), choose_button, TRUE, FALSE, 0);
+    gtk_box_pack_start(
+            GTK_BOX(image_button_hBox), analyse_image, TRUE, FALSE, 0);
 
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
     gtk_container_add(GTK_CONTAINER(Main_window), main_hBox);
