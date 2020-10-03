@@ -7,10 +7,10 @@ static void Window_setup(void);
 static void Image_setup(void);
 static void TextView_setup(void)
 
-static void Separator_setup(GtkWidget *vSep, GktWidget *hSep);
+static void Separator_setup(GtkWidget *vSep, GtkWidget *hSep);
 static void Button_setup(GtkWidget *choose_button, GtkWidget *analyse_image);
 static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
-                     GktWidget *btn, GktWidget *img_btn);
+                     GtkWidget *btn, GtkWidget *img_btn);
 
 static void Analyse(GtkWidget *file_selection);
 static void Choose_image();
@@ -97,7 +97,7 @@ static void Button_setup(GtkWidget *choose_button, GtkWidget *analyse_image)
 }
 
 static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
-                     GktWidget *btn, GktWidget *img_btn)
+                     GtkWidget *btn, GtkWidget *img_btn)
 {
     GtkWidget *scroll_bar;
     GtkWidget *main_hBox;
