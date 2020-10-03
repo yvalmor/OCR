@@ -55,9 +55,12 @@ static void Window_setup(void)
 
     // Main window creation
     Main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+    //Main window settings
     g_signal_connect(G_OBJECT(Main_window),
                      "delete-event", G_CALLBACK(gtk_main_quit), NULL);
     gtk_window_set_position(GTK_WINDOW(Main_window), GTK_WIN_POS_CENTER);
+    gtk_window_set_default_size(1280, 720);
 }
 
 static void Image_setup(void)
