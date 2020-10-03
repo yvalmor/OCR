@@ -104,7 +104,7 @@ static void Container_setup()
     scroll_bar = gtk_scrolled_window_new(NULL, NULL);
 
     // Containers binding
-    gtk_box_pack_start(GTK_BOX(main_hBox), image_vBox, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(main_hBox), image_vBox, TRUE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(main_hBox), vSeparator, FALSE, FALSE, 7);
     gtk_box_pack_start(GTK_BOX(main_hBox), scroll_bar, TRUE, TRUE, 0);
 
