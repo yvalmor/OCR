@@ -48,21 +48,13 @@ void Setup(void)
 
 static void Window_setup(void)
 {
-    // Constraints
-    GdkGeometry *hints;
-    hints.base_width = 1280;
-    hints.base_height = 720;
-    hints.max_width = 1280;
-    hints.max_height = 720;
+    // Main window settings
+    gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
 
     // Main window creation
     Main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     g_signal_connect(G_OBJECT(Main_window),
-                     "delete-event", G_CALLBACK(gtk_main_quit), GDK_GEOMETRY_HINTS(NULL));
-
-    // Main window settings
-    gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
-    gtk_window_set_geometry_hints(GTK_WINDOW(Main_window), NULL, hints, NULL);
+                     "delete-event", G_CALLBACK(gtk_main_quit), NULL);
     gtk_window_set_position(GTK_WINDOW(Main_window), GTK_WIN_POS_CENTER);
 }
 
@@ -70,6 +62,15 @@ static void Image_setup(void)
 {
     // Image initialisation
     Image = gtk_image_new();
+
+    // Constraints
+    GdkGeometry *hints;
+    hints.base_width = Image->857;
+    hints.base_height = Image->843;
+    hints.max_width = Image->857;
+    hints.max_height = Image->843;
+
+    gtk_window_set_geometry_hints(GTK_WINDOW(Main_window), GTK_WIDGET(Image), hints, NULL);
 }
 
 static void TextView_setup(void)
