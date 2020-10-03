@@ -5,7 +5,7 @@
 // Prototypes
 static void Window_setup(void);
 static void Image_setup(void);
-static void TextView_setup(void)
+static void TextView_setup(void);
 
 static void Separator_setup(GtkWidget *vSep, GtkWidget *hSep);
 static void Button_setup(GtkWidget *choose_button, GtkWidget *analyse_image);
