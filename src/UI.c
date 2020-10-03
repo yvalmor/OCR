@@ -108,9 +108,9 @@ static void Container_setup()
     gtk_box_pack_start(GTK_BOX(main_hBox), vSeparator, FALSE, FALSE, 7);
     gtk_box_pack_start(GTK_BOX(main_hBox), scroll_bar, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(image_vBox), Image, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(image_vBox), hSeparator, FALSE, FALSE, 7);
-    gtk_box_pack_start(GTK_BOX(image_vBox), image_button_hBox, FALSE, TRUE, 0);
+    gtk_box_pack_end(GTK_BOX(image_vBox), image_button_hBox, FALSE, TRUE, 0);
+    gtk_box_pack_end(GTK_BOX(image_vBox), hSeparator, FALSE, FALSE, 7);
+    gtk_box_pack_end(GTK_BOX(image_vBox), Image, FALSE, FALSE, 0);
 
     gtk_box_pack_start(
             GTK_BOX(image_button_hBox), choose_button, TRUE, FALSE, 0);
