@@ -79,8 +79,8 @@ static void TextView_setup(void)
 static void Check_size(void)
 {
     // If the size of the image is too big we resize it
-    if (Image->allocation.height > 843 || Image->allocation.width > 857)
-        gtk_widget_set_size_request(Image, 857, 843);
+    if (Image->allocation.height > 600 || Image->allocation.width > 600)
+        gtk_widget_set_size_request(Image, 600, 600);
 }
 
 static void Separator_setup()
