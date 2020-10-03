@@ -136,7 +136,7 @@ static void Analyse(GtkWidget *file_selection)
 
     // Set_text("generated.txt");
 
-    printf("%s", path);
+    Set_text("");
 }
 
 static void Choose_image()
@@ -156,7 +156,7 @@ static void Choose_image()
             "Open", GTK_RESPONSE_ACCEPT,
             NULL);
 
-    gtk_file_chooser_dialog_add_filter(GTK_FILE_CHOOSER(file_chooser), filter);
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), filter);
 
     res = gtk_dialog_run(GTK_DIALOG(file_chooser));
     if (res == GTK_RESPONSE_ACCEPT)
