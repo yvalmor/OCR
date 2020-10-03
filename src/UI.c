@@ -152,13 +152,9 @@ static void Choose_image()
     gtk_file_filter_add_pixbuf_formats(filter);
 
     file_chooser = gtk_file_chooser_dialog_new (
-            "Open File",
-            window,
-            action,
-            _("_Cancel"),
-            GTK_RESPONSE_CANCEL,
-            _("_Open"),
-            GTK_RESPONSE_ACCEPT,
+            "Open File", G_OBJECT(Main_window), action,
+            _("_Cancel"), GTK_RESPONSE_CANCEL,
+            _("_Open"), GTK_RESPONSE_ACCEPT,
             NULL);
 
     gtk_file_chooser_dialog_add_filter(GTK_FILE_CHOOSER(file_chooser), filter);
