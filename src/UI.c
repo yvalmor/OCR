@@ -48,13 +48,21 @@ void Setup(void)
 
 static void Window_setup(void)
 {
+    // Constraints
+    GdkGeometry hints;
+    hints.base_width = 1280;
+    hints.base_height = 720;
+    hints.max_width = 1280;
+    hints.max_height = 720;
+
     // Main window creation
     Main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    g_signal_connect(G_OBJECT(Main_window), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(G_OBJECT(Main_window),
+                     "delete-event", G_CALLBACK(gtk_main_quit), NULL);
 
     // Main window settings
     gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
-    gtk_window_set_default_size(GTK_WINDOW(Main_window), 1280, 720);
+    gtk_window_set_geometry_hints(GTK_WINDOW(Main_window), NULL, hints, NULL);
     gtk_window_set_position(GTK_WINDOW(Main_window), GTK_WIN_POS_CENTER);
 }
 
