@@ -118,8 +118,8 @@ static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
     gtk_box_pack_start(GTK_BOX(button_hBox), btn, TRUE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(button_hBox), img_btn, TRUE, FALSE, 0);
 
-    gtk_container_add(GTK_CONTAINER(scroll_container), TextView);
-    gtk_container_add(GTK_CONTAINER(window), main_hBox);
+    gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
+    gtk_container_add(GTK_CONTAINER(Main_window), main_hBox);
 }
 
 //TODO
