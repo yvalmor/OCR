@@ -52,7 +52,7 @@ static void Window_setup(void)
 {
     // Main window creation
     Main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    g_signal_connect(G_OBJECT(window_obj), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(G_OBJECT(Main_window), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
 
     // Main window settings
     gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
@@ -73,7 +73,7 @@ static void TextView_setup(void)
     gtk_text_view_set_editable(GTK_TEXT_VIEW(TextView), FALSE);
 }
 
-static void Separator_setup(GtkWidget *vSep, GtkWidget *hSep)
+static void Separator_setup(GtkWidget *vSeparator, GtkWidget *hSeparator)
 {
     // Separator initialisation
     vSeparator = gtk_vseparator_new();
@@ -107,16 +107,16 @@ static void Container_setup(GtkWidget *vSep, GtkWidget *hSep,
     scroll_bar = gtk_scrolled_window_new(NULL, NULL);
 
     // Containers binding
-    gtk_box_pack_start(GTK_BOX(hBox), image_vBox, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(hBox), vSep, FALSE, FALSE, 7);
-    gtk_box_pack_start(GTK_BOX(hBox), scroll_bar, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(main_hBox), image_vBox, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(main_hBox), vSep, FALSE, FALSE, 7);
+    gtk_box_pack_start(GTK_BOX(main_hBox), scroll_bar, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(vBox), Image, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vBox), hSep, FALSE, FALSE, 7);
-    gtk_box_pack_start(GTK_BOX(vBox), image_button_hBox, FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(image_vBox), Image, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(image_vBox), hSep, FALSE, FALSE, 7);
+    gtk_box_pack_start(GTK_BOX(image_vBox), image_button_hBox, FALSE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(button_hBox), btn, TRUE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(button_hBox), img_btn, TRUE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(image_button_hBox), btn, TRUE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(image_button_hBox), img_btn, TRUE, FALSE, 0);
 
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
     gtk_container_add(GTK_CONTAINER(Main_window), main_hBox);
