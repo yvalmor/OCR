@@ -1,7 +1,5 @@
 #include <gtk/gtk.h>
 
-void Analyse_setup(GtkWidget *Notebook, GtkWidget *Label);
-
 static void Image_setup(void);
 static void TextView_setup(void);
 
