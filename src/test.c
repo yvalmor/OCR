@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
 
+#include "../hdr/UI.h"
+
 static void Image_setup(void);
 static void TextView_setup(void);
 
