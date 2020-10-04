@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 
-#include "../../hdr/UI.h"
+#include "../hdr/UI.h"
 
 // Prototypes
 static void Launch_training();
