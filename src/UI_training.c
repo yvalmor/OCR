@@ -11,5 +11,5 @@ const gchar *solution;
 
 void Training_setup(GtkWidget *Notebook, GtkWidget *Label)
 {
-
+    images = {"1", "12"};
 }
