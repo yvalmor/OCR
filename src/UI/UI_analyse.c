@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 
-#include "../hdr/UI.h"
+#include "../../hdr/UI.h"
 
 static void Image_setup(void);
 static void TextView_setup(void);
@@ -10,6 +10,7 @@ static void Check_size(GtkWidget *image);
 static void Separator_setup(void);
 static void Button_setup(void);
 static void Container_setup(GtkWidget *Notebook, GtkWidget *Label);
+static void ImageScroller_setup(GtkWidget *image_scroller);
 
 static void Analyse(GtkWidget *file_selection);
 static void Choose_image();
@@ -93,16 +94,8 @@ static void Container_setup(GtkWidget *Notebook, GtkWidget *Label)
     image_vBox = gtk_vbox_new(FALSE, 0);
     image_button_hBox = gtk_hbox_new(TRUE, 0);
     scroll_bar = gtk_scrolled_window_new(NULL, NULL);
-    image_scroll = gtk_scrolled_window_new(NULL, NULL);
 
-    gtk_scrolled_window_set_policy
-            (
-                    GTK_SCROLLED_WINDOW(image_scroll), GTK_POLICY_AUTOMATIC,
-                    GTK_POLICY_AUTOMATIC
-            );
-
-    g_signal_connect_swapped(G_OBJECT(image_scroll),
-                             "size-allocate", G_CALLBACK(Check_size), image_scroll);
+    ImageScroller_setup(image_scroll);
 
     // Containers binding
     gtk_box_pack_start(GTK_BOX(main_hBox), image_vBox, TRUE, TRUE, 7);
@@ -123,6 +116,20 @@ static void Container_setup(GtkWidget *Notebook, GtkWidget *Label)
 
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
     gtk_notebook_append_page(GTK_NOTEBOOK(Notebook), main_hBox, Label);
+}
+
+static void ImageScroller_setup(GtkWidget *image_scroll)
+{
+    image_scroll = gtk_scrolled_window_new(NULL, NULL);
+
+    gtk_scrolled_window_set_policy
+            (
+                    GTK_SCROLLED_WINDOW(image_scroll), GTK_POLICY_AUTOMATIC,
+                    GTK_POLICY_AUTOMATIC
+            );
+
+    g_signal_connect_swapped(G_OBJECT(image_scroll),
+                             "size-allocate", G_CALLBACK(Check_size), image_scroll);
 }
 
 //TODO

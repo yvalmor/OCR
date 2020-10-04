@@ -5,6 +5,10 @@
 
 int main(int argc, char **argv)
 {
+    char *string = "truc";
+
+    printf("%s", string);
+
     // GTK+ initialisation
     gtk_init(&argc, &argv);
 

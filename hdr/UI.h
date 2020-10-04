@@ -3,6 +3,7 @@
 
 void Setup(void);
 void Analyse_setup(GtkWidget *Notebook, GtkWidget *Label);
+void Training_setup(GtkWidget *Notebook, GtkWidget *Label);
 
 extern GtkWidget *Main_window;
 
