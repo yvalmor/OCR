@@ -24,7 +24,7 @@ void Setup(void)
     Tab_setup();
 
     Analyse_setup(Notebook, Analyse_tab);
-    Analyse_setup(Notebook, Training_tab);
+    //Analyse_setup(Notebook, Training_tab);
 
     gtk_widget_show_all(Main_window);
 }
