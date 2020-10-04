@@ -48,7 +48,7 @@ static void Notebook_setup(void)
 {
     Notebook = gtk_notebook_new();
 
-    gkt_container_add(GTK_CONTAINER(Main_window), Notebook);
+    gtk_container_add(GTK_CONTAINER(Main_window), Notebook);
 }
 
 static void Tab_setup(void)
