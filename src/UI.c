@@ -7,8 +7,6 @@ static void Window_setup(void);
 static void Notebook_setup(void);
 static void Tab_setup(void);
 
-// Window
-static GtkWidget *Main_window;
 // Notebook
 static GtkWidget *Notebook;
 // Tabs
@@ -30,11 +28,11 @@ void Setup(void)
 
 static void Window_setup(void)
 {
-    // Main window settings
-    gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
-
     // Main window creation
     Main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+    // Main window settings
+    gtk_window_set_title(GTK_WINDOW(Main_window), "OCR");
 
     //Main window settings
     g_signal_connect(G_OBJECT(Main_window),
