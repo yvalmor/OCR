@@ -7,6 +7,9 @@ static void Window_setup(void);
 static void Notebook_setup(void);
 static void Tab_setup(void);
 
+// Main_window
+GtkWidget *Main_window;
+
 // Notebook
 static GtkWidget *Notebook;
 // Tabs

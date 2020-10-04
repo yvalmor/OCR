@@ -38,7 +38,7 @@ void Analyse_setup(GtkWidget *Notebook, GtkWidget *Label)
     Separator_setup();
     Button_setup();
 
-    Container_setup(GtkWidget *Notebook, GtkWidget *Label);
+    Container_setup(Notebook, Label);
 }
 
 static void Image_setup(void)
