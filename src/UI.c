@@ -10,7 +10,7 @@ static void Tab_setup(void);
 // Window
 static GtkWidget *Main_window;
 // Notebook
-static GtkNotebook *Notebook;
+static GtkWidget *Notebook;
 // Tabs
 static GtkWidget *Analyse_tab;
 static GtkWidget *Training_tab;

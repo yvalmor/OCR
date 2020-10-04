@@ -2,6 +2,6 @@
 #define OCR_UI_H
 
 void Setup(void);
-void Analyse_setup(GtkNotebook *Notebook, GtkLabel *Label);
+void Analyse_setup(GtkWidget *Notebook, GtkWidget *Label);
 
 #endif //OCR_UI_H

@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 
-void Analyse_setup(GtkNotebook *Notebook, GtkWidget *Label);
+void Analyse_setup(GtkWidget *Notebook, GtkWidget *Label);
 
 static void Image_setup(void);
 static void TextView_setup(void);
@@ -9,7 +9,7 @@ static void Check_size(GtkWidget *image);
 
 static void Separator_setup(void);
 static void Button_setup(void);
-static void Container_setup(GtkNotebook *Notebook, GtkWidget *Label);
+static void Container_setup(GtkWidget *Notebook, GtkWidget *Label);
 
 static void Analyse(GtkWidget *file_selection);
 static void Choose_image();
@@ -30,7 +30,7 @@ static GtkWidget *analyse_image;
 // Path
 static const gchar *path;
 
-void Analyse_setup(GtkNotebook *Notebook, GtkWidget *Label)
+void Analyse_setup(GtkWidget *Notebook, GtkWidget *Label)
 {
     Image_setup();
     TextView_setup();
@@ -38,7 +38,7 @@ void Analyse_setup(GtkNotebook *Notebook, GtkWidget *Label)
     Separator_setup();
     Button_setup();
 
-    Container_setup(GtkNotebook *Notebook, GtkWidget *Label);
+    Container_setup(GtkWidget *Notebook, GtkWidget *Label);
 }
 
 static void Image_setup(void)
@@ -80,7 +80,7 @@ static void Button_setup()
                              "clicked", G_CALLBACK(Analyse), NULL);
 }
 
-static void Container_setup(GtkNotebook *Notebook, GtkWidget *Label)
+static void Container_setup(GtkWidget *Notebook, GtkWidget *Label)
 {
     GtkWidget *scroll_bar;
     GtkWidget *image_scroll;
@@ -122,7 +122,7 @@ static void Container_setup(GtkNotebook *Notebook, GtkWidget *Label)
             GTK_SCROLLED_WINDOW(image_scroll), Image);
 
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
-    gtk_notebook_append_page(Notebook, main_hBox, Label);
+    gtk_notebook_append_page(GTK_NOTEBOOK(Notebook), main_hBox, Label);
 }
 
 //TODO
