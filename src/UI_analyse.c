@@ -2,6 +2,7 @@
 
 #include "../hdr/UI.h"
 
+// Prototypes
 static void Image_setup(void);
 static void TextView_setup(void);
 
@@ -129,7 +130,8 @@ static void ImageScroller_setup(GtkWidget *image_scroll)
             );
 
     g_signal_connect_swapped(G_OBJECT(image_scroll),
-                             "size-allocate", G_CALLBACK(Check_size), image_scroll);
+                             "size-allocate", G_CALLBACK(Check_size),
+                             image_scroll);
 }
 
 //TODO

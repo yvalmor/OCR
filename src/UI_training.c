@@ -1,3 +1,4 @@
+/*
 #include <gtk/gtk.h>
 
 #include "../hdr/UI.h"
@@ -31,3 +32,4 @@ static void Choose_images(void)
 {
     
 }
+ */
