@@ -59,15 +59,15 @@ static void TextView_setup(void)
 static void Check_size(GtkWidget *image)
 {
     // If the size of the image is too big we resize it
-    if (image->allocation.height > 600 || image->allocation.width > 600)
+    if (image->height > 600 || image->width > 600)
         gtk_widget_set_size_request(image, 600, 600);
 }
 
 static void Separator_setup()
 {
     // Separator initialisation
-    vSeparator = gtk_vseparator_new();
-    hSeparator = gtk_hseparator_new();
+    vSeparator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
+    hSeparator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 }
 
 static void Button_setup()
@@ -91,9 +91,9 @@ static void Container_setup(GtkWidget *Notebook, GtkWidget *Label)
     GtkWidget *image_button_hBox;
 
     // Containers initialisation
-    main_hBox = gtk_hbox_new(FALSE, 0);
-    image_vBox = gtk_vbox_new(FALSE, 0);
-    image_button_hBox = gtk_hbox_new(TRUE, 0);
+    main_hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    image_vBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    image_button_hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     scroll_bar = gtk_scrolled_window_new(NULL, NULL);
 
     ImageScroller_setup(image_scroll);
@@ -112,8 +112,7 @@ static void Container_setup(GtkWidget *Notebook, GtkWidget *Label)
     gtk_box_pack_start(
             GTK_BOX(image_button_hBox), analyse_image, TRUE, FALSE, 0);
 
-    gtk_scrolled_window_add_with_viewport(
-            GTK_SCROLLED_WINDOW(image_scroll), Image);
+    gtk_container_add(GTK_SCROLLED_WINDOW(image_scroll), Image);
 
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
     gtk_notebook_append_page(GTK_NOTEBOOK(Notebook), main_hBox, Label);
