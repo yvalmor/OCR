@@ -59,8 +59,8 @@ static void TextView_setup(void)
 static void Check_size(GtkWidget *image)
 {
     // If the size of the image is too big we resize it
-    if (image->height > 600 || image->width > 600)
-        gtk_widget_set_size_request(image, 600, 600);
+    //if (image->height > 600 || image->width > 600)
+    //    gtk_widget_set_size_request(image, 600, 600);
 }
 
 static void Separator_setup()
@@ -112,7 +112,7 @@ static void Container_setup(GtkWidget *Notebook, GtkWidget *Label)
     gtk_box_pack_start(
             GTK_BOX(image_button_hBox), analyse_image, TRUE, FALSE, 0);
 
-    gtk_container_add(GTK_SCROLLED_WINDOW(image_scroll), Image);
+    gtk_container_add(GTK_CONTAINER(image_scroll), Image);
 
     gtk_container_add(GTK_CONTAINER(scroll_bar), TextView);
     gtk_notebook_append_page(GTK_NOTEBOOK(Notebook), main_hBox, Label);
