@@ -44,8 +44,11 @@ int main()
                 printf("%d, %d: ", start, i);
 
                 for (int j = start; j < i; ++j)
+                {
                     for (int k = 0; k < width; ++k)
                         printf("%d ", pixels[j][k]);
+                    printf("\n");
+                }
                 printf("\n");
             }
         }
