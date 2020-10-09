@@ -2,7 +2,7 @@
 
 int check_line(int linePtr[])
 {
-    int line[] = linePtr;
+    int line[] = *linePtr;
 
     int length = sizeof(line) / sizeof(line[0]);
 
