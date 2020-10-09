@@ -1,9 +1,7 @@
 #include "../hdr/segmentation.h"
 
-int check_line(int linePtr[])
+int check_line(int line[])
 {
-    int line[] = *linePtr;
-
     int length = sizeof(line) / sizeof(line[0]);
 
     for (int i = 0; i < length; ++i) {
