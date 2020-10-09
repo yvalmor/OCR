@@ -1,7 +1,9 @@
 #ifndef OCR_BITMAP_H
 #define OCR_BITMAP_H
 
-#include <windows.h>
+typedef unsigned short WORD;
+typedef unsigned long DWORD;
+typedef long LONG;
 
 typedef struct tabBITMAPFILEHEADER
 {
