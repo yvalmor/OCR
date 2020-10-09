@@ -35,22 +35,26 @@ int main()
     int start;
 
     for (int i = 0; i < width; i++) {
-        if (check_line(pixels[i], width)) {
-            if (!is_line) {
+        if (check_line(pixels[i], width))
+        {
+            if (!is_line)
+            {
                 is_line = 1;
                 start = i;
-            } else
-            {
-                printf("%d, %d: ", start, i);
+            }
+        }
+        else
+        {
+            is_line = 0;
+            printf("%d, %d: ", start, i - 1);
 
-                for (int j = start; j < i; ++j)
-                {
-                    for (int k = 0; k < width; ++k)
-                        printf("%d ", pixels[j][k]);
-                    printf("\n");
-                }
+            for (int j = start; j < i - 1; ++j)
+            {
+                for (int k = 0; k < width; ++k)
+                    printf("%d ", pixels[j][k]);
                 printf("\n");
             }
+            printf("\n");
         }
     }
 }
