@@ -43,7 +43,7 @@ int main()
                 start = i;
             }
         }
-        else
+        else if (is_line)
         {
             is_line = 0;
             printf("%d, %d: ", start, i - 1);
