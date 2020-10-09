@@ -1,6 +1,8 @@
 #ifndef OCR_BITMAP_H
 #define OCR_BITMAP_H
 
+#include <windows.h>
+
 typedef struct tabBITMAPFILEHEADER
 {
     WORD bfType;
