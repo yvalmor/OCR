@@ -2,12 +2,14 @@
 
 #include "bitmap.h"
 
-int main(int argc, char **argv)
+int main()
 {
-    BITMAPINFOHEADER  bitmapInfoHeader;
+    BITMAPINFOHEADER bitmapInfoHeader;
     unsigned char *bitmapData;
 
     bitmapData = LoadBitmapFile("test.bmp", &bitmapInfoHeader);
 
     printf("%s", bitmapData);
+
+    return 0;
 }
