@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void write_bmp(char *filename, char rgb[], int length, int width)
+void write_bmp(char *filename, char rgb[], int length, int width);
 
 int main()
 {
@@ -16,7 +16,8 @@ int main()
     write_bmp("french_flag.bmp", fr, sizeof(fr) / sizeof(char), 3);
 }
 
-void write_bmp(char *filename, char rgb[], int length, int width) {
+void write_bmp(char *filename, char rgb[], int length, int width)
+{
 
     // Calculate the image height from its width and the array length
     int height = (length / 3) / width;
