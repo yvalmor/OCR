@@ -3,7 +3,8 @@
 
 #include "bitmap.h"
 
-unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
+unsigned char *LoadBitmapFile(char *filename,
+                              BITMAPINFOHEADER *bitmapInfoHeader)
 {
     FILE *filePtr;
     BITMAPFILEHEADER bitmapFileHeader;
