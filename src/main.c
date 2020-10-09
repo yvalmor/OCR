@@ -2,9 +2,16 @@
 #include <stdlib.h>
 
 #include "../hdr/segmentation.h"
+#include "../hdr/linkedLines.h"
 
 int main()
 {
+    LINES *firstLines = NULL;
+    firstLines = malloc(sizeof(LINES));
+    if (firstLines == NULL)
+        return 1;
+    firstLines -> next = NULL;
+
     int width = 20;
     int height = 20;
 
@@ -46,15 +53,10 @@ int main()
         else if (is_line)
         {
             is_line = 0;
-            printf("%d, %d: ", start, i - 1);
 
-            for (int j = start; j < i; ++j)
-            {
-                for (int k = 0; k < width; ++k)
-                    printf("%d ", pixels[j][k]);
-                printf("\n");
-            }
-            printf("\n");
+            push(firstLines, start, i);
         }
     }
+
+    printLines(firstLines);
 }
