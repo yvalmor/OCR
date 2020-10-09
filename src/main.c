@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "segmentation.h"
+#include "../hdr/segmentation.h"
 
 int main()
 {
