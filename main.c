@@ -12,13 +12,15 @@ int main()
             {
                 0x3a, 0x00, 0x36, 0x28,
                 width, height,
-                0x010001, 0, 0,
+                0x180001, 0, 0,
                 0x002e23, 0x002e23, 0, 0
             };
 
     char bitmap[] =
             {
-                0x01,
+                0xff,
+                0xff,
+                0xff,
                 0x00
             };
 
