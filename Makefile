@@ -16,13 +16,11 @@ all: $(EXEC)
 
 $(EXEC): $(OBJ)
 	@echo "Beginning compilation..."
-	@$(CC) -o $@ $^ $(LIBFLAGS)
+	$(CC) $(CFLAGS) $(LIBFLAGS) -g $^ -o $@
 	@echo "Done!"
 
-$(OBJ_DIR)/main.o: $(HDR)
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) -o $@ -c $< $(CFLAGS) $(LIBFLAGS)
+$(OBJ): $(SRC_DIR)/%.c $(HDR)
+	$(CC) $(CFLAGS) $(LIBFLAGS) -g -c $^
 
 .PHONY: clean
 
