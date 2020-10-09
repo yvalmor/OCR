@@ -48,7 +48,7 @@ int main()
             is_line = 0;
             printf("%d, %d: ", start, i - 1);
 
-            for (int j = start; j < i - 1; ++j)
+            for (int j = start; j < i; ++j)
             {
                 for (int k = 0; k < width; ++k)
                     printf("%d ", pixels[j][k]);
