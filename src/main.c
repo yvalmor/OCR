@@ -35,7 +35,7 @@ int main()
     int start;
 
     for (int i = 0; i < width; i++) {
-        if (check_line(pixels[i])) {
+        if (check_line(pixels[i], width)) {
             if (!is_line) {
                 is_line = 1;
                 start = i;
