@@ -20,7 +20,7 @@ void printLines(LINES *head)
     LINES *current = head;
     while (current -> next != NULL)
     {
-        printf("%d %d", current -> start, current -> end);
+        printf("%d %d\n", current -> start, current -> end);
         current = current -> next;
     }
 }
