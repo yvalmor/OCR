@@ -14,9 +14,13 @@ int main()
         }
     }
 
-    for (int i = 0, int j = 0; i < width && j < height; ++i, ++j) {
-        pixels[i][j] = 1;
-    }
+    pixels[0][0] = 1;
+    pixels[1][1] = 1;
+    pixels[2][2] = 1;
+    pixels[3][3] = 1;
+    pixels[4][4] = 1;
+    pixels[5][5] = 1;
+
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
