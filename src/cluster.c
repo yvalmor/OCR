@@ -7,7 +7,7 @@ static int currentLabel;
 static int w;
 static int h;
 
-void getClusters(void *_pixels, void *_clusters, int width, int height)
+void tagClusters(void *_pixels, void *_clusters, int width, int height)
 {
     int (*pixels)[height] = _pixels;
     int (*clusters)[height] = _clusters;
