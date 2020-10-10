@@ -9,8 +9,6 @@ static int h;
 
 void getClusters(int **pixels, int **clusters, int width, int height)
 {
-    pix = pixels;
-
     w = width;
     h = height;
 
@@ -22,7 +20,7 @@ void getClusters(int **pixels, int **clusters, int width, int height)
             {
                 clusters[i][j] = currentLabel;
                 checkNeighbours(pixels, clusters, i, j);
-                currentLabel++:
+                currentLabel++;
             }
 }
 
@@ -30,7 +28,7 @@ void checkNeighbours(int **pixels, int **clusters, int x, int y)
 {
     for (int i = x - 1; i < x + 2; ++i)
         for (int j = y - 1; j < y + 2; ++j)
-            if (checkPixel(clusters, i, j))
+            if (checkPixel(pixels, clusters, i, j))
             {
                 clusters[i][j] = currentLabel;
                 checkNeighbours(pixels, clusters, i, j);
