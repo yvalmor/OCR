@@ -4,21 +4,21 @@ void checkNeighbours(void *_pixels, void *_clusters, int x, int y);
 int checkPixel(void *_pixels, void *_clusters, int x, int y);
 
 static int currentLabel;
-static int h;
 static int w;
+static int h;
 
-void tagClusters(void *_pixels, void *_clusters, int height, int width)
+void tagClusters(void *_pixels, void *_clusters, int width, int height)
 {
-    int (*pixels)[width] = _pixels;
-    int (*clusters)[width] = _clusters;
+    int (*pixels)[height] = _pixels;
+    int (*clusters)[height] = _clusters;
 
-    h = height;
     w = width;
+    h = height;
 
     currentLabel = 1;
 
-    for (int i = 0; i < height; ++i)
-        for (int j = 0; j < width; ++j)
+    for (int i = 0; i < width; ++i)
+        for (int j = 0; j < height; ++j)
             if (checkPixel(pixels, clusters, i, j))
             {
                 clusters[i][j] = currentLabel;
