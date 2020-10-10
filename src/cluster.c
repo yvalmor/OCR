@@ -51,14 +51,15 @@ void tagClusters(void *_pixels, void *_clusters, int width, int height)
     currentLabel = 1;
 
     for (int i = 0; i < width; ++i)
+    {
         for (int j = 0; j < height; ++j)
-            if (checkPixel(pixels, clusters, i, j))
-            {
+            if (checkPixel(pixels, clusters, i, j)) {
                 pushLabel(firstLabel, currentLabel);
                 clusters[i][j] = currentLabel;
                 checkNeighbours(pixels, clusters, i, j);
                 currentLabel++;
             }
+    }
 
     setClusters(clusters);
 }
