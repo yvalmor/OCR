@@ -17,10 +17,15 @@ void setup()
 
     g_object_unref(builder);
 
-    gtk_widget_show(GTK_WIDGET(window));
+    gtk_widget_show_all(window);
 }
 
 void on_Main_window_destroy()
 {
     gtk_main_quit();
+}
+
+void on_choose_clicked()
+{
+
 }
