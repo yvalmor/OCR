@@ -5,7 +5,7 @@ int contains(int arr[], int length, int val);
 void checkNeighbours(void *_pixels, void *_clusters, int x, int y);
 int checkPixel(void *_pixels, void *_clusters, int x, int y);
 
-void pushLabel(LABELS *head, int label)
+void pushLabel(LABELS *head, int label);
 
 static int currentLabel;
 static int w;
