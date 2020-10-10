@@ -7,10 +7,10 @@ void initClusters(void *_clusters, int width, int height);
 
 int main()
 {
-    int width = 20;
-    int height = 20;
+    const int width = 20;
+    const int height = 20;
 
-    int pixels[20][20] = {
+    int placeholder[20][20] = {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -32,6 +32,11 @@ int main()
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
     };
+
+    int pixels[width][height];
+    for (int i = 0; i < width; ++i)
+        for (int j = 0; j < height; ++j)
+            pixels[i][j] = placeholder[i][j];
 
     int clusters[width][height];
 
