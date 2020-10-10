@@ -1,7 +1,7 @@
 #include "../hdr/cluster.h"
 
-void checkNeighbours(int clusters[][], int x, int y, int currentLabel);
-int checkPixel(int clusters[][], int x, int y);
+void checkNeighbours(int **clusters, int x, int y, int currentLabel);
+int checkPixel(int **clusters, int x, int y);
 
 static int pix[][];
 
