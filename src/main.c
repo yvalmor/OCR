@@ -38,8 +38,6 @@ int main()
         for (int j = 0; j < height; ++j)
             pixels[i][j] = placeholder[i][j];
 
-    free(placeholder);
-
     int clusters[width][height];
 
     initClusters(clusters, width, height);
