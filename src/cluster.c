@@ -1,10 +1,9 @@
 #include "../hdr/cluster.h"
 
-void checkNeighbours(int **clusters, int x, int y, int currentLabel);
-int checkPixel(int **clusters, int x, int y);
+void checkNeighbours(int **pixels, int **clusters, int x, int y);
+int checkPixel(int **pixels, int **clusters, int x, int y);
 
-static int pix[][];
-
+static int currentLabel;
 static int w;
 static int h;
 
@@ -15,33 +14,33 @@ void getClusters(int **pixels, int **clusters, int width, int height)
     w = width;
     h = height;
 
-    int currentLabel = 1;
+    currentLabel = 1;
 
     for (int i = 0; i < width; ++i)
         for (int j = 0; j < height; ++j)
-            if (checkPixel(clusters, i, j))
+            if (checkPixel(pixels, clusters, i, j))
             {
                 clusters[i][j] = currentLabel;
-                checkNeighbours(clusters, i, j, currentLabel);
+                checkNeighbours(pixels, clusters, i, j);
                 currentLabel++:
             }
 }
 
-void checkNeighbours(int **clusters, int x, int y, int currentLabel)
+void checkNeighbours(int **pixels, int **clusters, int x, int y)
 {
     for (int i = x - 1; i < x + 2; ++i)
         for (int j = y - 1; j < y + 2; ++j)
             if (checkPixel(clusters, i, j))
             {
                 clusters[i][j] = currentLabel;
-                checkNeighbours(clusters, i, j, currentLabel);
+                checkNeighbours(pixels, clusters, i, j);
             }
 }
 
-int checkPixel(int **clusters, int x, int y)
+int checkPixel(int **pixels, int **clusters, int x, int y)
 {
     if (x < 0 || x >= w || y < 0 || y >= h)
         return 0;
 
-    return pix[x][y] && !clusters[x][y];
+    return pixels[x][y] && !clusters[x][y];
 }
