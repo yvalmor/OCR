@@ -25,7 +25,7 @@ int contains(int arr[], int length, int val)
 
 void tagClusters(void *_pixels, void *_clusters, int width, int height)
 {
-    firstLabel -> next = NULL;
+    firstLabel = malloc(sizeof(LABELS));
 
     int (*pixels)[height] = _pixels;
     int (*clusters)[height] = _clusters;
