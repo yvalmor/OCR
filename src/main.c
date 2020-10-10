@@ -42,7 +42,7 @@ int main()
 
     initClusters(clusters, width, height);
 
-    getClusters(pixels, clusters, width, height);
+    tagClusters(pixels, clusters, width, height);
 
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
