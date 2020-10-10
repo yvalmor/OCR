@@ -7,7 +7,7 @@ void setup()
     GError *err = NULL;
 
     builder = gtk_builder_new();
-    if (gtk_builder_add_from_file(builder, "ocr.glade", &err) == 0)
+    if (gtk_builder_add_from_file(builder, "UI/ocr.glade", &err) == 0)
     {
         fprintf(stderr, "Error adding build from file. Error: %s\n", err -> message);
         return;
