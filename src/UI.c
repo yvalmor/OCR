@@ -11,7 +11,7 @@ void setup()
     gtk_builder_add_from_file(builder, "../UI/ocr.glade", NULL);
 
     window = GTK_WIDGET(
-            gkt_builder_get_object(builder, "Main_window")
+            gtk_builder_get_object(builder, "Main_window")
             );
     gtk_builder_connect_signals(builder, NULL);
 
