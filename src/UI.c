@@ -21,7 +21,7 @@ void setup()
 
     g_object_unref(builder);
 
-    gtk_widget_show_all(window);
+    gtk_widget_show_all();
 }
 
 void on_Main_window_destroy()
