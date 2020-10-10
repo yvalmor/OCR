@@ -8,7 +8,7 @@ void setup()
     GtkWidget *window;
 
     builder = gtk_builder_new();
-    gtk_builder_add_from_file(builder, "ocr.glade", NULL);
+    gtk_builder_add_from_file(builder, "../UI/ocr.glade", NULL);
 
     window = GTK_WIDGET(
             gtk_builder_get_object(builder, "Main_window")
