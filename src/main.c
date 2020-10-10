@@ -8,7 +8,7 @@ int main(int argc, char **argv)
     // GTK+ initialisation
     gtk_init(&argc, &argv);
 
-    Setup();
+    setup();
 
     // Main loop
     gtk_main();
