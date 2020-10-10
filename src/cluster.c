@@ -29,8 +29,8 @@ void getClusters(void *_pixels, void *_clusters, int width, int height)
 
 void checkNeighbours(void *_pixels, void *_clusters, int x, int y)
 {
-    int (*pixels)[height] = _pixels;
-    int (*clusters)[height] = _clusters;
+    int (*pixels)[h] = _pixels;
+    int (*clusters)[h] = _clusters;
 
     for (int i = x - 1; i < x + 2; ++i)
         for (int j = y - 1; j < y + 2; ++j)
@@ -43,8 +43,8 @@ void checkNeighbours(void *_pixels, void *_clusters, int x, int y)
 
 int checkPixel(void *_pixels, void *_clusters, int x, int y)
 {
-    int (*pixels)[height] = _pixels;
-    int (*clusters)[height] = _clusters;
+    int (*pixels)[h] = _pixels;
+    int (*clusters)[h] = _clusters;
 
     if (x < 0 || x >= w || y < 0 || y >= h)
         return 0;
