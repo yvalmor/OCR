@@ -5,20 +5,13 @@ int contains(int arr[], int length, int val);
 void checkNeighbours(void *_pixels, void *_clusters, int x, int y);
 int checkPixel(void *_pixels, void *_clusters, int x, int y);
 
+void pushLabel(LABELS *head, int label)
+
 static int currentLabel;
 static int w;
 static int h;
 
-CLUSTER getClusters(void *_clusterMatrix, int width, int height)
-{
-    int (*clusterMatrix)[height] = _clusterMatrix;
-
-    CLUSTER first;
-
-    PIXEL pixel;
-
-    return first;
-}
+LABELS *firstLabel;
 
 int contains(int arr[], int length, int val)
 {
@@ -30,6 +23,8 @@ int contains(int arr[], int length, int val)
 
 void tagClusters(void *_pixels, void *_clusters, int width, int height)
 {
+    firstLabel -> next = NULL;
+
     int (*pixels)[height] = _pixels;
     int (*clusters)[height] = _clusters;
 
@@ -42,6 +37,7 @@ void tagClusters(void *_pixels, void *_clusters, int width, int height)
         for (int j = 0; j < height; ++j)
             if (checkPixel(pixels, clusters, i, j))
             {
+                pushLabel(firstLabel, currentLabel);
                 clusters[i][j] = currentLabel;
                 checkNeighbours(pixels, clusters, i, j);
                 currentLabel++;
@@ -71,4 +67,17 @@ int checkPixel(void *_pixels, void *_clusters, int x, int y)
         return 0;
 
     return pixels[x][y] && !clusters[x][y];
+}
+
+void pushLabel(LABELS *head, int label)
+{
+    LABELS *current = head;
+    while (current -> next != NULL)
+        current = current -> next;
+
+    LABELS *new;
+    new -> value = label;
+    new -> next = NULL;
+
+    current -> next = new;
 }
