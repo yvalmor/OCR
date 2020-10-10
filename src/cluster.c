@@ -32,7 +32,7 @@ void setClusters(void *_clusters)
         for (int i = 0; i < w; ++i) {
             for (int j = 0; j < h; ++j) {
                 if (clusters[i][j] == current -> value)
-                    printf("%d i, %d j", i, j);
+                    printf("%d i, %d j, %d\n", i, j, clusters[i][j]);
             }
         }
     }
@@ -59,6 +59,8 @@ void tagClusters(void *_pixels, void *_clusters, int width, int height)
                 checkNeighbours(pixels, clusters, i, j);
                 currentLabel++;
             }
+
+    setClusters(clusters);
 }
 
 void checkNeighbours(void *_pixels, void *_clusters, int x, int y)
