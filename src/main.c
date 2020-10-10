@@ -1,17 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../hdr/segmentation.h"
-#include "../hdr/linkedLines.h"
+#include "../hdr/cluster.h"
+
+void initClusters(int clusters[][], int width, int height);
 
 int main()
 {
-    LINES *firstLines = NULL;
-    firstLines = malloc(sizeof(LINES));
-    if (firstLines == NULL)
-        return 1;
-    firstLines -> next = NULL;
-
     int width = 20;
     int height = 20;
 
@@ -38,25 +33,23 @@ int main()
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
     };
 
-    int is_line = 0;
-    int start;
+    int clusters[width][height];
 
-    for (int i = 0; i < width; i++) {
-        if (check_line(pixels[i], width))
-        {
-            if (!is_line)
-            {
-                is_line = 1;
-                start = i;
-            }
-        }
-        else if (is_line)
-        {
-            is_line = 0;
+    initClusters(clusters, width, height);
 
-            push(firstLines, start, i);
+    getClusters(pixels, clusters, width, height);
+
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            printf("%d", clusters[i][j]);
         }
+        printf("\n");
     }
+}
 
-    printLines(firstLines);
+void initClusters(int clusters[][], int width, int height)
+{
+    for (int i = 0; i < width; ++i)
+        for (int j = 0; j < height; ++j)
+            clusters[i][j] = 0;
 }
