@@ -3,7 +3,7 @@
 
 #include "../hdr/cluster.h"
 
-void initClusters(int clusters[][], int width, int height);
+void initClusters(int **clusters, int width, int height);
 
 int main()
 {
