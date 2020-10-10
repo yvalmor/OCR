@@ -77,11 +77,9 @@ void pushLabel(LABELS *head, int label)
     while (current -> next != NULL)
         current = current -> next;
 
-    LABELS *new =
-            {
-                label,
-                NULL
-            };
+    LABELS *new;
+    new -> value = label;
+    new -> next = NULL;
 
     current -> next = new;
 }
