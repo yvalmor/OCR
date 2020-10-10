@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -std=c99
+CFLAGS=-Wall -Wextra -std=c99 -export-dynamic
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
 
 SRC_DIR=src

@@ -8,7 +8,11 @@ void setup()
     GtkWidget *window;
 
     builder = gtk_builder_new();
-    gtk_builder_add_from_file(builder, "../UI/ocr.glade", NULL);
+    if (gtk_builder_add_from_file(builder, "../UI/ocr.glade", &err) == 0)
+    {
+        fprintf(stderr, "Error adding build from file. Error: %s\n", err -> message);
+        return;
+    }
 
     window = GTK_WIDGET(
             gtk_builder_get_object(builder, "Main_window")
@@ -27,5 +31,5 @@ void on_Main_window_destroy()
 
 void on_choose_clicked()
 {
-
+    printf("bla");
 }
