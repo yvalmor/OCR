@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../hdr/cluster.h"
 
@@ -13,6 +14,29 @@ static int w;
 static int h;
 
 LABELS *firstLabel;
+CLUSTER *firstCluster;
+
+void setClusters(void *_clusters)
+{
+    int (*clusters)[h] = _clusters;
+
+    LABELS *current = firstLabel;
+
+    int left = -1;
+    int right = -1;
+    int up = -1;
+    int down = -1;
+
+    while (current != NULL)
+    {
+        for (int i = 0; i < w; ++i) {
+            for (int j = 0; j < h; ++j) {
+                if (clusters[i][j] == current -> value)
+                    printf("%d i, %d j", i, j);
+            }
+        }
+    }
+}
 
 void tagClusters(void *_pixels, void *_clusters, int width, int height)
 {
