@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "../hdr/cluster.h"
 
 int contains(int arr[], int length, int val);
