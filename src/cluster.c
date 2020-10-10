@@ -53,8 +53,8 @@ void checkNeighbours(void *_pixels, void *_clusters, int x, int y)
     int (*pixels)[h] = _pixels;
     int (*clusters)[h] = _clusters;
 
-    for (int i = x - 1; i < x + 2; ++i)
-        for (int j = y - 3; j < y + 5; ++j)
+    for (int i = x - 3; i < x + 5; ++i)
+        for (int j = y - 1; j < y + 2; ++j)
             if (checkPixel(pixels, clusters, i, j))
             {
                 clusters[i][j] = currentLabel;
