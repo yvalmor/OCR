@@ -8,6 +8,7 @@ int checkPixel(void *_pixels, void *_clusters, int x, int y);
 
 int contains(int arr[], int length, int val);
 void pushLabel(LABELS *head, int label);
+void pushCluster(CLUSTER *head, int dimensions[4]);
 
 static int currentLabel;
 static int w;
@@ -16,28 +17,51 @@ static int h;
 LABELS *firstLabel;
 CLUSTER *firstCluster;
 
-void setClusters(void *_clusters)
+CLUSTER *setClusters(void *_clusters)
 {
+    firstCluster = malloc(sizeof(CLUSTER));
+
     int (*clusters)[h] = _clusters;
 
     LABELS *current = firstLabel;
 
-    int left = -1;
-    int right = -1;
-    int up = -1;
-    int down = -1;
+    int dimensions[4];
 
     while (current != NULL)
     {
-        for (int i = 0; i < w; ++i) {
-            for (int j = 0; j < h; ++j) {
+        for (int i = 0; i < 4; ++i)
+            dimensions[i] = -1;
+
+        for (int i = 0; i < w; ++i)
+        {
+            for (int j = 0; j < h; ++j)
+            {
                 if (clusters[i][j] == current -> value)
-                    printf("%d i, %d j, %d\n", i, j, clusters[i][j]);
+                    if (i < dimensions[0] || dimensions[0] == -1)
+                        dimensions[0] = i;
+                    if (i > dimensions[1] || dimensions[1] == -1)
+                        dimensions[1] = i;
+                    if (j < dimensions[2] || dimensions[2] == -1)
+                        dimensions[2] = j;
+                    if (j > dimensions[3] || dimensions[3] == -1)
+                        dimensions[3]; = j;
             }
         }
 
+        if (firstCluster -> up == -1)
+        {
+            firstCluster -> up = dimensions[0];
+            firstCluster -> down = dimensions[1];
+            firstCluster -> left = dimensions[2];
+            firstCluster -> right = dimensions[3];
+        }
+        else
+            pushCluster(firstCluster, dimensions);
+
         current = current -> next;
     }
+
+    return firstCluster;
 }
 
 void tagClusters(void *_pixels, void *_clusters, int width, int height)
@@ -55,7 +79,8 @@ void tagClusters(void *_pixels, void *_clusters, int width, int height)
     for (int i = 0; i < width; ++i)
     {
         for (int j = 0; j < height; ++j)
-            if (checkPixel(pixels, clusters, i, j)) {
+            if (checkPixel(pixels, clusters, i, j))
+            {
                 clusters[i][j] = currentLabel;
                 checkNeighbours(pixels, clusters, i, j);
 
@@ -112,6 +137,22 @@ void pushLabel(LABELS *head, int label)
 
     LABELS *new = malloc(sizeof(LABELS));
     new -> value = label;
+    new -> next = NULL;
+
+    current -> next = new;
+}
+
+void pushCluster(CLUSTER *head, int dimensions[4])
+{
+    CLUSTER *current = head;
+    while (current -> next != NULL)
+        current = current -> next;
+
+    CLUSTER *new = malloc(sizeof(CLUSTER));
+    new -> up = dimensions[0];
+    new -> down = dimensions[1];
+    new -> left = dimensions[2];
+    new -> right = dimensions[3];
     new -> next = NULL;
 
     current -> next = new;
