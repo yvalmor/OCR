@@ -8,7 +8,7 @@ static int pix[][];
 static int w;
 static int h;
 
-void getClusters(int pixels[][], int clusters[][], int width, int height)
+void getClusters(int **pixels, int **clusters, int width, int height)
 {
     pix = pixels;
 
@@ -27,7 +27,7 @@ void getClusters(int pixels[][], int clusters[][], int width, int height)
             }
 }
 
-void checkNeighbours(int clusters[][], int x, int y, int currentLabel)
+void checkNeighbours(int **clusters, int x, int y, int currentLabel)
 {
     for (int i = x - 1; i < x + 2; ++i)
         for (int j = y - 1; j < y + 2; ++j)
@@ -38,7 +38,7 @@ void checkNeighbours(int clusters[][], int x, int y, int currentLabel)
             }
 }
 
-int checkPixel(int clusters[][], int x, int y)
+int checkPixel(int **clusters, int x, int y)
 {
     if (x < 0 || x >= w || y < 0 || y >= h)
         return 0;
