@@ -77,7 +77,7 @@ void pushLabel(LABELS *head, int label)
     while (current -> next != NULL)
         current = current -> next;
 
-    LABELS *new;
+    LABELS *new = malloc(sizeof(LABELS));
     new -> value = label;
     new -> next = NULL;
 
