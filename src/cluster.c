@@ -2,11 +2,10 @@
 
 #include "../hdr/cluster.h"
 
-int contains(int arr[], int length, int val);
-
 void checkNeighbours(void *_pixels, void *_clusters, int x, int y);
 int checkPixel(void *_pixels, void *_clusters, int x, int y);
 
+int contains(int arr[], int length, int val);
 void pushLabel(LABELS *head, int label);
 
 static int currentLabel;
@@ -14,14 +13,6 @@ static int w;
 static int h;
 
 LABELS *firstLabel;
-
-int contains(int arr[], int length, int val)
-{
-    for (int i = 0; i < length; ++i)
-        if (arr[i] == val)
-            return 1;
-    return 0;
-}
 
 void tagClusters(void *_pixels, void *_clusters, int width, int height)
 {
@@ -69,6 +60,14 @@ int checkPixel(void *_pixels, void *_clusters, int x, int y)
         return 0;
 
     return pixels[x][y] && !clusters[x][y];
+}
+
+int contains(int arr[], int length, int val)
+{
+    for (int i = 0; i < length; ++i)
+        if (arr[i] == val)
+            return 1;
+    return 0;
 }
 
 void pushLabel(LABELS *head, int label)
