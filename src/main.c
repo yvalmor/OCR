@@ -47,7 +47,7 @@ int main()
     }
 }
 
-void initClusters(int clusters[][], int width, int height)
+void initClusters(int **clusters, int width, int height)
 {
     for (int i = 0; i < width; ++i)
         for (int j = 0; j < height; ++j)
