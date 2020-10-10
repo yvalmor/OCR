@@ -9,7 +9,7 @@ static int currentLabel;
 static int w;
 static int h;
 
-CLUSTER *getClusters(void *_clusterMatrix, int width, int height)
+CLUSTER getClusters(void *_clusterMatrix, int width, int height)
 {
     int (*clusterMatrix)[height] = _clusterMatrix;
 
