@@ -3,12 +3,12 @@
 
 #include "../hdr/cluster.h"
 
-void initClusters(void *_clusters, int width, int height);
+void initClusters(void *_clusters, int height, int width);
 
 int main()
 {
-    const int width = 21;
-    const int height = 20;
+    const int height = 21;
+    const int width = 20;
 
     int placeholder[21][20] = {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -34,30 +34,30 @@ int main()
             {0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
     };
 
-    int pixels[width][height];
-    for (int i = 0; i < width; ++i)
-        for (int j = 0; j < height; ++j)
+    int pixels[height][width];
+    for (int i = 0; i < height; ++i)
+        for (int j = 0; j < width; ++j)
             pixels[i][j] = placeholder[i][j];
 
-    int clusters[width][height];
+    int clusters[height][width];
 
-    initClusters(clusters, width, height);
+    initClusters(clusters, height, width);
 
-    getClusters(pixels, clusters, width, height);
+    tagClusters(pixels, clusters, height, width);
 
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
             printf("%d", clusters[i][j]);
         }
         printf("\n");
     }
 }
 
-void initClusters(void *_clusters, int width, int height)
+void initClusters(void *_clusters, int height, int width)
 {
-    int (*clusters)[height] = _clusters;
+    int (*clusters)[width] = _clusters;
 
-    for (int i = 0; i < width; ++i)
-        for (int j = 0; j < height; ++j)
+    for (int i = 0; i < height; ++i)
+        for (int j = 0; j < width; ++j)
             clusters[i][j] = 0;
 }
