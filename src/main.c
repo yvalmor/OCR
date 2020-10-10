@@ -49,7 +49,7 @@ int main()
 
 void initClusters(void *_clusters, int width, int height)
 {
-    int (*_clusters)[height] = _clusters;
+    int (*clusters)[height] = _clusters;
 
     for (int i = 0; i < width; ++i)
         for (int j = 0; j < height; ++j)
