@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -std=c99 -export-dynamic -rDynamic
+CFLAGS=-Wall -Wextra -std=c99 -export-dynamic -rdynamic
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
 
 SRC_DIR=src
@@ -28,7 +28,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	@echo "Cleaning in process..."
-	@rm -rf $(OBJS)
+	@rm -rf $(OBJ)
 	@echo "Done!"
 	@echo "Removing executable"
 	@rm -f $(EXEC)
