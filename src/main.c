@@ -43,6 +43,13 @@ int main()
     initClusters(clusters, width, height);
 
     tagClusters(pixels, clusters, width, height);
+
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            printf("%d", clusters[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 void initClusters(void *_clusters, int width, int height)
