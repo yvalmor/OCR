@@ -28,7 +28,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	@echo "Cleaning in process..."
-	@rm -rf $(OBJS)
+	@rm -rf $(OBJ)
 	@echo "Done!"
 	@echo "Removing executable"
 	@rm -f $(EXEC)
