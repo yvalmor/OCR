@@ -28,7 +28,7 @@ LINES *Get_lines(int rows, int columns, int pixels[rows][columns]);
 void Push_line(LINES *head, int upper, int lower);
 
 CHARACTERS *Get_char(
-        int rows, int columns, int pixels[rows][columns], LINES firstLine);
+        int rows, int columns, int pixels[rows][columns], LINES *firstLine);
 void Push_char(CHARACTERS *head, BOUNDS bounds);
 
 #endif //OCR_HISTOGRAM_H

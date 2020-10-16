@@ -28,7 +28,7 @@ LINES *Get_lines(int rows, int columns, int pixels[rows][columns])
 
     for (int i = 0; i < rows; ++i)
     {
-        if (histo[i] >= threshold)
+        if (histogram[i] >= threshold)
         {
             start = i++;
 
@@ -68,7 +68,7 @@ void Push_line(LINES *head, int upper, int lower)
 
 // Character segmentation
 CHARACTERS *Get_char(
-        int rows, int columns, int pixels[rows][columns], LINES firstLine)
+        int rows, int columns, int pixels[rows][columns], LINES *firstLine)
 {
     LINES *currentLine = firstLine;
     CHARACTERS *first = malloc(sizeof(CHARACTERS));
