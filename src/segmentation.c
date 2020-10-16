@@ -1,9 +1,10 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../hdr/segmentation.h"
 
 // Line segmentation
-LINES *Get_lines(int rows, int columns, int *pixels)
+LINES *Get_lines(int rows, int columns, const int *pixels)
 {
     int histogram[rows];
 
@@ -22,6 +23,7 @@ LINES *Get_lines(int rows, int columns, int *pixels)
 
     LINES *first = malloc(sizeof(LINES));
     first -> next = NULL;
+    first -> upper = 0;
 
     int start;
     int end;
@@ -46,7 +48,7 @@ LINES *Get_lines(int rows, int columns, int *pixels)
 
 void Push_line(LINES *head, int upper, int lower)
 {
-    if (head -> next == NULL)
+    if (head -> upper == 0)
     {
         head -> upper = upper;
         head -> lower = lower;
@@ -57,22 +59,21 @@ void Push_line(LINES *head, int upper, int lower)
     while (current -> next != NULL)
         current = current -> next;
 
-    LINES *new = malloc(sizeof(LINES));
-    new -> upper = upper;
-    new -> lower = lower;
-    new -> next = NULL;
-
-    current -> next = new;
+    current -> next = malloc(sizeof(LINES));
+    current -> next -> upper = upper;
+    current -> next -> lower = lower;
+    current -> next -> next = NULL;
 }
 
 
 // Character segmentation
 CHARACTERS *Get_char(
-        int rows, int columns, int *pixels, LINES *firstLine)
+        int rows, int columns, const int *pixels, LINES *firstLine)
 {
     LINES *currentLine = firstLine;
     CHARACTERS *first = malloc(sizeof(CHARACTERS));
     first -> next = NULL;
+    first -> bounds.upper = 0;
 
     int histogram[columns];
     int sum;
@@ -86,7 +87,7 @@ CHARACTERS *Get_char(
         for (int j = 0; j < columns; ++j)
         {
             sum = 0;
-            for (int i = 0; i < rows; ++i)
+            for (int i = currentLine -> upper; i < currentLine -> lower; ++i)
                 sum += *((pixels + i * rows) + j);
 
             histogram[j] = sum;
@@ -123,7 +124,7 @@ CHARACTERS *Get_char(
 
 void Push_char(CHARACTERS *head, BOUNDS bounds)
 {
-    if (head -> next == NULL)
+    if (head -> bounds.upper == 0)
     {
         head -> bounds = bounds;
         return;
@@ -133,9 +134,7 @@ void Push_char(CHARACTERS *head, BOUNDS bounds)
     while (current -> next != NULL)
         current = current -> next;
 
-    CHARACTERS *new = malloc(sizeof(CHARACTERS));
-    new -> bounds = bounds;
-    new -> next = NULL;
-
-    current -> next = new;
+    current -> next = malloc(sizeof(CHARACTERS));
+    current -> next -> bounds = bounds;
+    current -> next -> next = NULL;
 }
