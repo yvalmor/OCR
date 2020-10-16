@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../hdr/cluster.h"
-
-void initClusters(void *_clusters, int width, int height);
+#include "../hdr/segmentation.h"
 
 int main()
 {
-    const int width = 20;
-    const int height = 20;
+    const int rows = 20;
+    const int columns = 20;
 
-    int placeholder[20][20] = {
+    int placeholder[rows][columns] = {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -33,30 +31,41 @@ int main()
             {0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
     };
 
-    int pixels[height][width];
-    for (int i = 0; i < width; ++i)
-        for (int j = 0; j < height; ++j)
+    int pixels[rows][columns];
+    for (int i = 0; i < rows; ++i)
+        for (int j = 0; j < columns; ++j)
             pixels[i][j] = placeholder[i][j];
 
-    int clusters[height][width];
+    LINES *lines = Get_lines(rows, columns, pixels);
+    CHARACTERS *characters = Get_char(rows, columns, pixels, lines);
 
-    initClusters(clusters, width, height);
+    CHARACTERS *current = characters;
 
-    tagClusters(pixels, clusters, width, height);
+    int upper;
+    int lower;
+    int left;
+    int right;
 
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
-            printf("%d", clusters[i][j]);
+    while (current != NULL)
+    {
+        upper = (current -> bounds).upper;
+        lower = (current -> bounds).lower;
+        left = (current -> bounds).left;
+        right = (current -> bounds).right;
+
+        printf("word:\n");
+
+        for (int i = upper; i < lower ; ++i)
+        {
+            for (int j = left; j < right; ++j)
+            {
+                printf("%d", pixels[i][j]);
+            }
+            printf("\n");
         }
+
         printf("\n");
+
+        current = current -> next;
     }
-}
-
-void initClusters(void *_clusters, int width, int height)
-{
-    int (*clusters)[height] = _clusters;
-
-    for (int i = 0; i < width; ++i)
-        for (int j = 0; j < height; ++j)
-            clusters[i][j] = 0;
 }
