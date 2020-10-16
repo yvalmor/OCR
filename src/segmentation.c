@@ -3,17 +3,17 @@
 #include "../hdr/segmentation.h"
 
 // Line segmentation
-LINES *Get_lines(int rows, int columns, int pixels[rows][columns])
+LINES *Get_lines(int rows, int columns, int *pixels)
 {
     int histogram[rows];
 
     int sum;
-    int mean_val;
+    int mean_val = 0;
     for (int i = 0; i < rows; ++i)
     {
         sum = 0;
         for (int j = 0; j < columns; ++j)
-            sum += pixels[rows][columns];
+            sum += *((pixels + i * rows) + j);
         mean_val += sum;
         histogram[i] = sum;
     }
@@ -28,14 +28,14 @@ LINES *Get_lines(int rows, int columns, int pixels[rows][columns])
 
     for (int i = 0; i < rows; ++i)
     {
-        if (histogram[i] >= threshold)
+        if (histogram[i] > threshold)
         {
             start = i++;
 
-            while (i < rows && histogram[i++] >= threshold)
+            while (i < rows && histogram[i++] > threshold)
                 ;
 
-            end = i;
+            end = i - 1;
 
             Push_line(first, start, end);
         }
@@ -68,7 +68,7 @@ void Push_line(LINES *head, int upper, int lower)
 
 // Character segmentation
 CHARACTERS *Get_char(
-        int rows, int columns, int pixels[rows][columns], LINES *firstLine)
+        int rows, int columns, int *pixels, LINES *firstLine)
 {
     LINES *currentLine = firstLine;
     CHARACTERS *first = malloc(sizeof(CHARACTERS));
@@ -87,7 +87,7 @@ CHARACTERS *Get_char(
         {
             sum = 0;
             for (int i = 0; i < rows; ++i)
-                sum += pixels[i][j];
+                sum += *((pixels + i * rows) + j);
 
             histogram[j] = sum;
             mean_val += sum;
@@ -99,16 +99,16 @@ CHARACTERS *Get_char(
 
         for (int j = 0; j < columns; ++j)
         {
-            if (histogram[j] >= threshold)
+            if (histogram[j] > threshold)
             {
                 left = j++;
 
-                while (j < columns && histogram[j++] >= threshold)
+                while (j < columns && histogram[j++] > threshold)
                     ;
 
                 BOUNDS bounds =
                         {
-                                currentLine -> upper, currentLine -> lower, left, j
+                                currentLine -> upper, currentLine -> lower, left, j - 1
                         };
 
                 Push_char(first, bounds);

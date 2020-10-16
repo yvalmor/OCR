@@ -36,8 +36,8 @@ int main()
         for (int j = 0; j < columns; ++j)
             pixels[i][j] = placeholder[i][j];
 
-    LINES *lines = Get_lines(rows, columns, pixels);
-    CHARACTERS *characters = Get_char(rows, columns, pixels, lines);
+    LINES *lines = Get_lines(rows, columns, *pixels);
+    CHARACTERS *characters = Get_char(rows, columns, *pixels, lines);
 
     CHARACTERS *current = characters;
 
