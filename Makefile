@@ -5,6 +5,7 @@ LDFLAGS=-ISDL2 -ISLD2_image
 
 EXEC=bin/ocr
 
+HDR=$(wildcard hdr/*.h)
 SRC_DIR=src
 OBJ_DIR=obj
 
@@ -15,7 +16,7 @@ OBJS=$(patsubst %,$(OBJ_DIR)/%,$(FILES).o)
 all: $(EXEC)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) -c -o $@ $< $(HDR)
 
 $(EXEC): $(OBJS)
 	@$(CC) $(LIBFLAGS) -g -o $@ $<
