@@ -1,6 +1,8 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
+#include "../hdr/segmentation.h"
+
 gboolean on_Main_window_delete(GtkWidget * widget, gpointer data);
 void on_Main_window_destroy(GtkWidget *widget, gpointer data);
 void on_imageChooser_set_file(GtkFileChooserButton *button);
@@ -79,4 +81,9 @@ void on_imageAnalyse_clicked(
 {
     g_print(filename);
     gtk_text_buffer_set_text(buffer, filename, -1);
+
+    /*
+     * IMAGE image = Load_image(filename);
+     * if NULL
+     * CHARACTERS characters = Segment_image(image.rows, image.columns, image.pixels);*/
 }
