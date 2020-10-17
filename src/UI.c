@@ -54,7 +54,8 @@ int setup()
     return 0;
 }
 
-gboolean on_Main_window_delete(GtkWidget *widget, gpointer data)
+gboolean on_Main_window_delete(
+        __attribute__ ((unused)) GtkWidget *widget, __attribute__ ((unused)) gpointer data)
 {
     g_print("Quitting app...\n");
     return TRUE;
