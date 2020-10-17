@@ -38,7 +38,7 @@ int main(int argc, char **argv)
         for (int j = 0; j < columns; ++j)
             pixels[i][j] = placeholder[i][j];
 
-    CHARACTERS *firstChar = Segment_image(rows, columns, *pixels, lines);
+    CHARACTERS *firstChar = Segment_image(rows, columns, *pixels);
 
     CHARACTERS *current = firstChar;
 
