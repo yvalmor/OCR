@@ -1,34 +1,78 @@
+#include <string.h>
 #include <gtk/gtk.h>
 
-void setup()
+gboolean on_Main_window_destroy(GtkWidget *widget, gpointer data);
+void on_Main_window_delete(GtkWidget * widget, gpointer data);
+void on_imageChooser_set_file(GtkFileChooserButton *button);
+
+char *filename;
+
+static GtkTextBuffer *buffer;
+static GtkImage *image;
+
+int setup()
 {
     GtkBuilder *builder;
     GtkWidget *window;
+    GtkWidget *textView;
+    GtkWidget *imageWidget;
     GError *err = NULL;
 
     builder = gtk_builder_new();
     if (gtk_builder_add_from_file(builder, "UI/ocr.glade", &err) == 0)
     {
         fprintf(stderr, "Error adding build from file. Error: %s\n", err -> message);
-        return;
+        return 1;
     }
 
-    window = GTK_WIDGET(
-            gtk_builder_get_object(builder, "Main_window")
+    window = GTK_WIDGET
+            (
+                    gtk_builder_get_object(builder, "Main_window")
             );
+
+    textView = GTK_WIDGET
+            (
+                    gtk_builder_get_object(builder, "imageContent")
+            );
+
+    buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textView));
+
+    imageWidget = GTK_WIDGET
+            (
+                    gtk_builder_get_object(builder, "chosenImage")
+            );
+
+    image = GTK_IMAGE(imageWidget);
+
     gtk_builder_connect_signals(builder, NULL);
 
-    g_object_unref(builder);
+    g_object_unref(G_OBJECT(builder));
 
-    gtk_widget_show_all(window);
+    gtk_widget_show(window);
+
+    return 0;
 }
 
-void on_Main_window_destroy()
+gboolean on_Main_window_delete(GtkWidget *widget, gpointer data)
+{
+    g_print("Quitting app...\n");
+    return TRUE;
+}
+
+void on_Main_window_destroy(GtkWidget *widget, gpointer data)
 {
     gtk_main_quit();
+    g_print("App closed\n");
 }
 
-void on_choose_clicked()
+void on_imageChooser_set_file(GtkFileChooserButton *button)
 {
-    return;
+    filename = gtk_file_chooser_get_filename(GTK_FILECHOOSER(button));
+    gtk_image_set_from_file(image, filename);
+}
+
+void on_imageAnalyse_clicked(GtkWidget *widget, gpointer data)
+{
+    g_print(filename);
+    gtk_text_buffer_set_text(buffer, filename, -1);
 }
