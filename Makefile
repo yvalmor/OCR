@@ -1,6 +1,7 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -std=c99
+CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
+LDFLAGS=-ISDL2 -ISDL2_image
 
 SRC_DIR=src
 OBJ_DIR=obj
@@ -16,7 +17,7 @@ all: $(EXEC)
 
 $(EXEC): $(OBJ)
 	@echo "Beginning compilation..."
-	@$(CC) -o $@ $^ $(LIBFLAGS)
+	@$(CC) -o $@ $^ $(LIBFLAGS) $(LDFLAGS)
 	@echo "Done!"
 
 $(OBJ_DIR)/main.o: $(HDR)
@@ -33,3 +34,4 @@ clean:
 	@echo "Removing executable"
 	@rm -f $(EXEC)
 	@echo "Done!"
+  

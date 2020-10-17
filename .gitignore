@@ -52,6 +52,6 @@ Mkfile.old
 dkms.conf
 .idea/
 
-
+# CLion
 CMakeLists.txt
 cmake-build-debug-mingw/
