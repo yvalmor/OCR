@@ -80,6 +80,9 @@ void on_imageChooser_file_set(GtkFileChooserButton *button)
 void on_imageAnalyse_clicked(
         __attribute__ ((unused)) GtkWidget *widget, __attribute__ ((unused)) gpointer data)
 {
+    if (filename == NULL)
+        return;
+
     gtk_text_buffer_set_text(buffer, filename, -1);
 
     /*
