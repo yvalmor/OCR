@@ -33,3 +33,4 @@ clean:
 	@echo "Removing executable"
 	@rm -f $(EXEC)
 	@echo "Done!"
+  
