@@ -1,34 +1,26 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic
+CFLAGS=-Wall -Wextra -Werror -std=c99
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
-LDFLAGS=-ISDL2 -ISDL2_image
+LDFLAGS=-ISDL2 -ISLD2_image
 
-HDR=$(wildcard hdr/*.h)
-OBJ=obj
-SRC=src
+EXEC=bin/ocr
 
-EXEC=bin/ocr.exe
+SRC_DIR=src
+OBJ_DIR=obj
+
+FILES=main
+
+OBJS=$(patsubst %,$(OBJ_DIR)/%,$(FILES).o)
 
 all: $(EXEC)
 
-$(EXEC): $(OBJ) $(HDR)
-	@echo "Beginning compilation..."
-	@$(CC) $(LIBFLAGS) $(LDFLAGS) -o $@ $^
-	@echo "Done!"
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) -c -o $@ $<
 
-$(OBJ)/%.o: $(SRC)/%.c
-	@echo "Generation object files"
-	@$(CC) $(CFLAGS) -c -o $@ $<
-
-.PHONY: clean
+$(EXEC): $(OBJS)
+	$(CC) $(LIBFLAGS) -g -o $@ $<
 
 clean:
-	@echo "Cleaning in process..."
-	@echo "Removing object files..."
-	@rm -rf $(OBJ)
-	@echo "Object files removed!"
-	@echo "Removing executable..."
-	@rm -f $(EXEC)
-	@echo "Executable removed!"
-	@echo "Cleaning finished!"
-  
+	rm -f $(OBJS) $(EXEC)
+
+.PHONY: clean
