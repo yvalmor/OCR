@@ -15,12 +15,12 @@ OBJS=$(patsubst %,$(OBJ_DIR)/%,$(FILES).o)
 all: $(EXEC)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) -c -o $@ $<
 
 $(EXEC): $(OBJS)
-	$(CC) $(LIBFLAGS) -g -o $@ $<
+	@$(CC) $(LIBFLAGS) -g -o $@ $<
 
 clean:
-	rm -f $(OBJS) $(EXEC)
+	@rm -f $(OBJS) $(EXEC)
 
 .PHONY: clean
