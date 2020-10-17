@@ -30,5 +30,5 @@ void on_Main_window_destroy()
 
 void on_choose_clicked()
 {
-    printf("bla");
+    return;
 }
