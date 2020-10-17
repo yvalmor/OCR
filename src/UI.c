@@ -60,7 +60,8 @@ gboolean on_Main_window_delete(GtkWidget *widget, gpointer data)
     return TRUE;
 }
 
-void on_Main_window_destroy(GtkWidget *widget, gpointer data)
+void on_Main_window_destroy(
+        __attribute__ ((unused)) GtkWidget *widget, __attribute__ ((unused)) gpointer data)
 {
     gtk_main_quit();
     g_print("App closed\n");
@@ -68,11 +69,12 @@ void on_Main_window_destroy(GtkWidget *widget, gpointer data)
 
 void on_imageChooser_set_file(GtkFileChooserButton *button)
 {
-    filename = gtk_file_chooser_get_filename(GTK_FILECHOOSER(button));
+    filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(button));
     gtk_image_set_from_file(image, filename);
 }
 
-void on_imageAnalyse_clicked(GtkWidget *widget, gpointer data)
+void on_imageAnalyse_clicked(
+        __attribute__ ((unused)) GtkWidget *widget, __attribute__ ((unused)) gpointer data)
 {
     g_print(filename);
     gtk_text_buffer_set_text(buffer, filename, -1);
