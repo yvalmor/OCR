@@ -70,7 +70,7 @@ void on_Main_window_destroy(
     g_print("App closed\n");
 }
 
-void on_imageChooser_set_file(GtkFileChooserButton *button)
+void on_imageChooser_file_set(GtkFileChooserButton *button)
 {
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(button));
     gtk_image_set_from_file(image, filename);
