@@ -1,10 +1,27 @@
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "../hdr/segmentation.h"
 
+// Prototypes
+static LINES *Get_lines(int rows, int columns, const int *pixels);
+static void Push_line(LINES *head, int upper, int lower);
+
+static CHARACTERS *Get_char(
+        int rows, int columns, const int *pixels, LINES *firstLine);
+static void Push_char(CHARACTERS *head, BOUNDS bounds);
+
+// Functions
+// Segmentation
+CHARACTERS *Segment_image(int rows, int columns, const int *pixels)
+{
+    LINES *lines = Get_lines(rows, columns, pixels);
+    CHARACTERS *characters = Get_char(rows, columns, pixels, lines);
+
+    return characters;
+}
+
 // Line segmentation
-LINES *Get_lines(int rows, int columns, const int *pixels)
+static LINES *Get_lines(int rows, int columns, const int *pixels)
 {
     int histogram[rows];
 
@@ -46,7 +63,7 @@ LINES *Get_lines(int rows, int columns, const int *pixels)
     return first;
 }
 
-void Push_line(LINES *head, int upper, int lower)
+static void Push_line(LINES *head, int upper, int lower)
 {
     if (head -> upper == 0)
     {
@@ -67,7 +84,7 @@ void Push_line(LINES *head, int upper, int lower)
 
 
 // Character segmentation
-CHARACTERS *Get_char(
+static CHARACTERS *Get_char(
         int rows, int columns, const int *pixels, LINES *firstLine)
 {
     LINES *currentLine = firstLine;
@@ -122,7 +139,7 @@ CHARACTERS *Get_char(
     return first;
 }
 
-void Push_char(CHARACTERS *head, BOUNDS bounds)
+static void Push_char(CHARACTERS *head, BOUNDS bounds)
 {
     if (head -> bounds.upper == 0)
     {

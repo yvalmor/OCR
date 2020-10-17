@@ -3,7 +3,6 @@
 #include <gtk/gtk.h>
 
 #include "../hdr/segmentation.h"
-
 #include "../hdr/UI.h"
 
 int main(int argc, char **argv)
@@ -39,10 +38,9 @@ int main(int argc, char **argv)
         for (int j = 0; j < columns; ++j)
             pixels[i][j] = placeholder[i][j];
 
-    LINES *lines = Get_lines(rows, columns, *pixels);
-    CHARACTERS *characters = Get_char(rows, columns, *pixels, lines);
+    CHARACTERS *firstChar = Segment_image(rows, columns, *pixels, lines);
 
-    CHARACTERS *current = characters;
+    CHARACTERS *current = firstChar;
 
     int upper;
     int lower;

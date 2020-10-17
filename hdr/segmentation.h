@@ -24,11 +24,6 @@ typedef struct tagCHARACTERS
 } CHARACTERS;
 
 // Prototypes
-LINES *Get_lines(int rows, int columns, const int *pixels);
-void Push_line(LINES *head, int upper, int lower);
-
-CHARACTERS *Get_char(
-        int rows, int columns, const int *pixels, LINES *firstLine);
-void Push_char(CHARACTERS *head, BOUNDS bounds);
+CHARACTERS *Segment_image(int rows, int columns, const int *pixels);
 
 #endif //OCR_HISTOGRAM_H
