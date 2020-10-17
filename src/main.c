@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <gtk/gtk.h>
 
 #include "../hdr/segmentation.h"
 
-int main()
+#include "../hdr/UI.h"
+
+int main(int argc, char **argv)
 {
     const int rows = 20;
     const int columns = 20;
@@ -68,4 +71,14 @@ int main()
 
         current = current -> next;
     }
+
+    // GTK+ initialisation
+    gtk_init(&argc, &argv);
+
+    setup();
+
+    // Main loop
+    gtk_main();
+
+    return EXIT_SUCCESS;
 }
