@@ -1,9 +1,10 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-gboolean on_Main_window_destroy(GtkWidget *widget, gpointer data);
-void on_Main_window_delete(GtkWidget * widget, gpointer data);
+gboolean on_Main_window_delete(GtkWidget * widget, gpointer data);
+void on_Main_window_destroy(GtkWidget *widget, gpointer data);
 void on_imageChooser_set_file(GtkFileChooserButton *button);
+void on_imageAnalyse_clicked(GtkWidget *widget, gpointer data);
 
 char *filename;
 
