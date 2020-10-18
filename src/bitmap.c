@@ -90,12 +90,16 @@ IMAGE *create_Image(char *file_name)
         fprintf(stderr, "Couldn't load %s: %s\n", file_name, SDL_GetError());
         return NULL;
     }
+    atexit(SDL_Quit);
+
     int row = surface->w;
     int columns = surface->h;
 
     PIXEL *pixels = create_Matrix(surface, row, column);
 
     IMAGE image = {row, column, *pixels};
+
+    SDL_
 
     return *image;
 }
