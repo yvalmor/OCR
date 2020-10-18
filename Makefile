@@ -1,27 +1,24 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -std=c99
+CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
 LDFLAGS=-ISDL2 -ISLD2_image
 
 EXEC=bin/ocr
 
-HDR=$(wildcard hdr/*.h)
 SRC_DIR=src
 OBJ_DIR=obj
+HDR_DIR=hdr
 
-FILES=main
-
-OBJS=$(patsubst %,$(OBJ_DIR)/%,$(FILES).o)
+SRC=$(wildcard $(SRC_DIR)/*.c)
+OBJ=$(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+HDR=$(wildcard $(HDR_DIR)/*.h)
 
 all: $(EXEC)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) -c -o $@ $<
-
-$(EXEC): $(OBJS)
-	@$(CC) $(LIBFLAGS) -g -o $@ $< $(HDR)
+$(EXEC): $(HDR)
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $@
 
 clean:
-	@rm -f $(OBJS) $(EXEC)
+	@rm -f $(OBJ) $(EXEC)
 
 .PHONY: clean
