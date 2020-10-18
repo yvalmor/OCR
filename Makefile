@@ -16,6 +16,7 @@ HDR=$(wildcard $(HDR_DIR)/*.h)
 all: $(EXEC)
 
 $(EXEC): $(HDR)
+	@mkdir -p bin
 	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $@
 
 clean:
