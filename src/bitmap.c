@@ -45,9 +45,10 @@ PIXEL *create_Matrix(SDL_Surface *surface, int row, int column)
             pixels[i][j] = pix;
         }
     }
+    PIXEL *point_pix = pixels[0];
 
     SDL_UnlockSurface(surface);
-    return *pixels;
+    return point_pix;
 }
 
 IMAGE *create_Image(char *file_name)
@@ -70,7 +71,7 @@ IMAGE *create_Image(char *file_name)
     int row = surface->w;
     int column = surface->h;
 
-    PIXEL *pixels = malloc(sizeof(PIXEL) * row * column);
+    PIXEL *pixels;
     pixels = create_Matrix(surface, row, column);
 
     IMAGE image = {row, column, pixels};
