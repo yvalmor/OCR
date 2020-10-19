@@ -73,12 +73,13 @@ IMAGE *create_Image(char *file_name)
     PIXEL *pixels = malloc(sizeof(PIXEL) * row * column);
     pixels = create_Matrix(surface, row, column);
 
-    IMAGE *image = {row, column, pixels};
+    IMAGE image = {row, column, pixels};
+    IMAGE *im = &image;
 
     SDL_FreeSurface(surface);
     SDL_Quit();
 
-    return image;
+    return im;
 }
 
 int save_Text(char *file_name, char *text)
