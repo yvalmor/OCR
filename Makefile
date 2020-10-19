@@ -1,35 +1,25 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -std=c99 -export-dynamic -rdynamic
+CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
+LDFLAGS=-ISDL2 -ISLD2_image
+
+EXEC=bin/ocr
 
 SRC_DIR=src
 OBJ_DIR=obj
 HDR_DIR=hdr
 
 SRC=$(wildcard $(SRC_DIR)/*.c)
-OBJ=$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
+OBJ=$(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 HDR=$(wildcard $(HDR_DIR)/*.h)
-
-EXEC=bin/ocr.exe
 
 all: $(EXEC)
 
-$(EXEC): $(OBJ)
-	@echo "Beginning compilation..."
-	@$(CC) -o $@ $^ $(LIBFLAGS)
-	@echo "Done!"
-
-$(OBJ_DIR)/main.o: $(HDR)
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) -o $@ -c $< $(CFLAGS) $(LIBFLAGS)
-
-.PHONY: clean
+$(EXEC): $(HDR)
+	@mkdir -p bin
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $@
 
 clean:
-	@echo "Cleaning in process..."
-	@rm -rf $(OBJ)
-	@echo "Done!"
-	@echo "Removing executable"
-	@rm -f $(EXEC)
-	@echo "Done!"
+	@rm -f $(OBJ) $(EXEC)
+
+.PHONY: clean

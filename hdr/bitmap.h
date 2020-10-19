@@ -1,6 +1,6 @@
 #ifndef BITMAP_H
 #define BITMAP_H
-#include "SDL.h"
+#include <SDL/SDL.h>
 
 typedef struct Tag_PIXEL
 {

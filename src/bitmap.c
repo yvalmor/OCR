@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "SDL.h"
-#include "bitmap.h"
+#include <SDL/SDL.h>
+#include "../hdr/bitmap.h"
 
 SDL_Surface *load(char *file_name)
 {
