@@ -15,7 +15,7 @@ SDL_Surface *load(char *file_name)
         return NULL;
     }
 
-    return *surface;
+    return surface;
 }
 
 Uint32 get_Pixel(SDL_Surface *surface, int x, int y)
@@ -26,26 +26,27 @@ Uint32 get_Pixel(SDL_Surface *surface, int x, int y)
     switch(bpp)
     {
         case 1:
-             return p;
+            return *p;
 
         case 2:
              {
                  Uint16 *result = p;
-                 return result;
+                 return *p;
              }
 
         case 3:
              {
+                 Uint32 *result = p;
                  if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-                     return p[0] << 16 | p[1] << 8 | p[2];
+                     return result[0] << 16 | result[1] << 8 | result[2];
                  else
-                     return p[0] | p[1] << 8 | p[2] << 16;
+                     return result[0] | result[1] << 8 | result[2] << 16;
              }
 
         case 4:
              {
                  Uint32 *result = p;
-                 return result;
+                 return *result;
              }
 
         default:
@@ -55,8 +56,7 @@ Uint32 get_Pixel(SDL_Surface *surface, int x, int y)
 
 PIXEL *create_Matrix(SDL_Surface *surface, int row, int column)
 {
-    PIXEL pixels[row][columns];
-    PIXEL pix = malloc(sizeof(PIXEL));
+    PIXEL pixels[row][column];
     SDL_LockSurface(surface);
 
 
@@ -65,14 +65,15 @@ PIXEL *create_Matrix(SDL_Surface *surface, int row, int column)
         for(int j = 0; j < column; j++)
         {
             Uint8 r, g, b;
-            Uint32 pixel = get_Pixel(surface, i, j)
-            SDL_GetRGB(pixel, surface->format, *r, *g, *b)
-            pixels[i][j] = {r, g, b}
+            Uint32 pixel = get_Pixel(surface, i, j);
+            SDL_GetRGB(pixel, surface->format, r, g, b);
+            PIXEL pix = { r, g, b };
+            pixels[i][j] = pix;
         }
     }
 
     SDL_UnlockSurface(surface);
-    return *pixels;
+    return pixels;
 }
 
 IMAGE *create_Image(char *file_name)
@@ -93,22 +94,23 @@ IMAGE *create_Image(char *file_name)
     atexit(SDL_Quit);
 
     int row = surface->w;
-    int columns = surface->h;
+    int column = surface->h;
 
     PIXEL *pixels = create_Matrix(surface, row, column);
 
-    IMAGE image = {row, column, *pixels};
+    IMAGE *image = {row, column, pixels};
 
-    SDL_
+    SDL_FreeSurface(surface);
+    SDL_Quit();
 
-    return *image;
+    return image;
 }
 
 int save_Text(char *file_name, char *text)
 {
-    FILE *file = fopen(file_name, "w+")
+    FILE *file = fopen(file_name, "w+");
 
-    if(fichier == NULL)
+    if(file == NULL)
     {
         printf("Impossible to open the file \"%s\"", file_name);
         return 1;

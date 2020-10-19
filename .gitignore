@@ -35,6 +35,7 @@
 *.i*86
 *.x86_64
 *.hex
+bin/*
 
 # Debug files
 *.dSYM/
@@ -50,5 +51,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# CLion
+CMakeLists.txt
+cmake-build-debug-mingw/
 .idea/
-/cmake-build-debug-mingw/

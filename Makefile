@@ -1,7 +1,7 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic
+CFLAGS=-Wall -Wextra -std=c99 -rdynamic
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
-LDFLAGS=-ISDL2 -ISLD2_image
+LDFLAGS=-I"include" -L"lib" -lSDL2 
 
 EXEC=bin/ocr
 

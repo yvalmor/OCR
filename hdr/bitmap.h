@@ -4,9 +4,9 @@
 
 typedef struct Tag_PIXEL
 {
-    uint8 r;
-    uint8 g;
-    uint8 b;
+    Uint8 r;
+    Uint8 g;
+    Uint8 b;
 }
 PIXEL;
 
