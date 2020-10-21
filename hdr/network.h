@@ -15,7 +15,7 @@ typedef struct Neuron
 	double value;
 	double activated;
 //	double *delta_weight;
-//	size_t len_delta_weight; need to see if it can be usefull for backp
+//	int len_delta_weight; need to see if it can be usefull for backp
 } Neuron;
 
 
@@ -30,7 +30,7 @@ typedef struct Layer
 
 typedef struct Network
 {
-	Layer layers; // /!\ first hidden layer, input handled before
+	Layer *layers; // /!\ first hidden layer, input handled before
 	int nbLayers;
 	char *Path;
 } Network;
@@ -47,7 +47,7 @@ const double training_data[4][2] = {
 const double expected_res[4][1] = { {0}, {1}, {1}, {0}};
 
 Neuron* rndNeuron(int len_weight);
-Neuron* initNeuron(int len_weight, double *weight, int biais);
+Neuron* initNeuron(int len_weight, double *weight, int biais, double wtedValue, double wtedA);
 double sigmoid(double x);
 double rdmDouble(double min, double max);
 
@@ -57,6 +57,7 @@ void backpropagation();
 void freeNeuron(Neuron *neuron);
 void freeLayer(Layer *layer);
 void freeNetwork(Network *network);
-void sumNeuron(Neuron *neuron);
+void sumNeuron(Neuron *neuron, Neuron *neededForA);
+void handleInput(double *input,int len_input, Network *net);
 
 #endif
