@@ -4,20 +4,17 @@
 
 int main(__attribute((unused)) int argc, __attribute((unused))char **argv)
 {
-    printf("ok1");
-    IMAGE *i = create_Image("truc.bmp");
-    printf("ok2");
-    PIXEL *pixels = i -> pixels;
-    printf("ok3");
+    IMAGE *im = create_Image("truc.bmp");
+    PIXEL *pixels = im -> pixels;
 
-    int rows = i -> rows;
-    int columns = i -> columns;
+    int rows = im -> rows;
+    int columns = im -> columns;
 
     for (int i = 0; i < rows; ++i)
     {
         for(int j = 0; j < columns; ++j)
         {
-            unsigned char r = ((pixels + i * rows) + j) -> r;
+            unsigned char r = ((pixels + i * columns) + j) -> r;
             printf("%d", r);
         }
         printf("\n");

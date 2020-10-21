@@ -8,7 +8,7 @@ SDL_Surface *load(char *file_name)
     SDL_Surface *surface;
 
     surface = SDL_LoadBMP(file_name);
-    
+
     if(surface == NULL)
     {
         fprintf(stderr, "Couldn't load %s: %s\n", file_name, SDL_GetError());
@@ -23,12 +23,11 @@ Uint32 get_Pixel(SDL_Surface *surface, int x, int y)
 {
     Uint8 *p = surface->pixels + y * surface->pitch + x * 4;
     return *(Uint32*)p;
-
 }
 
 PIXEL *create_Matrix(SDL_Surface *surface, int row, int column)
 {
-    PIXEL pixels[row][column]; 
+    PIXEL pixels[row][column];
     SDL_LockSurface(surface);
 
     for(int i = 0; i < row; i++)
@@ -37,7 +36,7 @@ PIXEL *create_Matrix(SDL_Surface *surface, int row, int column)
         {
             Uint8 r, g, b;
             Uint8 *red = &r;
-            Uint8 *green = &g; 
+            Uint8 *green = &g;
             Uint8 *blue = &b;
             Uint32 pixel = get_Pixel(surface, i, j);
             SDL_GetRGB(pixel, surface->format, red, green, blue);
