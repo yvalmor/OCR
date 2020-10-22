@@ -1,5 +1,6 @@
-#ifndef BITMAP_H
-#define BITMAP_H
+#ifndef OCR_BITMAP_H
+#define OCR_BITMAP_H
+
 #include <SDL2/SDL.h>
 
 typedef struct Tag_PIXEL
@@ -7,25 +8,20 @@ typedef struct Tag_PIXEL
     Uint8 r;
     Uint8 g;
     Uint8 b;
-}
-PIXEL;
+} PIXEL;
 
 typedef struct tagIMAGE
 {
     int rows;
     int columns;
     PIXEL *pixels;
-}
-IMAGE;
+} IMAGE;
 
-SDL_Surface *load(char *file_name);
-
+int Init_Sdl();
+SDL_Surface* load_image_surface(char *path);
+IMAGE load_image(SDL_Surface *surface);
 Uint32 get_Pixel(SDL_Surface *surface, int x, int y);
+void create_Image(SDL_Surface *surface, IMAGE image);
+void create_Matrix(SDL_Surface *surface, IMAGE image);
 
-PIXEL *create_Matrix(SDL_Surface *surface, int row, int column);
-
-IMAGE *create_Image(char *file_name);
-
-int save_Text(char *file_name, char *text);
-
-#endif
+#endif //OCR_BITMAP_H

@@ -1,22 +1,45 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <SDL2/SDL.h>
+
 #include "../hdr/bitmap.h"
 
-SDL_Surface *load(char *file_name)
+int Init_Sdl()
 {
-    SDL_Surface *surface;
-
-    surface = SDL_LoadBMP(file_name);
-
-    if(surface == NULL)
+    if((SDL_Init(SDL_INIT_VIDEO) == -1))
     {
-        fprintf(stderr, "Couldn't load %s: %s\n", file_name, SDL_GetError());
-        return NULL;
+        printf("Could not initialize SDL: %s.\n", SDL_GetError());
+        return 1;
     }
-    surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA8888, 0);
 
-    return surface;
+    atexit(SDL_Quit);
+
+    return 0;
+}
+
+SDL_Surface* load_image_surface(char *path)
+{
+    SDL_Surface *img;
+
+    img = SDL_LoadBMP(path);
+
+    if(img == NULL)
+    {
+        fprintf(stderr, "Couldn't load %s: %s\n", path, SDL_GetError());
+        exit(1);
+    }
+
+    return img;
+}
+
+IMAGE load_image(SDL_Surface *surface)
+{
+    int w = surface->w;
+    int h = surface->h;
+
+    PIXEL pixels[h][w];
+
+    IMAGE image = {};
+
+    return image;
 }
 
 Uint32 get_Pixel(SDL_Surface *surface, int x, int y)
@@ -25,77 +48,32 @@ Uint32 get_Pixel(SDL_Surface *surface, int x, int y)
     return *(Uint32*)p;
 }
 
-PIXEL *create_Matrix(SDL_Surface *surface, int row, int column)
+void create_Matrix(SDL_Surface *surface, IMAGE image)
 {
-    PIXEL pixels[row][column];
+    int row = image.rows;
+    int columns = image.columns;
+
     SDL_LockSurface(surface);
 
     for(int i = 0; i < row; i++)
     {
-        for(int j = 0; j < column; j++)
+        for(int j = 0; j < columns; j++)
         {
-            Uint8 r, g, b;
-            Uint8 *red = &r;
-            Uint8 *green = &g;
-            Uint8 *blue = &b;
-            Uint32 pixel = get_Pixel(surface, i, j);
-            SDL_GetRGB(pixel, surface->format, red, green, blue);
-            PIXEL pix = (PIXEL){r, g, b};
-            pixels[i][j] = pix;
+            Uint8 r = 0, g = 0, b = 0;
+            Uint32 pixel = get_Pixel(surface, j, i);
+            SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+            (image.pixels + i * row + j) -> r = r;
+            (image.pixels + i * row + j) -> g = g;
+            (image.pixels + i * row + j) -> b = b;
         }
     }
-    PIXEL *point_pix = pixels[0];
 
     SDL_UnlockSurface(surface);
-    return point_pix;
 }
 
-IMAGE *create_Image(char *file_name)
+void create_Image(SDL_Surface  *surface, IMAGE image)
 {
-    if((SDL_Init(SDL_INIT_VIDEO) == -1))
-    {
-        printf("Could not initialize SDL: %s.\n", SDL_GetError());
-        return NULL;
-    }
-
-    SDL_Surface *surface = load(file_name);
-
-    if(surface == NULL)
-    {
-        fprintf(stderr, "Couldn't load %s: %s\n", file_name, SDL_GetError());
-        return NULL;
-    }
-    atexit(SDL_Quit);
-
-    int row = surface->w;
-    int column = surface->h;
-
-    PIXEL *pixels;
-    pixels = create_Matrix(surface, row, column);
-
-    IMAGE image = {row, column, pixels};
-    IMAGE *im = &image;
+    create_Matrix(surface, image);
 
     SDL_FreeSurface(surface);
-    SDL_Quit();
-
-    return im;
-}
-
-int save_Text(char *file_name, char *text)
-{
-    FILE *file = fopen(file_name, "w+");
-
-    if(file == NULL)
-    {
-        printf("Impossible to open the file \"%s\"", file_name);
-        return 1;
-    }
-    else
-    {
-        fprintf(file, text);
-        fclose(file);
-    }
-
-    return 0;
 }

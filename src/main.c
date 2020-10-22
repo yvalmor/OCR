@@ -4,19 +4,26 @@
 
 int main(__attribute((unused)) int argc, __attribute((unused))char **argv)
 {
-    IMAGE *im = create_Image("truc.bmp");
-    PIXEL *pixels = im -> pixels;
+    if (Init_Sdl())
+        exit(1);
 
-    int rows = im -> rows;
-    int columns = im -> columns;
+    SDL_Surface *surface = load_image_surface("truc.bmp");
+
+    int rows = surface->h;
+    int columns = surface->w;
+
+    PIXEL pixels[rows][columns];
+
+    IMAGE image = {rows, columns, *pixels};
+
+    create_Image(surface, image);
+
+    printf("size:%dx%d\n", rows, columns);
 
     for (int i = 0; i < rows; ++i)
     {
-        for(int j = 0; j < columns; ++j)
-        {
-            unsigned char r = ((pixels + i * columns) + j) -> r;
-            printf("%d", r);
-        }
+        for (int j = 0; j < columns; ++j)
+            printf("%4d ", (image.pixels + i * rows + j)->r);
         printf("\n");
     }
 
