@@ -24,7 +24,8 @@ int setup()
     builder = gtk_builder_new();
     if (gtk_builder_add_from_file(builder, "UI/ocr.glade", &err) == 0)
     {
-        fprintf(stderr, "Error adding build from file. Error: %s\n", err -> message);
+        fprintf(stderr,
+                "Error adding build from file. Error: %s\n", err -> message);
         return 1;
     }
 
@@ -65,7 +66,8 @@ gboolean on_Main_window_delete(
 }
 
 void on_Main_window_destroy(
-        __attribute__ ((unused)) GtkWidget *widget, __attribute__ ((unused)) gpointer data)
+        __attribute__ ((unused)) GtkWidget *widget,
+        __attribute__ ((unused)) gpointer data)
 {
     gtk_main_quit();
     g_print("App closed\n");
@@ -78,7 +80,8 @@ void on_imageChooser_file_set(GtkFileChooserButton *button)
 }
 
 void on_imageAnalyse_clicked(
-        __attribute__ ((unused)) GtkWidget *widget, __attribute__ ((unused)) gpointer data)
+        __attribute__ ((unused)) GtkWidget *widget,
+        __attribute__ ((unused)) gpointer data)
 {
     if (filename == NULL)
         return;
