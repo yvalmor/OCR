@@ -71,7 +71,7 @@ Layer *create_layer(int size, Layer *prev, Layer *next)
 	Neuron *neuron = malloc(sizeof(Neuron));
 
 	if (neuron == NULL || layer == NULL)	
-		errx(1, "*neuron or *mayer is NULL at create_layer.\n");
+		errx(1, "*neuron or *layer is NULL at create_layer.\n");
 
 	
 	//if to check if not in input cuz input does not has weights etc
@@ -79,8 +79,7 @@ Layer *create_layer(int size, Layer *prev, Layer *next)
 	{
 		//nber of weights in neuron == nber of neurons in previous layer
 		for (int i = 0; i < size; i++)
-			(neuron + i) = (rndNeuron((*prev).len_neurons)); 
-			//*(neuron + i) = rndNeuron((*prev).len_neurons); 
+			(neuron + i) = rndNeuron((*prev).len_neurons);
 	}
 
 	(*layer).neurons = neuron;
@@ -94,15 +93,16 @@ Layer *create_layer(int size, Layer *prev, Layer *next)
 //the weights == coming to neurons (not leaving it)
 void propagation(Layer *current)
 {
-	while ((*current).NextLayer != NULL)
+	Layer *temp = current;
+
+	while (temp->NextLayer != NULL)
 	{
-		//*(current) = *(current.NextLayer);
-		printf("current layer's len : %d and adress is : %p", (*current).len_neurons, &current);
+		printf("current layer's len : %d and adress is : %p", (*temp).len_neurons, &temp);
 		
 		for (int i = 0; i < current->len_neurons; i++)
-			sumNeuron(current->neurons[i], current->PreviousLayer->neurons);
+			sumNeuron( &(temp->neurons[i]), current->PreviousLayer->neurons);
 
-		current = current->NextLayer;
+		temp = temp->NextLayer;
 	}
 }
 
@@ -122,10 +122,11 @@ void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 void handleInput(double *input, int len_input,  Network *net)
 {
 	Neuron *inputNeurons = malloc(sizeof(Neuron) * len_input);
+	Neuron *tmp = inputNeurons;
 	double t[1] = {1};
 
 	for (int i = 0; i < len_input; i++)
-		inputNeurons[i] = initNeuron(1 , t, 0, input[i], sigmoid(input[i]));
+		(tmp + i) = initNeuron(1 , t, 0, input[i], sigmoid(input[i]));
 
 	sumNeuron(net->layers->neurons, inputNeurons);
 }	
