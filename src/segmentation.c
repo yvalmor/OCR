@@ -10,8 +10,19 @@ static CHARACTERS *Get_char(
         int rows, int columns, const int *pixels, LINES *firstLine);
 static void Push_char(CHARACTERS *head, BOUNDS bounds);
 
+
 // Functions
-// Segmentation
+// Image segmentation
+
+/**
+ * Segments the image and returns the rectangle containing the characters
+ *
+ * @author Yvon Morice
+ * @param rows, the number of rows of pixels in the image
+ * @param columns, the number of columns of pixels in the image
+ * @param pixels, the matrix of pixels after the binarization of the image
+ * @return a linked list of the rectangle containing the characters
+ */
 CHARACTERS *Segment_image(int rows, int columns, const int *pixels)
 {
     LINES *lines = Get_lines(rows, columns, pixels);
@@ -21,6 +32,17 @@ CHARACTERS *Segment_image(int rows, int columns, const int *pixels)
 }
 
 // Line segmentation
+
+/**
+ * Segments the image into different lines
+ *
+ * @author Yvon Morice
+ * @param rows, the number of rows of pixels in the image
+ * @param columns, the number of columns of pixels in the image
+ * @param pixels, the matrix of pixels after the binarization of the image
+ * @return a linked list of the lines as rectangles
+ *         (we only save the upper and lower bounds of the rectangle)
+ */
 static LINES *Get_lines(int rows, int columns, const int *pixels)
 {
     int histogram[rows];
@@ -63,6 +85,14 @@ static LINES *Get_lines(int rows, int columns, const int *pixels)
     return first;
 }
 
+/**
+ * Pushes a new element into the linked list of lines
+ *
+ * @author Yvon Morice
+ * @param head, the first line of the list
+ * @param upper, the upper bound value of the new element
+ * @param lower, the lower bound value of the new element
+ */
 static void Push_line(LINES *head, int upper, int lower)
 {
     if (head -> upper == 0)
@@ -82,8 +112,19 @@ static void Push_line(LINES *head, int upper, int lower)
     current -> next -> next = NULL;
 }
 
-
 // Character segmentation
+
+/**
+ * Segments the image into different characters using
+ * the lines determined with Get_lines.
+ *
+ * @author Yvon Morice
+ * @param rows, the number of rows of pixels in the image
+ * @param columns, the number of columns of pixels in the image
+ * @param pixels, the matrix of pixels after the binarization of the image
+ * @param firstLine, the first element of the linked list of lines
+ * @return the first element of the linked list of characters
+ */
 static CHARACTERS *Get_char(
         int rows, int columns, const int *pixels, LINES *firstLine)
 {
@@ -93,9 +134,7 @@ static CHARACTERS *Get_char(
     first -> bounds.upper = 0;
 
     int histogram[columns];
-    int sum;
-    int mean_val;
-    int threshold;
+    int sum, mean_val, threshold;
 
     while (currentLine != NULL)
     {
@@ -111,7 +150,7 @@ static CHARACTERS *Get_char(
             mean_val += sum;
         }
 
-        threshold = mean_val/columns;
+        threshold = mean_val / columns;
 
         int left;
 
@@ -139,6 +178,13 @@ static CHARACTERS *Get_char(
     return first;
 }
 
+/**
+ * Pushes a new element into the linked list of characters
+ *
+ * @author Yvon Morice
+ * @param head, the first character of the list
+ * @param bounds, the bounds of the rectangle containing the character
+ */
 static void Push_char(CHARACTERS *head, BOUNDS bounds)
 {
     if (head -> bounds.upper == 0)
