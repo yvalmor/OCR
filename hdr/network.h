@@ -32,8 +32,6 @@ typedef struct Network
 {
 	Layer *layers; // /!\ first hidden layer, input handled before
 	int nbLayers;
-	char *Path;
-	int sizePath;
 } Network;
 
 
@@ -52,7 +50,7 @@ void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, doubl
 double sigmoid(double x);
 double rdmDouble(double min, double max);
 
-void create_network(Network *net, int n, char *path, int sizePath);
+Network *create_network(int len, Layer *firstLayerLinked, int nbNeuronsPerHLayer); //add 1param for output nbNeuron
 void create_layer(Layer *layer, int size, Layer *prev, Layer *Next, int poss_lenW);
 void propagation(Network *net);
 void propagation_layer(Layer *layer);

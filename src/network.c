@@ -72,21 +72,45 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
 	(*layer).NextLayer = next;
 }
 
+Network *create_network(int len, Layer *layer, int nbNeurons)
+{
+	Network *net = malloc(sizeof(Network));
+
+	Layer *firstHidden = malloc(sizeof(Layer));
+	create_layer(firstHidden, nbNeurons, layer, NULL, 0);
+
+	for (int i = 0; i < len - 1; i++)
+	{
+		Layer *new = malloc(sizeof(Layer));
+		//rotate new with firstHidden and so on to link each layers
+
+	}
+
+	Layer *output = malloc(sizeof(Layer));
+
+	//output to link, link layer to next and in for link +=also prev
+
+	(*net).layers = layer;
+	(*net).nbLayers = len;
+
+	return net;
+}
+
+
+void feedForward(Network *net)
+{
+	propagation_layer((*net).layers);
+}
 
 //the weights == coming to neurons (not leaving it)
+//need to use it on first hidden layer (not input one)
 void propagation_layer(Layer *current)
 {
-	Layer *temp = current;
+	for (int i = 0; i < current->len_neurons && i < current->PreviousLayer->len_neurons; i++)
+		sumNeuron((*current).neurons + i, current->PreviousLayer->neurons);
 
-	while (temp->NextLayer != NULL)
-	{
-		printf("current layer's len : %d and adress is : %p", (*temp).len_neurons, &temp);
-		
-		for (int i = 0; i < current->len_neurons; i++)
-			sumNeuron( &(temp->neurons[i]), current->PreviousLayer->neurons);
-
-		temp = temp->NextLayer;
-	}
+	if (current->NextLayer != NULL)
+		propagation_layer((*current).NextLayer);
 }
 
 
@@ -95,7 +119,7 @@ void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 	double sum = neuron->biais;
 
 	for (int i = 0; i < neuron->len_weight; i++)
-		sum += *((neuron + i)->weights) * (prevNeurons + i)->activated;
+		sum += (neuron->weights[i]) * (prevNeurons + i)->activated;
 
 	(*neuron).value = sum;
 	(*neuron).activated = sigmoid(sum);
@@ -169,22 +193,11 @@ int main()
 	//:%s/foo/bar/gc
 	srand((unsigned int) time (NULL));
 
-	Neuron *neuron = malloc(sizeof(Neuron));
-	rndNeuron(neuron, 10);
-
-	printNeuron(neuron);
-	
 	Layer *input = malloc(sizeof(Layer));
-	Layer *hidden = malloc(sizeof(Layer));
-	Layer *output = malloc(sizeof(Layer));
-
 	create_layer(input, 2, NULL, NULL, 0);
-	create_layer(hidden, 4, input, output, 0);
-	create_layer(output, 2, hidden, NULL, 0);
 
-	printLayer(input);
-	printLayer(hidden);
-	printLayer(output);
-		
+	Network *net = create_network(3, input, 4);
+
+	free(net);
 	return 0;
 }
