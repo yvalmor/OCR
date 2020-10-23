@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <err.h>
-#include "../hdr/network.h"
+#include "network.h"
 
 //maths functions
 double sigmoid(double x)
@@ -17,38 +17,27 @@ double rdmDouble(double min, double max)
 
 
 //NN functions
-void freeNeuron(Neuron *neuron)
-{
-	free((*neuron).weights);
-	free(neuron);
-}
 
 //return neuron initialised randomly
-Neuron *rndNeuron(int len_weight)
+void rndNeuron(Neuron *neuron, int len_weight)
 {
-	Neuron *neuron = malloc(sizeof(Neuron));
-
 	double *weights = malloc(sizeof(double) * len_weight);
 
 	if (neuron == NULL || weights == NULL)
 		errx(1, "*neuron or *weights is NULL at rndNeuron.\n");
 
 	for (int i = 0; i < len_weight; i++)
-		*(weights + i) = rdmDouble(-2.0, 2.0);
+		*(weights + i) = rdmDouble(-1.5, 1.5);
 	
-	(*neuron).biais = rdmDouble(-2.0, 2.0);
+	(*neuron).biais = rdmDouble(-1.5, 1.5);
 	(*neuron).weights = weights;
 	(*neuron).len_weight = len_weight;
-	return neuron;
 }
 
 
 //return a neuron with the wanted initialised value
-Neuron *initNeuron(int len_weight, double *wtedWeights, int wtdBiais, double wtedValue, double wtedA)
+void initNeuron(Neuron *neuron, int len_weight, double *wtedWeights, int wtdBiais, double wtedValue, double wtedA)
 {
-	
-	Neuron *neuron = malloc(sizeof(Neuron));
-
 	double *weights = malloc(sizeof(double) * len_weight);
 
 	if (len_weight != 0 && (neuron == NULL || weights == NULL))	
@@ -59,39 +48,33 @@ Neuron *initNeuron(int len_weight, double *wtedWeights, int wtdBiais, double wte
 	(*neuron).len_weight = len_weight;
 	(*neuron).value = wtedValue;
 	(*neuron).activated = wtedA;
-	return neuron;
 }
 
 
 //return a layer of size neurons linked to previous and next layer
-Layer *create_layer(int size, Layer *prev, Layer *next)
+void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_lenW)
 {
-	Layer *layer = malloc(sizeof(Layer));
-	
-	Neuron *neuron = malloc(sizeof(Neuron));
+	Neuron *neuron = malloc(sizeof(Neuron) * size);
 
 	if (neuron == NULL || layer == NULL)	
 		errx(1, "*neuron or *layer is NULL at create_layer.\n");
 
-	
+	int l = (prev == NULL) ? poss_lenW : prev->len_neurons;	
 	//if to check if not in input cuz input does not has weights etc
-	if (prev != NULL)
-	{
-		//nber of weights in neuron == nber of neurons in previous layer
-		for (int i = 0; i < size; i++)
-			(neuron + i) = rndNeuron((*prev).len_neurons);
-	}
+
+	//nber of weights in neuron == nber of neurons in previous layer
+	for (int i = 0; i < size; i++)
+		rndNeuron(neuron + i, l);
 
 	(*layer).neurons = neuron;
 	(*layer).len_neurons = size;
 	(*layer).PreviousLayer = prev;
 	(*layer).NextLayer = next;
-	return layer;
 }
 
 
 //the weights == coming to neurons (not leaving it)
-void propagation(Layer *current)
+void propagation_layer(Layer *current)
 {
 	Layer *temp = current;
 
@@ -118,6 +101,9 @@ void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 	(*neuron).activated = sigmoid(sum);
 }
 
+
+//useless fction cus i just need to call propagation with first hidden layer
+//instead of handling input alone etc, so yea will remove it.
 //*input needed to integrate in *net (in layers0 which is first hidden layer)
 void handleInput(double *input, int len_input,  Network *net)
 {
@@ -126,10 +112,56 @@ void handleInput(double *input, int len_input,  Network *net)
 	double t[1] = {1};
 
 	for (int i = 0; i < len_input; i++)
-		(tmp + i) = initNeuron(1 , t, 0, input[i], sigmoid(input[i]));
+		initNeuron(&tmp[i], 1 , t, 0, input[i], sigmoid(input[i]));
 
 	sumNeuron(net->layers->neurons, inputNeurons);
 }	
+
+
+//for backpropagation now
+// cost function
+double sqr(double a, double b)
+{
+	return a * b;
+}
+
+double cost(double expected, double output)
+{
+	return sqr(output - expected, output - expected);
+}
+
+double totalCostO(Layer *output, double *expected)
+{
+	double total = 0;
+	for (int i = 0; i < output->len_neurons; i++)
+		total += cost(expected[i], output->neurons[i].activated);
+
+	return total;
+}
+
+
+void printNeuron(Neuron *neuron)
+{
+	printf("biais: %d\n", neuron->biais);
+	printf("value: %f\n", neuron->value);
+	printf("activated: %f\n", neuron->activated);
+	printf("weights: \n");
+
+	for (int i = 0; i < neuron->len_weight; i++)
+		printf("| %f\n", neuron->weights[i]);
+
+	printf("\n");
+}
+
+void printLayer(Layer *layer)
+{
+	printf("\nbegining print of neuron at: %p\n", &layer);
+
+	for (int i = 0; i < layer->len_neurons; i++)
+		printNeuron((*layer).neurons + i);
+
+	printf("=================================\n");
+}
 
 //need to create a main.c lazy :c
 int main()
@@ -137,7 +169,22 @@ int main()
 	//:%s/foo/bar/gc
 	srand((unsigned int) time (NULL));
 
+	Neuron *neuron = malloc(sizeof(Neuron));
+	rndNeuron(neuron, 10);
+
+	printNeuron(neuron);
+	
+	Layer *input = malloc(sizeof(Layer));
+	Layer *hidden = malloc(sizeof(Layer));
+	Layer *output = malloc(sizeof(Layer));
+
+	create_layer(input, 2, NULL, NULL, 0);
+	create_layer(hidden, 4, input, output, 0);
+	create_layer(output, 2, hidden, NULL, 0);
+
+	printLayer(input);
+	printLayer(hidden);
+	printLayer(output);
+		
 	return 0;
 }
-
-

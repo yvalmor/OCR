@@ -33,6 +33,7 @@ typedef struct Network
 	Layer *layers; // /!\ first hidden layer, input handled before
 	int nbLayers;
 	char *Path;
+	int sizePath;
 } Network;
 
 
@@ -46,18 +47,24 @@ const double training_data[4][2] = {
 
 const double expected_res[4][1] = { {0}, {1}, {1}, {0}};
 
-Neuron* rndNeuron(int len_weight);
-Neuron* initNeuron(int len_weight, double *weight, int biais, double wtedValue, double wtedA);
+void rndNeuron(Neuron *neuron, int len_weight);
+void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, double wtedValue, double wtedA);
 double sigmoid(double x);
 double rdmDouble(double min, double max);
 
-Layer* create_layer(int size, Layer *prev, Layer *Next);
-void propagation(Layer *current);
+void create_network(Network *net, int n, char *path, int sizePath);
+void create_layer(Layer *layer, int size, Layer *prev, Layer *Next, int poss_lenW);
+void propagation(Network *net);
+void propagation_layer(Layer *layer);
+void propagate_layer(Layer *layer);
+
 void backpropagation();
-void freeNeuron(Neuron *neuron);
-void freeLayer(Layer *layer);
-void freeNetwork(Network *network);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
 void handleInput(double *input,int len_input, Network *net);
+
+double sqr(double a, double b);
+double cost(double expctd, double output);
+double totalCostO(Layer *layer, double *expected);
+
 
 #endif
