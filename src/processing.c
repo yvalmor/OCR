@@ -41,7 +41,7 @@ void toBlackAndWhite(IMAGE image, int intensity[image.rows][image.columns])
     }
 }
 
-void toMatrix(char *text, int rows, int columns, int *matrix)
+void to_matrix_bw(char *text, int rows, int columns, int *matrix)
 {
     int index = 0;
 
