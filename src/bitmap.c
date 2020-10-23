@@ -3,6 +3,7 @@
 
 #include "../hdr/bitmap.h"
 #include "../hdr/segmentation.h"
+#include "../hdr/text.h"
 
 int Init_Sdl()
 {
@@ -94,7 +95,9 @@ void loadImage(char *path)
 
     get_matrix_text(image, text);
 
-    set_text(text);
+    save_Text("generated.txt", text);
+    set_text(path);
+    //set_text(text);
 }
 
 Uint8* pixel_ref(SDL_Surface *surf, unsigned x, unsigned y)

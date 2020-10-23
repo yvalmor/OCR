@@ -20,6 +20,6 @@ $(EXEC): $(HDR)
 	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $@
 
 clean:
-	@rm -f $(OBJ) $(EXEC)
+	@rm -f $(OBJ) $(EXEC) $(wildcard bin/*)
 
 .PHONY: clean
