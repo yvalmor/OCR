@@ -25,5 +25,6 @@ typedef struct tagCHARACTERS
 
 // Prototypes
 CHARACTERS *Segment_image(int rows, int columns, const int *pixels);
+void set_text(char *text);
 
 #endif //OCR_HISTOGRAM_H
