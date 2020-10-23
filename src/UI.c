@@ -2,6 +2,7 @@
 #include <gtk/gtk.h>
 
 #include "../hdr/segmentation.h"
+#include "../hdr/bitmap.h"
 
 gboolean on_Main_window_delete(GtkWidget * widget, gpointer data);
 void on_Main_window_destroy(GtkWidget *widget, gpointer data);
@@ -22,7 +23,7 @@ int setup()
     GError *err = NULL;
 
     builder = gtk_builder_new();
-    if (gtk_builder_add_from_file(builder, "UI/ocr.glade", &err) == 0)
+    if (gtk_builder_add_from_file(builder, "../UI/ocr.glade", &err) == 0)
     {
         fprintf(stderr,
                 "Error adding build from file. Error: %s\n", err -> message);
@@ -86,10 +87,10 @@ void on_imageAnalyse_clicked(
     if (filename == NULL)
         return;
 
-    gtk_text_buffer_set_text(buffer, filename, -1);
+    loadImage(filename);
+}
 
-    /*
-     * IMAGE image = Load_image(filename);
-     * if NULL
-     * CHARACTERS characters = Segment_image(image.rows, image.columns, image.pixels);*/
+void set_text(char *text)
+{
+    gtk_text_buffer_set_text(buffer, text, -1);
 }
