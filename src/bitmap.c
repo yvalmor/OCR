@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 
 #include "../hdr/bitmap.h"
-#include "../hdr/segmentation.h"
+#include "../hdr/UI.h"
 #include "../hdr/text.h"
 #include "../hdr/processing.h"
 

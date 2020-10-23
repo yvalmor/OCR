@@ -2,6 +2,10 @@
 #define OCR_HISTOGRAM_H
 
 // Structures
+
+/**
+ * Used to store the bounds of the rectangle containing a character
+ */
 typedef struct tagBOUNDS
 {
     int upper;
@@ -25,6 +29,5 @@ typedef struct tagCHARACTERS
 
 // Prototypes
 CHARACTERS *Segment_image(int rows, int columns, const int *pixels);
-void set_text(char *text);
 
 #endif //OCR_HISTOGRAM_H
