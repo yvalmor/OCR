@@ -4,6 +4,7 @@
 #include "../hdr/bitmap.h"
 #include "../hdr/segmentation.h"
 #include "../hdr/text.h"
+#include "../hdr/processing.h"
 
 int Init_Sdl()
 {
@@ -90,12 +91,24 @@ void loadImage(char *path)
 
     create_Image(surface, image);
 
-    const int size = ((4 * columns + 1) * rows + 2) * 3 - 1;
-    char text[size];
+    const int sizeColors = ((4 * columns + 1) * rows + 2) * 3 - 1;
+    char textColors[sizeColors];
 
-    get_matrix_text(image, text);
+    get_matrix_text(image, textColors);
+    save_Text("colors.txt", textColors);
 
-    save_Text("generated.txt", text);
+    int intensity[rows][columns];
+
+    toGrayscale(image, intensity);
+    toBlackAndWhite(image, intensity);
+
+    const int sizeBW = (2 * columns + 1) * rows + 1;
+    char textBW[sizeBW];
+
+    toMatrix(textBW, rows, columns, *intensity);
+
+    save_Text("bw.txt", textBW);
+
     set_text(path);
     //set_text(text);
 }
