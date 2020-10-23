@@ -2,12 +2,19 @@
 
 #include "../hdr/bitmap.h"
 
+void loadImage(char *path);
+
 int main(__attribute((unused)) int argc, __attribute((unused))char **argv)
 {
     if (Init_Sdl())
         exit(1);
 
-    SDL_Surface *surface = load_image_surface("truc.bmp");
+    return 0;
+}
+
+void loadImage(char *path)
+{
+    SDL_Surface *surface = load_image_surface(path);
 
     int rows = surface->h;
     int columns = surface->w;
@@ -26,6 +33,4 @@ int main(__attribute((unused)) int argc, __attribute((unused))char **argv)
             printf("%4d ", (image.pixels + i * rows + j)->r);
         printf("\n");
     }
-
-    return 0;
 }

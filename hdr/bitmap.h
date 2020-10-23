@@ -19,9 +19,9 @@ typedef struct tagIMAGE
 
 int Init_Sdl();
 SDL_Surface* load_image_surface(char *path);
-IMAGE load_image(SDL_Surface *surface);
-Uint32 get_Pixel(SDL_Surface *surface, int x, int y);
 void create_Image(SDL_Surface *surface, IMAGE image);
+Uint8* pixel_ref(SDL_Surface *surf, unsigned x, unsigned y);
+Uint32 get_pixel(SDL_Surface *surface, unsigned x, unsigned y);
 void create_Matrix(SDL_Surface *surface, IMAGE image);
 
 #endif //OCR_BITMAP_H
