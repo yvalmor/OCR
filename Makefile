@@ -19,7 +19,7 @@ $(EXEC): $(HDR)
 	@mkdir -p bin
 	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $@
 
+.PHONY: clean
+
 clean:
 	@rm -f $(OBJ) $(EXEC) $(wildcard bin/*)
-
-.PHONY: clean
