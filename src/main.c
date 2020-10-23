@@ -1,4 +1,7 @@
-#include <stdio.h>
+#include <stdlib.h>
+#include <gtk/gtk.h>
+
+#include "../hdr/UI.h"
 
 #include "../hdr/bitmap.h"
 
@@ -7,9 +10,18 @@ void loadImage(char *path);
 int main(__attribute((unused)) int argc, __attribute((unused))char **argv)
 {
     if (Init_Sdl())
-        exit(1);
+        return EXIT_FAILURE;
+  
+    // GTK+ initialisation
+    gtk_init(&argc, &argv);
 
-    return 0;
+    if (setup() == 1)
+        return EXIT_FAILURE;
+
+    // Main loop
+    gtk_main();
+
+    return EXIT_SUCCESS;
 }
 
 void loadImage(char *path)
