@@ -53,8 +53,8 @@ SDL_Surface* load_image_surface(char *path)
  * Gathers a colored image's pixel data in a string
  *
  * @author Yvon Morice
- * @param image the image we want to get the data from
- * @param text the string that will contain the pixel data
+ * @param image, contains the pixel matrix which we want to extract data from
+ * @param text, the string that contains the extracted data
  */
 
 static void get_matrix_text(IMAGE image, char *text)
@@ -145,7 +145,6 @@ void loadImage(char *path)
     save_Text("bw.txt", textBW);
 
     set_text(path);
-    //set_text(text);
 }
 
 /**
