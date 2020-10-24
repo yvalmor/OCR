@@ -28,7 +28,7 @@ void rndNeuron(Neuron *neuron, int len_weight)
 
     for (int i = 0; i < len_weight; i++)
         *(weights + i) = rdmDouble(-1.5, 1.5);
-
+    
     (*neuron).biais = rdmDouble(-1.5, 1.5);
     (*neuron).weights = weights;
     (*neuron).len_weight = len_weight;
@@ -40,7 +40,7 @@ void initNeuron(Neuron *neuron, int len_weight, double *wtedWeights, int wtdBiai
 {
     double *weights = malloc(sizeof(double) * len_weight);
 
-    if (len_weight != 0 && (neuron == NULL || weights == NULL))	
+    if (len_weight != 0 && (neuron == NULL || weights == NULL))    
         errx(1, "*neuron or *weights is NULL at initNeuron.\n");
 
     (*neuron).biais = wtdBiais;
@@ -56,10 +56,10 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
 {
     Neuron *neuron = malloc(sizeof(Neuron) * size);
 
-    if (neuron == NULL || layer == NULL)	
+    if (neuron == NULL || layer == NULL)    
         errx(1, "*neuron or *layer is NULL at create_layer.\n");
 
-    int l = (prev == NULL) ? poss_lenW : prev->len_neurons;	
+    int l = (prev == NULL) ? poss_lenW : prev->len_neurons;    
     //if to check if not in input cuz input does not has weights etc
 
     //nber of weights in neuron == nber of neurons in previous layer
@@ -77,12 +77,16 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
 Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneurons)
 {
     Network *net = malloc(sizeof(Network));
-    Layer *next = layer;
-    Layer *prev = layer->PreviousLayer;
 
+    Layer *next = layer->NextLayer;
+    Layer *prev = layer;
+    
+    Layer *temp;
 
     for (int i = 0; i < len - 1; i++)
     {
+        temp = malloc(sizeof(Layer));
+
 
     }
 
@@ -116,7 +120,7 @@ void propagation_layer(Layer *current)
         for (int i = 0; i < tmp->len_neurons; i++)
             sumNeuron((*tmp).neurons + i, (*tmp).PreviousLayer->neurons + i);
 
-    tmp = tmp->NextLayer;
+        tmp = tmp->NextLayer;
     }
 }
 
@@ -217,14 +221,14 @@ int main()
 
 
     Network *net = create_network(3, input, 4, 2);
-//  printf("first layer address: %p\n", &input);
-//  printf("net first layer: %p\n", &(net->layers));
+//    printf("first layer address: %p\n", &input);
+//    printf("net first layer: %p\n", &(net->layers));
 
     feedForward(net);
 
-//  free(net);
+//    free(net);
     free(input);
     free(hidden);
     free(output);
     return 0;
-}
+}        

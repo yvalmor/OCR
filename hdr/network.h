@@ -8,39 +8,40 @@
 
 typedef struct Neuron
 {
-	double *weights; //those arriving
-	int len_weight;
-	int biais;
+    double *weights; //those arriving
+    int len_weight;
+    int biais;
 
-	double value;
-	double activated;
-//	double *delta_weight;
-//	int len_delta_weight; need to see if it can be usefull for backp
+    double value;
+    double activated;
+//    double *delta_weight;
+//    int len_delta_weight; need to see if it can be usefull for backp
 } Neuron;
 
 
 typedef struct Layer 
 {
-	Neuron *neurons;	 	//list of neurons
-	int len_neurons; 		 //size for the list
-	struct Layer *PreviousLayer; 	 //pointer to the previous layer
-	struct Layer *NextLayer;	 //pointer to the next layer
+    Neuron *neurons;         //list of neurons
+    int len_neurons;          //size for the list
+    struct Layer *PreviousLayer;      //pointer to the previous layer
+    struct Layer *NextLayer;     //pointer to the next layer
 } Layer;
 
 
 typedef struct Network
 {
-	Layer *layers; // /!\ first hidden layer, input handled before
-	int nbLayers;
+    Layer *layers; // /!\ first hidden layer, input handled before
+    int nbLayers;
 } Network;
 
 
 
-const double training_data[4][2] = {
-		{0, 0},
-		{0, 1},
-		{1, 0},
-		{1, 1}
+const double training_data[4][2] = 
+{
+    {0, 0},
+    {0, 1},
+    {1, 0},
+    {1, 1}
 };
 
 const double expected_res[4][1] = { {0}, {1}, {1}, {0}};
