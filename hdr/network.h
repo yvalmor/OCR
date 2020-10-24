@@ -54,7 +54,6 @@ void link2layers(Layer *head, Layer *NewHead, int sizeNewHead);
 void create_layer(Layer *layer, int size, Layer *prev, Layer *Next, int poss_lenW);
 void propagation(Network *net);
 void propagation_layer(Layer *layer);
-void propagate_layer(Layer *layer);
 Network *create_network(int nbLayers, Layer *input, int neuronsPerLayer, int outputNbneurons);
 
 void backpropagation();

@@ -72,21 +72,18 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
 	(*layer).NextLayer = next;
 }
 
+
+
 Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneurons)
 {
 	Network *net = malloc(sizeof(Network));
-	Layer *temp = layer;
+	Layer *next = layer;
+	Layer *prev = layer->PreviousLayer;
 
-	printf("\n > temp: %p\n",&temp);
 
 	for (int i = 0; i < len - 1; i++)
 	{
-
-		printf("\n > temp: %p\n",&temp);
-		Layer *new = malloc(sizeof(Layer));
-		link2layers(temp, new, (i == len - 2) ? outputNbneurons : nbNeurons);
-		temp = new;
-
+			
 	}
 
 	//output to link, link layer to next and in for link +=also prev
@@ -112,11 +109,15 @@ void feedForward(Network *net)
 //need to use it on first hidden layer (not input one)
 void propagation_layer(Layer *current)
 {
-	/*for (int i = 0; i < current->len_neurons && i < current->PreviousLayer->len_neurons; i++)
-		sumNeuron((*current).neurons + i, current->PreviousLayer->neurons);
-*/
-	if (current->NextLayer != NULL)
-		propagation_layer((*current).NextLayer);
+	Layer *tmp = current;
+
+	while (tmp != NULL)
+	{
+		for (int i = 0; i < tmp->len_neurons; i++)
+			sumNeuron((*tmp).neurons + i, (*tmp).PreviousLayer->neurons + i);
+
+		tmp = tmp->NextLayer;
+	}
 }
 
 
@@ -166,7 +167,7 @@ void printNeuron(Neuron *neuron)
 	printf("\n");
 }
 
-void printLayer(Layer *layer)
+void printLayer(Layer *layer, int rec)
 {
 	printf("\nbegining print of neuron at: %p\n", &layer);
 
@@ -174,6 +175,20 @@ void printLayer(Layer *layer)
 		printNeuron((*layer).neurons + i);
 
 	printf("=================================\n");
+
+	if (rec)
+	{
+		if (layer->NextLayer != NULL)
+		{
+			printf("NextLayer: ");
+			printLayer(layer->NextLayer, 0);
+		}
+		if (layer->PreviousLayer != NULL)
+		{
+			printf("PreviousLayer: ");
+			printLayer(layer->PreviousLayer, 0);
+		}
+	}
 }
 
 //need to create a main.c lazy :c
@@ -190,26 +205,26 @@ int main()
 	create_layer(hidden, 4, input, output, 0);
 	create_layer(output, 2, hidden, NULL, 0);
 
-
-	Layer *tmp = input;
-	printf("0: %p | 1: %p | 2: %p\n", &input, &hidden, &output);
-	printf("n: %p | n: %p | n: %p\n", &input->NextLayer, &hidden->NextLayer, &output->NextLayer);
-	printf("p: %p | p: %p | p: %p\n", &input->PreviousLayer, &hidden->PreviousLayer, &output->PreviousLayer);
-
-	while (tmp->NextLayer != NULL)
-	{
-		printf("&tmp: %p\n", &tmp);
-		tmp = tmp->NextLayer;
-	}
+	/*Layer *tmp = input;
+	printf("0: %p | 1: %p | 2: %p\n", input, hidden, output);
+	printf("n: %p | n: %p | n: %p\n", input->NextLayer, hidden->NextLayer, output->NextLayer);
+	printf("p: %p | p: %p | p: %p\n", input->PreviousLayer, hidden->PreviousLayer, output->PreviousLayer);*/
+	printLayer(output, 0);
+	propagation_layer(hidden);
+	printf("Done.\n");
+	printLayer(output, 0);
 
 
-//	Network *net = create_network(3, input, 4, 2);
+
+	Network *net = create_network(3, input, 4, 2);
 //	printf("first layer address: %p\n", &input);
 //	printf("net first layer: %p\n", &(net->layers));
 
-//	feedForward(net);
+	feedForward(net);
 
 //	free(net);
 	free(input);
+	free(hidden);
+	free(output);
 	return 0;
 }
