@@ -106,32 +106,6 @@ Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneuron
     Layer *i = allLayers;
     i->NextLayer = i + 1;
 
-    //Layer *next = layer->NextLayer;
-    //Layer *prev = layer;
-    
-    //Layer *temp;
-
-/*
-    for (int i = 0; i < len - 1; i++)
-    {  
-        temp = malloc(sizeof(Layer));
-
-        if (i != len - 2)
-            create_layer(temp, nbNeurons, NULL, NULL, 0);        
-
-        else
-            create_layer(temp, outputNbneurons, NULL, NULL, 0);
-
-        pushLayer(layer, temp);
-
-        temp->PreviousLayer = prev;
-        temp->NextLayer = next;
-
-        next = temp->NextLayer;
-        prev = temp;
-       
-    }*/
-
     (*net).layers = allLayers;
     (*net).nbLayers = len;
 
@@ -140,7 +114,6 @@ Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneuron
 
 void feedForward(Network *net)
 {
-    printf("Starting feedForward\n");
     propagation_layer((*net).layers + 1);
 }
 
@@ -148,7 +121,6 @@ void feedForward(Network *net)
 //need to use it on first hidden layer (not input one)
 void propagation_layer(Layer *current)
 {
-    printf("Starting propagation\n");
     Layer *tmp = current;
 
     while (tmp != NULL)
@@ -165,7 +137,6 @@ void propagation_layer(Layer *current)
 
 void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 {
-    printf("Starting sumNeuron\n");
     double sum = neuron->biais;
 
     for (int i = 0; i < neuron->len_weight; i++)
