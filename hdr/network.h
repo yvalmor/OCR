@@ -30,7 +30,7 @@ typedef struct Layer
 
 typedef struct Network
 {
-    Layer *layers; // /!\ first hidden layer, input handled before
+    Layer *layers; //list of all layers
     int nbLayers;
 } Network;
 
@@ -51,7 +51,6 @@ void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, doubl
 double sigmoid(double x);
 double rdmDouble(double min, double max);
 
-void link2layers(Layer *head, Layer *NewHead, int sizeNewHead);
 void create_layer(Layer *layer, int size, Layer *prev, Layer *Next, int poss_lenW);
 void propagation(Network *net);
 void propagation_layer(Layer *layer);

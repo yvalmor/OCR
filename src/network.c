@@ -86,58 +86,69 @@ void pushLayer(Layer *head, Layer *toAdd)
     toAdd->NextLayer = NULL;
 }
 
+//len is the nber of layer to create (so not including the input)
 Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneurons)
 {
     Network *net = malloc(sizeof(Network));
+    Layer *allLayers = malloc(1 + sizeof(Layer) * len);
+
+    allLayers = layer;
+    
+    for (int i = 1; i < len; i++)
+    {
+        Layer *prev = allLayers + i - 1;
+        Layer *next = (i < len - 1) ? allLayers + i + 1 : NULL;
+        int number = (i < len - 1) ? nbNeurons : outputNbneurons;
+
+        create_layer(allLayers + i, number, prev, next, 0);
+    }
+
+    Layer *i = allLayers;
+    i->NextLayer = i + 1;
 
     //Layer *next = layer->NextLayer;
     //Layer *prev = layer;
     
-    Layer *temp;
+    //Layer *temp;
 
-    for (int i = 0; i < len - 2; i++)
-    {
+/*
+    for (int i = 0; i < len - 1; i++)
+    {  
         temp = malloc(sizeof(Layer));
-        create_layer(temp, nbNeurons, NULL, NULL, 0);        
-        
+
+        if (i != len - 2)
+            create_layer(temp, nbNeurons, NULL, NULL, 0);        
+
+        else
+            create_layer(temp, outputNbneurons, NULL, NULL, 0);
+
         pushLayer(layer, temp);
 
-        /*
         temp->PreviousLayer = prev;
         temp->NextLayer = next;
 
         next = temp->NextLayer;
         prev = temp;
-        */
-    }
+       
+    }*/
 
-    Layer *output = malloc(sizeof(Layer));
-
-    create_layer(output, outputNbneurons, temp, NULL, 0);
-
-    //output to link, link layer to next and in for link +=also prev
-
-    (*net).layers = layer;
+    (*net).layers = allLayers;
     (*net).nbLayers = len;
 
     return net;
 }
 
-void link2layers(Layer *head, Layer *newHead, int sizeNewHead)
-{
-    head->NextLayer = newHead;
-    create_layer(newHead, sizeNewHead, head, NULL, 0);
-}
-
 void feedForward(Network *net)
 {
-    propagation_layer((*net).layers);
+    printf("Starting feedForward\n");
+    propagation_layer((*net).layers + 1);
 }
 
 //the weights == coming to neurons (not leaving it)
 //need to use it on first hidden layer (not input one)
 void propagation_layer(Layer *current)
 {
+    printf("Starting propagation\n");
     Layer *tmp = current;
 
     while (tmp != NULL)
@@ -146,12 +157,15 @@ void propagation_layer(Layer *current)
             sumNeuron((*tmp).neurons + i, (*tmp).PreviousLayer->neurons + i);
 
         tmp = tmp->NextLayer;
+
     }
+    printf("\n");
 }
 
 
 void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 {
+    printf("Starting sumNeuron\n");
     double sum = neuron->biais;
 
     for (int i = 0; i < neuron->len_weight; i++)
@@ -220,6 +234,22 @@ void printLayer(Layer *layer, int rec)
     }
 }
 
+
+//fction to test creation network
+void testNET(Network *n)
+{
+    Layer *l = n->layers;
+    for (int i = 0; i < n->nbLayers; i++)
+    {
+        printf("n->layers[%d]: %p\n", i, n->layers + i);
+        printf("| layer[%d]->next: %p\n", i, l->NextLayer);
+        printf("| layer[%d]->prev: %p\n\n", i, l->PreviousLayer);
+
+        l = l->NextLayer;
+    }
+}
+
+
 //need to create a main.c lazy :c
 int main()
 {
@@ -227,21 +257,14 @@ int main()
     srand((unsigned int) time (NULL));
 
     Layer *input = malloc(sizeof(Layer));
-    //Layer *hidden = malloc(sizeof(Layer));
-    //Layer *output = malloc(sizeof(Layer));
-
     create_layer(input, 2, NULL, NULL, 0);
-    //create_layer(hidden, 4, input, output, 0);
-    //create_layer(output, 2, hidden, NULL, 0);
 
-    /*printLayer(output, 0);
-    propagation_layer(hidden);
-    printf("Done.\n");
-    printLayer(output, 0);*/
-
-
-
-    Network *net = create_network(3, input, 4, 2);
+    Neuron *a = input->neurons;
+    Neuron *b = a + 1;
+    a->activated = 0;
+    b->activated = 1;
+    
+    Network *net = create_network(3, input, 3, 2);
     feedForward(net);
 
     free(net);
