@@ -83,12 +83,20 @@ Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneuron
     
     Layer *temp;
 
-    for (int i = 0; i < len - 1; i++)
+    for (int i = 0; i < len - 2; i++)
     {
         temp = malloc(sizeof(Layer));
+        create_layer(temp, nbNeurons, prev, next, 0);        
 
+        temp->PreviousLayer = prev;
+        temp->NextLayer = next;
 
+        next = temp->NextLayer;
+        prev = temp;
     }
+
+    Layer *output = malloc(sizeof(Layer));
+    create_layer(output, outputNbneurons, prev, next, 0);
 
     //output to link, link layer to next and in for link +=also prev
 
@@ -202,33 +210,26 @@ int main()
     srand((unsigned int) time (NULL));
 
     Layer *input = malloc(sizeof(Layer));
-    Layer *hidden = malloc(sizeof(Layer));
-    Layer *output = malloc(sizeof(Layer));
+    //Layer *hidden = malloc(sizeof(Layer));
+    //Layer *output = malloc(sizeof(Layer));
 
-    create_layer(input, 2, NULL, hidden, 0);
-    create_layer(hidden, 4, input, output, 0);
-    create_layer(output, 2, hidden, NULL, 0);
+    create_layer(input, 2, NULL, NULL, 0);
+    //create_layer(hidden, 4, input, output, 0);
+    //create_layer(output, 2, hidden, NULL, 0);
 
-    /*Layer *tmp = input;
-    printf("0: %p | 1: %p | 2: %p\n", input, hidden, output);
-    printf("n: %p | n: %p | n: %p\n", input->NextLayer, hidden->NextLayer, output->NextLayer);
-    printf("p: %p | p: %p | p: %p\n", input->PreviousLayer, hidden->PreviousLayer, output->PreviousLayer);*/
-    printLayer(output, 0);
+    /*printLayer(output, 0);
     propagation_layer(hidden);
     printf("Done.\n");
-    printLayer(output, 0);
+    printLayer(output, 0);*/
 
 
 
     Network *net = create_network(3, input, 4, 2);
-//    printf("first layer address: %p\n", &input);
-//    printf("net first layer: %p\n", &(net->layers));
-
     feedForward(net);
 
-//    free(net);
+    free(net);
     free(input);
-    free(hidden);
-    free(output);
+    //free(hidden);
+    //free(output);
     return 0;
-}        
+} 
