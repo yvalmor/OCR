@@ -73,30 +73,47 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
 }
 
 
+void pushLayer(Layer *head, Layer *toAdd)
+{
+    Layer *temp = head;
+
+    while (temp->NextLayer != NULL)
+        temp = temp->NextLayer;
+
+    temp->NextLayer = toAdd;
+
+    toAdd->PreviousLayer = temp;
+    toAdd->NextLayer = NULL;
+}
 
 Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneurons)
 {
     Network *net = malloc(sizeof(Network));
 
-    Layer *next = layer->NextLayer;
-    Layer *prev = layer;
+    //Layer *next = layer->NextLayer;
+    //Layer *prev = layer;
     
     Layer *temp;
 
     for (int i = 0; i < len - 2; i++)
     {
         temp = malloc(sizeof(Layer));
-        create_layer(temp, nbNeurons, prev, next, 0);        
+        create_layer(temp, nbNeurons, NULL, NULL, 0);        
+        
+        pushLayer(layer, temp);
 
+        /*
         temp->PreviousLayer = prev;
         temp->NextLayer = next;
 
         next = temp->NextLayer;
         prev = temp;
+        */
     }
 
     Layer *output = malloc(sizeof(Layer));
-    create_layer(output, outputNbneurons, prev, next, 0);
+
+    create_layer(output, outputNbneurons, temp, NULL, 0);
 
     //output to link, link layer to next and in for link +=also prev
 
