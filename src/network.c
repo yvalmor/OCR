@@ -72,21 +72,22 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
 	(*layer).NextLayer = next;
 }
 
-Network *create_network(int len, Layer *layer, int nbNeurons)
+Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneurons)
 {
 	Network *net = malloc(sizeof(Network));
+	Layer *temp = layer;
 
-	Layer *firstHidden = malloc(sizeof(Layer));
-	create_layer(firstHidden, nbNeurons, layer, NULL, 0);
+	printf("\n > temp: %p\n",&temp);
 
 	for (int i = 0; i < len - 1; i++)
 	{
+
+		printf("\n > temp: %p\n",&temp);
 		Layer *new = malloc(sizeof(Layer));
-		//rotate new with firstHidden and so on to link each layers
+		link2layers(temp, new, (i == len - 2) ? outputNbneurons : nbNeurons);
+		temp = new;
 
 	}
-
-	Layer *output = malloc(sizeof(Layer));
 
 	//output to link, link layer to next and in for link +=also prev
 
@@ -96,6 +97,11 @@ Network *create_network(int len, Layer *layer, int nbNeurons)
 	return net;
 }
 
+void link2layers(Layer *head, Layer *newHead, int sizeNewHead)
+{
+	head->NextLayer = newHead;
+	create_layer(newHead, sizeNewHead, head, NULL, 0);
+}
 
 void feedForward(Network *net)
 {
@@ -106,9 +112,9 @@ void feedForward(Network *net)
 //need to use it on first hidden layer (not input one)
 void propagation_layer(Layer *current)
 {
-	for (int i = 0; i < current->len_neurons && i < current->PreviousLayer->len_neurons; i++)
+	/*for (int i = 0; i < current->len_neurons && i < current->PreviousLayer->len_neurons; i++)
 		sumNeuron((*current).neurons + i, current->PreviousLayer->neurons);
-
+*/
 	if (current->NextLayer != NULL)
 		propagation_layer((*current).NextLayer);
 }
@@ -124,23 +130,6 @@ void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 	(*neuron).value = sum;
 	(*neuron).activated = sigmoid(sum);
 }
-
-
-//useless fction cus i just need to call propagation with first hidden layer
-//instead of handling input alone etc, so yea will remove it.
-//*input needed to integrate in *net (in layers0 which is first hidden layer)
-void handleInput(double *input, int len_input,  Network *net)
-{
-	Neuron *inputNeurons = malloc(sizeof(Neuron) * len_input);
-	Neuron *tmp = inputNeurons;
-	double t[1] = {1};
-
-	for (int i = 0; i < len_input; i++)
-		initNeuron(&tmp[i], 1 , t, 0, input[i], sigmoid(input[i]));
-
-	sumNeuron(net->layers->neurons, inputNeurons);
-}	
-
 
 //for backpropagation now
 // cost function
@@ -194,10 +183,33 @@ int main()
 	srand((unsigned int) time (NULL));
 
 	Layer *input = malloc(sizeof(Layer));
-	create_layer(input, 2, NULL, NULL, 0);
+	Layer *hidden = malloc(sizeof(Layer));
+	Layer *output = malloc(sizeof(Layer));
 
-	Network *net = create_network(3, input, 4);
+	create_layer(input, 2, NULL, hidden, 0);
+	create_layer(hidden, 4, input, output, 0);
+	create_layer(output, 2, hidden, NULL, 0);
 
-	free(net);
+
+	Layer *tmp = input;
+	printf("0: %p | 1: %p | 2: %p\n", &input, &hidden, &output);
+	printf("n: %p | n: %p | n: %p\n", &input->NextLayer, &hidden->NextLayer, &output->NextLayer);
+	printf("p: %p | p: %p | p: %p\n", &input->PreviousLayer, &hidden->PreviousLayer, &output->PreviousLayer);
+
+	while (tmp->NextLayer != NULL)
+	{
+		printf("&tmp: %p\n", &tmp);
+		tmp = tmp->NextLayer;
+	}
+
+
+//	Network *net = create_network(3, input, 4, 2);
+//	printf("first layer address: %p\n", &input);
+//	printf("net first layer: %p\n", &(net->layers));
+
+//	feedForward(net);
+
+//	free(net);
+	free(input);
 	return 0;
 }

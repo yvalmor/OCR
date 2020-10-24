@@ -50,11 +50,12 @@ void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, doubl
 double sigmoid(double x);
 double rdmDouble(double min, double max);
 
-Network *create_network(int len, Layer *firstLayerLinked, int nbNeuronsPerHLayer); //add 1param for output nbNeuron
+void link2layers(Layer *head, Layer *NewHead, int sizeNewHead);
 void create_layer(Layer *layer, int size, Layer *prev, Layer *Next, int poss_lenW);
 void propagation(Network *net);
 void propagation_layer(Layer *layer);
 void propagate_layer(Layer *layer);
+Network *create_network(int nbLayers, Layer *input, int neuronsPerLayer, int outputNbneurons);
 
 void backpropagation();
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
