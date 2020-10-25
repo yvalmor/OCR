@@ -61,7 +61,7 @@ static LINES *Get_lines(int rows, int columns, const int *pixels)
         histogram[i] = sum;
     }
 
-    int threshold = mean_val / rows;
+    int threshold = (mean_val / rows)/2;
 
 
     LINES *first = malloc(sizeof(LINES));
@@ -155,7 +155,7 @@ static CHARACTERS *Get_char(
             mean_val += sum;
         }
 
-        threshold = mean_val / columns;
+        threshold = (mean_val / columns)/3;
 
         int left;
 
@@ -248,7 +248,7 @@ int Save_segmentation(int rows, const int *matrix, CHARACTERS *firstChar)
         {
             for (int j = left; j < right; ++j)
             {
-                fprintf(file, "%d", *(matrix + i * rows + j));
+                fprintf(file, "%2d", *(matrix + i * rows + j));
             }
             fprintf(file, "\n");
         }
