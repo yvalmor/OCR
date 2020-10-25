@@ -4,7 +4,10 @@
 #include <err.h>
 #include "network.h"
 
-//maths functions
+/**
+ * @authors Eliott Beguet
+ * @param x, value to get sigmoid on
+ */
 double sigmoid(double x)
 {
     return 1 / (1 + exp(-x));
@@ -19,6 +22,11 @@ double rdmDouble(double min, double max)
 //NN functions
 
 //return neuron initialised randomly
+/**
+ * @authors Eliott Beguet
+ * @param neuron, neuron to apply modifications
+ * @param len_weight, number of weight to create for this neuron
+ */
 void rndNeuron(Neuron *neuron, int len_weight)
 {
     double *weights = malloc(sizeof(double) * len_weight);
@@ -36,6 +44,11 @@ void rndNeuron(Neuron *neuron, int len_weight)
 
 
 //return a neuron with the wanted initialised value
+
+/**
+ * @authors Eliott Beguet
+ * @see rndNeuron, with more possibilities 
+ */
 void initNeuron(Neuron *neuron, int len_weight, double *wtedWeights, int wtdBiais, double wtedValue, double wtedA)
 {
     double *weights = malloc(sizeof(double) * len_weight);
@@ -52,6 +65,14 @@ void initNeuron(Neuron *neuron, int len_weight, double *wtedWeights, int wtdBiai
 
 
 //return a layer of size neurons linked to previous and next layer
+/**
+ * @authors Eliott Beguet
+ * @param layer, layer to apply modification
+ * @param size, number of neurons for this layer
+ * @param prev, pointer for the previous layer
+ * @param next, pointer for the next layer
+ * @param poss_lenW, useless param which will be removed soon
+ */
 void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_lenW)
 {
     Neuron *neuron = malloc(sizeof(Neuron) * size);
@@ -73,20 +94,15 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
 }
 
 
-void pushLayer(Layer *head, Layer *toAdd)
-{
-    Layer *temp = head;
-
-    while (temp->NextLayer != NULL)
-        temp = temp->NextLayer;
-
-    temp->NextLayer = toAdd;
-
-    toAdd->PreviousLayer = temp;
-    toAdd->NextLayer = NULL;
-}
-
 //len is the nber of layer to create (so not including the input)
+/**
+ * @authors Eliott Beguet
+ * @param len, number of layer for this network (DO NOT count the input layer in)
+ * @param layer, pointer to the input layer
+ * @param nbNeurons, number of neurons wanted for the hidden layers
+ * @param outputNbneurons, number of neurons wanted for the ouptut layer
+ * @return new Network fully operational
+ */
 Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneurons)
 {
     Network *net = malloc(sizeof(Network));
@@ -112,13 +128,20 @@ Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneuron
     return net;
 }
 
+/**
+ * @authors Eliott Beguet
+ * @param network to apply the feed forward
+ */
 void feedForward(Network *net)
 {
     propagation_layer((*net).layers + 1);
 }
 
-//the weights == coming to neurons (not leaving it)
-//need to use it on first hidden layer (not input one)
+/**
+ * Be carefull not to launch it on input layer.
+ * @authors Eliott Beguet
+ * @param current, layer where we want the propagation to starts
+ */
 void propagation_layer(Layer *current)
 {
     Layer *tmp = current;
@@ -134,7 +157,12 @@ void propagation_layer(Layer *current)
     printf("\n");
 }
 
-
+/**
+ * @authors Eliott Beguet
+ * @param neuron, neuron where we wanna update it value and activation
+ * with the weighted sum
+ * @param prevNeurons, previous neuron usefull to get the previous activation
+ */
 void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 {
     double sum = neuron->biais;
@@ -147,17 +175,32 @@ void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 }
 
 //for backpropagation now
-// cost function
+/**
+ * @authors Eliott Beguet
+ * @param a, b, value to return the square of.
+ */
 double sqr(double a, double b)
 {
     return a * b;
 }
 
+/**
+ * @authors Eliott Beguet
+ * @param ouptut, the value we got thanks to the feed forward
+ * @param expected, the value we expected output to be
+ * @return the cost of one output's neuron
+ */
 double cost(double expected, double output)
 {
     return sqr(output - expected, output - expected);
 }
 
+/**
+ * @authors Eliott Beguet
+ * @param *output, the layer we need to calculate it cost
+ * @param *expected, the array of expected value
+ * @return the tocal cost of the output layer
+ */
 double totalCostO(Layer *output, double *expected)
 {
     double total = 0;
@@ -167,7 +210,10 @@ double totalCostO(Layer *output, double *expected)
     return total;
 }
 
-
+/**
+ * @authors Eliott Beguet
+ * @param ?, whatever we wanna print to see what we have
+ */
 void printNeuron(Neuron *neuron)
 {
     printf("biais: %d\n", neuron->biais);
@@ -181,6 +227,9 @@ void printNeuron(Neuron *neuron)
     printf("\n");
 }
 
+/**
+ * @see printNeuron
+ */
 void printLayer(Layer *layer, int rec)
 {
     printf("\nbegining print of neuron at: %p\n", &layer);
@@ -206,7 +255,9 @@ void printLayer(Layer *layer, int rec)
 }
 
 
-//fction to test creation network
+/**
+ * @see printNeuron
+ */
 void testNET(Network *n)
 {
     Layer *l = n->layers;
