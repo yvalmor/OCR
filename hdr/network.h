@@ -8,29 +8,29 @@
 
 typedef struct Neuron
 {
-    double *weights; //those arriving
+    double *weights;                //those arriving
     int len_weight;
     int biais;
 
     double value;
     double activated;
-//    double *delta_weight;
-//    int len_delta_weight; need to see if it can be usefull for backp
+    double *delta_weight;
+    int len_delta_weight;
 } Neuron;
 
 
 typedef struct Layer 
 {
-    Neuron *neurons;         //list of neurons
-    int len_neurons;          //size for the list
-    struct Layer *PreviousLayer;      //pointer to the previous layer
-    struct Layer *NextLayer;     //pointer to the next layer
+    Neuron *neurons;                //list of neurons
+    int len_neurons;                //size for the list
+    struct Layer *PreviousLayer;    //pointer to the previous layer
+    struct Layer *NextLayer;        //pointer to the next layer
 } Layer;
 
 
 typedef struct Network
 {
-    Layer *layers; //list of all layers
+    Layer *layers;                  //list of all layers
     int nbLayers;
 } Network;
 
@@ -56,13 +56,17 @@ void propagation(Network *net);
 void propagation_layer(Layer *layer);
 Network *create_network(int nbLayers, Layer *input, int neuronsPerLayer, int outputNbneurons);
 
-void backpropagation();
+void backpropagation(Network *net, double *expected);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
-void handleInput(double *input,int len_input, Network *net);
 
 double sqr(double a, double b);
-double cost(double expctd, double output);
-double totalCostO(Layer *layer, double *expected);
+double mse(double expctd, double output);
+double totalErrorOutput(Layer *layer, double *expected);
+double totalError(Network *net, double *expected);
+void updateWeightsNeuron(Neuron *n, double LearningRate);
+void updateLayer(Layer *l, double LearningRate);
 
+void freeNetwork(Network *net);
+void freeLayer(Layer *l);
 
 #endif

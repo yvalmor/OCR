@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <err.h>
-
 #include "../hdr/network.h"
 
 /**
@@ -191,9 +190,9 @@ double sqr(double a, double b)
  * @param expected, the value we expected output to be
  * @return the cost of one output's neuron
  */
-double cost(double expected, double output)
+double mse(double expected, double output)
 {
-    return sqr(output - expected, output - expected);
+    return sqr(expected - output, expected - output);
 }
 
 /**
@@ -202,15 +201,107 @@ double cost(double expected, double output)
  * @param *expected, the array of expected value
  * @return the tocal cost of the output layer
  */
-double totalCostO(Layer *output, double *expected)
+double totalErrorOutput(Layer *output, double *expected)
 {
     double total = 0;
     for (int i = 0; i < output->len_neurons; i++)
-        total += cost(expected[i], output->neurons[i].activated);
+        total += mse(expected[i], output->neurons[i].activated);
 
-    return total;
+    return total / 2;
 }
 
+/**
+ * @authors Eliott Beguet
+ * @param net, network to calculate the cost
+ * @return double error
+ */
+double totalError(Network *net, double *expected)
+{
+    int pos = net->nbLayers - 1;
+    return totalErrorOutput((*net).layers + pos, expected);
+}
+
+/**
+  @authors Eliott Beguet
+  @param *n, network to apply backpropagation
+  @param *expected, the expected output for the given input
+  */
+void backpropagation(Network *n, double *expected)
+{
+    double error = 0;totalError(n, expected);
+
+    for (int i = n->nbLayers - 1; i > 0; i--)
+    {
+        //modify weight, bias with 2fctions
+    }
+}
+
+void trainNetwork(Network *net, double lRate, int epoch)
+{
+    double err = 0;
+    
+    for (int i = 0; i < epoch; i++)
+    {
+        err += totalError(n, expected);
+
+        propagation(net);
+        backpropagation(net);
+    }
+
+    err *= (1.0 / epoch);
+    printf("Error: %f\n", err);
+}
+
+void updateWeightsNeuron(Neuron *neuron, double lR)
+{
+
+}
+
+void updateLayer(Layer *layer, double lR)
+{
+
+}
+
+/**
+ * @authors Eliott Beguet
+ * @param ?, whatever struct to be free'd
+ */
+void freeNeuron(Neuron *n)
+{
+    free(n->weights);
+    free(n->delta_weight);
+    free(n);
+}
+
+/**
+ * @see freeNeuron
+ */
+void freeLayer(Layer *l)
+{
+    for (int i = 0; i < l->len_neurons; i++)
+        free((*l).neurons + i);
+
+    //free(l->PreviousLayer);
+    //free(l->NextLayer);
+    free(l);
+}
+
+/**
+ * @see freeNeuron
+ */
+void freeNetwork(Network *n)
+{
+    for (int i = 0; i < n->nbLayers; i++)
+        freeLayer((*n).layers + i);
+
+    //free(n->layers);
+    free(n);
+}
+
+
+
+
+// ALL FCTIONS BELOW ARE FOR TEST ONLY
 /**
  * @authors Eliott Beguet
  * @param ?, whatever we wanna print to see what we have
@@ -292,7 +383,6 @@ int main()
 
     free(net);
     free(input);
-    //free(hidden);
-    //free(output);
+    //freeNetwork(net); 
     return 0;
 } 
