@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <err.h>
-#include "network.h"
+
+#include "../hdr/network.h"
 
 /**
  * @authors Eliott Beguet
