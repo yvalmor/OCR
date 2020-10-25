@@ -26,9 +26,13 @@ all: $(EXEC_OCR) $(EXEC_XOR)
 
 $(EXEC_OCR): $(HDR)
 	@mkdir -p bin
-	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o ($(BIN_DIR)/$@)
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
 
 $(EXEC_XOR): $(XOR_OBJ)
+	@(CC) $(XORCFLAGS) $(XOR_OBJ) -lm -o $(BIN_DIR)/$@
+
+$(XOR_OBJ):
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
 
 $(XOR_OBJ): $(HDR)
 	@(CC) $(XORCFLAGS) -g -c $(XOR) -o $(OBJ_DIR)/network.o
