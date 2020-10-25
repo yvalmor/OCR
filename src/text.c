@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "../hdr/text.h"
 
@@ -15,7 +14,7 @@ int save_Text(char *file_name, char *text)
 
     fprintf(file, "%s", text);
     fclose(file);
-    printf("file: %s: saved successfully!\n", file_name);
+    printf("file: \"%s\": saved successfully!\n", file_name);
 
     return 0;
 }
