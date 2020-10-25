@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "../hdr/segmentation.h"
 
@@ -23,7 +25,7 @@ static void Push_char(CHARACTERS *head, BOUNDS bounds);
  * @param pixels, the matrix of pixels after the binarization of the image
  * @return a linked list of the rectangle containing the characters
  */
-CHARACTERS *Segment_image(int rows, int columns, const int *pixels)
+CHARACTERS *Segment_image(int rows, int columns, int *pixels)
 {
     LINES *lines = Get_lines(rows, columns, pixels);
     CHARACTERS *characters = Get_char(rows, columns, pixels, lines);
@@ -52,13 +54,15 @@ static LINES *Get_lines(int rows, int columns, const int *pixels)
     for (int i = 0; i < rows; ++i)
     {
         sum = 0;
-        for (int j = 0; j < columns; ++j)
+        for (int j = 0; j < columns; ++j) {
             sum += *((pixels + i * rows) + j);
+        }
         mean_val += sum;
         histogram[i] = sum;
     }
 
     int threshold = mean_val / rows;
+
 
     LINES *first = malloc(sizeof(LINES));
     first -> next = NULL;
@@ -132,6 +136,7 @@ static CHARACTERS *Get_char(
     CHARACTERS *first = malloc(sizeof(CHARACTERS));
     first -> next = NULL;
     first -> bounds.upper = 0;
+    first -> bounds.lower = 0;
 
     int histogram[columns];
     int sum, mean_val, threshold;
@@ -200,4 +205,60 @@ static void Push_char(CHARACTERS *head, BOUNDS bounds)
     current -> next = malloc(sizeof(CHARACTERS));
     current -> next -> bounds = bounds;
     current -> next -> next = NULL;
+}
+
+// Save
+
+/**
+ * Saves the result of the segmentation in a file
+ *
+ * @param text, the string that will contain the result
+ * @param rows, the number of rows of pixels in the image
+ * @param matrix, the values of the pixels after having been binarized
+ * @param firstChar, the linked list of characters
+ */
+int Save_segmentation(int rows, const int *matrix, CHARACTERS *firstChar)
+{
+    FILE *file;
+    char *filename = "seg.txt";
+
+    if ((file = fopen(filename, "w+")) == NULL)
+    {
+        printf("Impossible to open the file \"%s\"", filename);
+        return 1;
+    }
+
+    CHARACTERS *current = firstChar;
+
+    int upper;
+    int lower;
+    int left;
+    int right;
+
+    while (current != NULL)
+    {
+        upper = (current -> bounds).upper;
+        lower = (current -> bounds).lower;
+        left = (current -> bounds).left;
+        right = (current -> bounds).right;
+
+        fprintf(file, "word: %3d %3d %3d %3d\n", upper, lower, left, right);
+
+        for (int i = upper; i < lower ; ++i)
+        {
+            for (int j = left; j < right; ++j)
+            {
+                fprintf(file, "%d", *(matrix + i * rows + j));
+            }
+            fprintf(file, "\n");
+        }
+
+        fprintf(file, "\n");
+
+        current = current -> next;
+    }
+
+    fclose(file);
+    printf("file: \"%s\": saved successfully!\n", filename);
+    return 0;
 }

@@ -1,6 +1,6 @@
 #include "../hdr/processing.h"
 
-void toGrayscale(IMAGE image, int intensity[image.rows][image.columns])
+void toGrayscale(IMAGE image, int *intensity)
 {
     int r, g, b;
 
@@ -17,12 +17,12 @@ void toGrayscale(IMAGE image, int intensity[image.rows][image.columns])
 
             Uint8 average = 0.3*r + 0.59*g + 0.11*b;
 
-            intensity[i][j] = average;
+            *(intensity + i * rows + j) = average;
         }
     }
 }
 
-void toBlackAndWhite(IMAGE image, int intensity[image.rows][image.columns])
+void toBlackAndWhite(IMAGE image, int *intensity)
 {
     int rows = image.rows;
     int columns = image.columns;
@@ -31,12 +31,12 @@ void toBlackAndWhite(IMAGE image, int intensity[image.rows][image.columns])
     {
         for (int j = 0; j < columns; j++)
         {
-            int value = intensity[i][j];
+            int value = *(intensity + i * rows + j);
 
             if (value >= 127)
-                intensity[i][j] = 1;
+                *(intensity + i * rows + j) = 0;
             else
-                intensity[i][j] = 0;
+                *(intensity + i * rows + j) = 1;
         }
     }
 }

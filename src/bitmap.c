@@ -5,6 +5,7 @@
 #include "../hdr/UI.h"
 #include "../hdr/text.h"
 #include "../hdr/processing.h"
+#include "../hdr/segmentation.h"
 
 
 /**
@@ -102,7 +103,7 @@ static void get_matrix_text(IMAGE image, char *text)
 }
 
 /**
- * Loads a bitmap file, creates an IMAGE structure from it, preprocess's it and
+ * Loads a bitmap file, creates an IMAGE structure from it, preprocess it and
  * saves its processed pixel data in a file
  *
  * @author Souleymane Sentici
@@ -134,8 +135,13 @@ void loadImage(char *path)
 
     int intensity[rows][columns];
 
-    toGrayscale(image, intensity);
-    toBlackAndWhite(image, intensity);
+    toGrayscale(image, *intensity);
+
+    toBlackAndWhite(image, *intensity);
+
+    CHARACTERS *firstChar = Segment_image(rows, columns, *intensity);
+
+    Save_segmentation(rows, *intensity, firstChar);
 
     const int sizeBW = (2 * columns + 1) * rows + 1;
     char textBW[sizeBW];
@@ -235,8 +241,8 @@ void create_Matrix(SDL_Surface *surface, IMAGE image)
  * Fills a given IMAGE with the info of a bitmap loaded in a surface
  *
  * @author Souleymane Sentici
- * @param surface the surface in which the bitmap is loaded
- * @param image the IMAGE that will contain the bitmap's info
+ * @param surface, the surface in which the bitmap is loaded
+ * @param image, the IMAGE that will contain the bitmap info
  * @see create_Matrix
  */
 void create_Image(SDL_Surface  *surface, IMAGE image)
