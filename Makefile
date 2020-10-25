@@ -36,4 +36,4 @@ $(XOR_OBJ):
 .PHONY: clean
 
 clean:
-	@rm -f $(OBJ) $(EXEC) $(wildcard bin/*)
+	@rm -rf $(OBJ) $(XOR_OBJ) $(wildcard $(BIN_DIR)/*)
