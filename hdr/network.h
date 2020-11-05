@@ -9,13 +9,13 @@
 typedef struct Neuron
 {
     double *weights;                //those arriving
-    int len_weight;
-    int biais;
+    int len_weight;                 //nber of weight
+    int biais;                      //corresponging bias
 
-    double value;
-    double activated;
-    double *delta_weight;
-    int len_delta_weight;
+    double error;                   //error stored
+    double value;                   //weighted sum
+    double activated;               //sigmoid value
+    double delta_weight;            //variation of weight
 } Neuron;
 
 
@@ -31,7 +31,7 @@ typedef struct Layer
 typedef struct Network
 {
     Layer *layers;                  //list of all layers
-    int nbLayers;
+    int nbLayers;                   //nbers of layers
 } Network;
 
 
@@ -49,6 +49,7 @@ const double expected_res[4][1] = { {0}, {1}, {1}, {0}};
 void rndNeuron(Neuron *neuron, int len_weight);
 void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, double wtedValue, double wtedA);
 double sigmoid(double x);
+double sigmoid_prime(double x);
 double rdmDouble(double min, double max);
 
 void create_layer(Layer *layer, int size, Layer *prev, Layer *Next, int poss_lenW);
@@ -56,15 +57,18 @@ void propagation(Network *net);
 void propagation_layer(Layer *layer);
 Network *create_network(int nbLayers, Layer *input, int neuronsPerLayer, int outputNbneurons);
 
-void backpropagation(Network *net, double *expected);
+double backpropagation(Network *net, double *expected);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
 
 double sqr(double a, double b);
 double mse(double expctd, double output);
-double totalErrorOutput(Layer *layer, double *expected);
-double totalError(Network *net, double *expected);
-void updateWeightsNeuron(Neuron *n, double LearningRate);
+double ErrorOutput(Layer *layer, double *expected);
+double totalErrorOutput(Network *net, double *expected);
+void updateWeightsNeuron(Neuron *n, Neuron *previousN, double LearningRate, double desired);
 void updateLayer(Layer *l, double LearningRate);
+
+double errorHiddenLayer(Neuron *neuronCalculateErr, Layer *toSearchWeight, int posW);
+double totalErrorHidden(Layer *toCalculateError);
 
 void freeNetwork(Network *net);
 void freeLayer(Layer *l);
