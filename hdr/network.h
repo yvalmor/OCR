@@ -15,7 +15,6 @@ typedef struct Neuron
     double error;                   //error stored
     double value;                   //weighted sum
     double activated;               //sigmoid value
-    double delta_weight;            //variation of weight
 } Neuron;
 
 
@@ -31,6 +30,8 @@ typedef struct Layer
 typedef struct Network
 {
     Layer *layers;                  //list of all layers
+    Layer *input;
+    Layer *output;
     int nbLayers;                   //nbers of layers
 } Network;
 
@@ -44,7 +45,7 @@ const double training_data[4][2] =
     {1, 1}
 };
 
-const double expected_res[4][1] = { {0}, {1}, {1}, {0}};
+const double expected_res[4] = {0, 1, 1, 0};
 
 void rndNeuron(Neuron *neuron, int len_weight);
 void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, double wtedValue, double wtedA);
@@ -53,9 +54,9 @@ double sigmoid_prime(double x);
 double rdmDouble(double min, double max);
 
 void create_layer(Layer *layer, int size, Layer *prev, Layer *Next, int poss_lenW);
-void propagation(Network *net);
+void feedForward(Network *net);
 void propagation_layer(Layer *layer);
-Network *create_network(int nbLayers, Layer *input, int neuronsPerLayer, int outputNbneurons);
+Network *create_network(int nbLayers, int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
 
 double backpropagation(Network *net, double *expected);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);

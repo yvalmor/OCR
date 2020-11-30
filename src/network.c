@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <err.h>
-#include "../hdr/network.h"
+#include "network.h"
 
 /**
  * @authors Eliott Beguet
@@ -34,7 +34,7 @@ double rdmDouble(double min, double max)
  */
 void rndNeuron(Neuron *neuron, int len_weight)
 {
-    double *weights = malloc(sizeof(double) * len_weight);
+    double *weights = calloc(len_weight, sizeof(double));
 
     if (neuron == NULL || weights == NULL)
         errx(1, "*neuron or *weights is NULL at rndNeuron.\n");
@@ -60,7 +60,7 @@ void rndNeuron(Neuron *neuron, int len_weight)
  */
 void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_lenW)
 {
-    Neuron *neuron = malloc(sizeof(Neuron) * size);
+    Neuron *neuron = calloc(size, sizeof(Neuron));
 
     if (neuron == NULL || layer == NULL)    
         errx(1, "*neuron or *layer is NULL at create_layer.\n");
@@ -82,18 +82,24 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
 //len is the nber of layer to create (so not including the input)
 /**
  * @authors Eliott Beguet
- * @param len, number of layer for this network (DO NOT count the input layer in)
+ * @param len, number of layer for this network (including input and output) 
  * @param layer, pointer to the input layer
  * @param nbNeurons, number of neurons wanted for the hidden layers
  * @param outputNbneurons, number of neurons wanted for the ouptut layer
  * @return new Network fully operational
  */
-Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneurons)
+Network *create_network(int len, int nbNeurons, int inputNbNeurons,
+    int outputNbneurons)
 {
+    //allocate memory for whole Network
     Network *net = malloc(sizeof(Network));
-    Layer *allLayers = malloc(sizeof(Layer) * (1 +len));
+    Layer *allLayers = calloc(len + 1, sizeof(Layer));
+    
+    //allocate memory for the input
+    Layer *inp = malloc(sizeof(Layer));
+    create_layer(inp, inputNbNeurons, NULL, allLayers + 1, 0);
 
-    allLayers = layer;
+    allLayers = inp;
     
     for (int i = 1; i < len; i++)
     {
@@ -104,11 +110,10 @@ Network *create_network(int len, Layer *layer, int nbNeurons, int outputNbneuron
         create_layer(allLayers + i, number, prev, next, 0);
     }
 
-    Layer *i = allLayers;
-    i->NextLayer = i + 1;
-
     (*net).layers = allLayers;
-    (*net).nbLayers = len + 1;
+    (*net).nbLayers = len;
+    (*net).input = inp;
+    (*net).output = allLayers + len - 1;
 
     return net;
 }
@@ -179,6 +184,7 @@ double mse(double expected, double output)
 }
 
 /**
+ * on this case we assume and need len(output) = len(expected)
  * @authors Eliott Beguet
  * @param *output, the layer we need to calculate it cost
  * @param *expected, the array of expected value
@@ -202,8 +208,8 @@ double ErrorOutput(Layer *output, double *expected)
  */
 double totalErrorOutput(Network *net, double *expected)
 {
-    int pos = net->nbLayers - 1;
-    return ErrorOutput((*net).layers + pos, expected);
+    //expected : 0 0 with 1 1 || 0 1 with 0 1 || 1 0 with 1 0 etc
+    return ErrorOutput((*net).output, expected);
 }
 
 /**
@@ -230,7 +236,7 @@ double errorHiddenLayer(Neuron *n, Layer *lWeight, int posi)
 /**
  * @authors Eliott Beguet
  * @param *l, layer to calculate error of neurons in
- ** @see errorHiddenLayer
+ * @see errorHiddenLayer
  */
 double totalErrorHidden(Layer *l)
 {
@@ -261,6 +267,7 @@ double backpropagation(Network *n, double *expected)
         else
         {
             error += totalErrorHidden(n->layers + i);
+            updateLayer(n->layers + i, 0.4);
         }
         //modify weight, bias with 2fctions
 
@@ -276,7 +283,7 @@ void trainNetwork(Network *net, double lRate, int epoch, double *expected)
     
     for (int i = 0; i < epoch; i++)
     {
-        propagation(net);
+        feedForward(net);
         err += backpropagation(net, expected);
     }
 
@@ -292,8 +299,12 @@ double deltaw = l_rate * actu->err[actun] * done->out[donen];
 */
 void updateWeightsNeuron(Neuron *neuron, Neuron *prev, double lR, double desired)
 {
-    double deltaW = prev->activated *sigmoid_prime(neuron->value) * 2 * (neuron->activated - desired);
-    double deltaB = sigmoid_prime(neuron->value) * 2 * (neuron->activated - desired);
+    double deltaW = prev->activated *
+        sigmoid_prime(neuron->value) *
+        2 * (neuron->activated - desired);
+
+    double deltaB = sigmoid_prime(neuron->value) *
+        2 * (neuron->activated - desired);
 
     for (int i = 0; i < neuron->len_weight; i++)
        neuron->weights[i] = -(lR * deltaW) + (neuron->weights[i]); 
@@ -306,7 +317,11 @@ void updateLayer(Layer *layer, double lR)
     for (int i = 0; i < layer->len_neurons; i++)
     {
         //change desired not 1.2
-        updateWeightsNeuron((*layer).neurons + i, (*layer).PreviousLayer->neurons + i, lR, 1.2);
+        updateWeightsNeuron(
+            (*layer).neurons + i,
+            (*layer).PreviousLayer->neurons + i,
+            lR, 
+            42.2);
     }
 }
 
@@ -317,7 +332,7 @@ void updateLayer(Layer *layer, double lR)
 void freeNeuron(Neuron *n)
 {
     free(n->weights);
-    free(n);
+   // free(n);
 }
 
 /**
@@ -328,8 +343,6 @@ void freeLayer(Layer *l)
     for (int i = 0; i < l->len_neurons; i++)
         freeNeuron((*l).neurons + i);
 
-    //free(l->PreviousLayer);
-    //free(l->NextLayer);
     free(l);
 }
 
@@ -338,10 +351,9 @@ void freeLayer(Layer *l)
  */
 void freeNetwork(Network *n)
 {
-    for (int i = 0; i < n->nbLayers; i++)
+    for (int i = 1; i < n->nbLayers; i++)
         freeLayer((*n).layers + i);
 
-    //free(n->layers);
     free(n);
 }
 
@@ -417,19 +429,17 @@ int main()
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
 
-    Layer *input = malloc(sizeof(Layer));
-    create_layer(input, 2, NULL, NULL, 0);
+    Network *net = create_network(4, 4, 2, 2);
+    //trainNetwork(net, 1.248, 1000, arr);
 
-    Neuron *a = input->neurons;
-    Neuron *b = a + 1;
-    a->activated = 0;
-    b->activated = 1;
+    testNET(net);
+
+    //printLayer(net->output, 0);
     
-    Network *net = create_network(3, input, 3, 2);
-    feedForward(net);
-
-    free(net);
-    free(input);
-    //freeNetwork(net); 
+    /*
+    double ok[4] = {0, 1, 1, 0};
+    printf("Error for output: %f\n", ErrorOutput(net->output, ok));
+    */
+    freeNetwork(net); 
     return 0;
 } 
