@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <err.h>
-#include "network.h"
+
+#include "../hdr/network.h"
 
 /**
  * @authors Eliott Beguet
@@ -41,7 +42,7 @@ void rndNeuron(Neuron *neuron, int len_weight)
 
     for (int i = 0; i < len_weight; i++)
         *(weights + i) = rdmDouble(-1.5, 1.5);
-    
+
     (*neuron).error = 0;
     (*neuron).biais = rdmDouble(-1.5, 1.5);
     (*neuron).weights = weights;
@@ -58,14 +59,14 @@ void rndNeuron(Neuron *neuron, int len_weight)
  * @param next, pointer for the next layer
  * @param poss_lenW, useless param which will be removed soon
  */
-void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_lenW)
+void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW)
 {
     Neuron *neuron = calloc(size, sizeof(Neuron));
 
-    if (neuron == NULL || layer == NULL)    
+    if (neuron == NULL || layer == NULL)
         errx(1, "*neuron or *layer is NULL at create_layer.\n");
 
-    int l = (prev == NULL) ? poss_lenW : prev->len_neurons;    
+    int l = (prev == NULL) ? poss_lenW : prev->len_neurons;
     //if to check if not in input cuz input does not has weights etc
     //nber of weights in neuron == nber of neurons in previous layer
 
@@ -75,47 +76,48 @@ void create_layer(Layer *layer, int size, Layer *prev, Layer *next, int poss_len
     (*layer).neurons = neuron;
     (*layer).len_neurons = size;
     (*layer).PreviousLayer = prev;
-    (*layer).NextLayer = next;
 }
 
 
 //len is the nber of layer to create (so not including the input)
 /**
  * @authors Eliott Beguet
- * @param len, number of layer for this network (including input and output) 
+ * @param len, number of layer for this network (including input and output)
  * @param layer, pointer to the input layer
  * @param nbNeurons, number of neurons wanted for the hidden layers
  * @param outputNbneurons, number of neurons wanted for the ouptut layer
  * @return new Network fully operational
  */
-Network *create_network(int len, int nbNeurons, int inputNbNeurons,
-    int outputNbneurons)
+void create_network(Network *net, int nbNeurons, int inputNbNeurons, int outputNbneurons)
 {
-    //allocate memory for whole Network
-    Network *net = malloc(sizeof(Network));
-    Layer *allLayers = calloc(len + 1, sizeof(Layer));
-    
+    int len = net->nbLayers;
+
     //allocate memory for the input
-    Layer *inp = malloc(sizeof(Layer));
-    create_layer(inp, inputNbNeurons, NULL, allLayers + 1, 0);
+    Layer *inp = calloc(len, sizeof(Layer));
+    create_layer(inp, inputNbNeurons, NULL, 0);
 
-    allLayers = inp;
-    
-    for (int i = 1; i < len; i++)
+    Layer *currentLayer = inp;
+    Layer *previousLayer = NULL;
+
+    for (int i = 1; i < len - 1; i++)
     {
-        Layer *prev = allLayers + i - 1;
-        Layer *next = (i < len - 1) ? allLayers + i + 1 : NULL;
-        int number = (i < len - 1) ? nbNeurons : outputNbneurons;
+        previousLayer = currentLayer;
+        currentLayer = inp + i;
+        previousLayer->NextLayer = currentLayer;
 
-        create_layer(allLayers + i, number, prev, next, 0);
+        create_layer(currentLayer, nbNeurons, previousLayer, 0);
     }
 
-    (*net).layers = allLayers;
-    (*net).nbLayers = len;
-    (*net).input = inp;
-    (*net).output = allLayers + len - 1;
+    previousLayer = currentLayer;
+    currentLayer = inp + len - 1;
+    previousLayer->NextLayer = currentLayer;
 
-    return net;
+    create_layer(currentLayer, outputNbneurons, previousLayer, 0);
+    currentLayer->NextLayer = NULL;
+
+    (*net).layers = inp;
+    (*net).input = inp;
+    (*net).output = currentLayer;
 }
 
 /**
@@ -223,7 +225,7 @@ double errorHiddenLayer(Neuron *n, Layer *lWeight, int posi)
 {
      double res = 0;
      posi += 0;
-    
+
      for (int i = 0; i < lWeight->len_neurons; i++)
         res += (lWeight->neurons[i].error * lWeight->neurons[i].weights[posi]);
 
@@ -280,7 +282,7 @@ void trainNetwork(Network *net, double lRate, int epoch, double *expected)
 {
     lRate++;
     double err = 0;
-    
+
     for (int i = 0; i < epoch; i++)
     {
         feedForward(net);
@@ -291,7 +293,7 @@ void trainNetwork(Network *net, double lRate, int epoch, double *expected)
     printf("Error: %f\n", err);
 }
 
- 
+
 /*
 double deltaw = l_rate * actu->err[actun] * done->out[donen];
                 actu->w[i] += deltaw + 0.1 * actu->previous_dw[i];
@@ -320,7 +322,7 @@ void updateLayer(Layer *layer, double lR)
         updateWeightsNeuron(
             (*layer).neurons + i,
             (*layer).PreviousLayer->neurons + i,
-            lR, 
+            lR,
             42.2);
     }
 }
@@ -332,7 +334,6 @@ void updateLayer(Layer *layer, double lR)
 void freeNeuron(Neuron *n)
 {
     free(n->weights);
-   // free(n);
 }
 
 /**
@@ -340,10 +341,10 @@ void freeNeuron(Neuron *n)
  */
 void freeLayer(Layer *l)
 {
-    for (int i = 0; i < l->len_neurons; i++)
-        freeNeuron((*l).neurons + i);
+    int len = l->len_neurons;
 
-    free(l);
+    for (int i = len - 1; i >= 0; i--)
+        freeNeuron((*l).neurons + i);
 }
 
 /**
@@ -351,14 +352,11 @@ void freeLayer(Layer *l)
  */
 void freeNetwork(Network *n)
 {
-    for (int i = 1; i < n->nbLayers; i++)
+    int len = n->nbLayers;
+
+    for (int i = len - 1; i >= 0; i--)
         freeLayer((*n).layers + i);
-
-    free(n);
 }
-
-
-
 
 // ALL FCTIONS BELOW ARE FOR TEST ONLY
 /**
@@ -429,17 +427,22 @@ int main()
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
 
-    Network *net = create_network(4, 4, 2, 2);
+    //allocate memory for whole Network
+    Network *net = malloc(sizeof(Network));
+    net->nbLayers = 4;
+
+    create_network(net, 4, 2, 2);
     //trainNetwork(net, 1.248, 1000, arr);
 
     testNET(net);
 
     //printLayer(net->output, 0);
-    
+
     /*
     double ok[4] = {0, 1, 1, 0};
     printf("Error for output: %f\n", ErrorOutput(net->output, ok));
     */
-    freeNetwork(net); 
+    freeNetwork(net);
+    free(net);
     return 0;
-} 
+}

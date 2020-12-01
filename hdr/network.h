@@ -18,7 +18,7 @@ typedef struct Neuron
 } Neuron;
 
 
-typedef struct Layer 
+typedef struct Layer
 {
     Neuron *neurons;                //list of neurons
     int len_neurons;                //size for the list
@@ -37,7 +37,7 @@ typedef struct Network
 
 
 
-const double training_data[4][2] = 
+const double training_data[4][2] =
 {
     {0, 0},
     {0, 1},
@@ -53,10 +53,10 @@ double sigmoid(double x);
 double sigmoid_prime(double x);
 double rdmDouble(double min, double max);
 
-void create_layer(Layer *layer, int size, Layer *prev, Layer *Next, int poss_lenW);
+void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW);
 void feedForward(Network *net);
 void propagation_layer(Layer *layer);
-Network *create_network(int nbLayers, int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
+void create_network(Network *net, int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
 
 double backpropagation(Network *net, double *expected);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
