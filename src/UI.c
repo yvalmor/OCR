@@ -12,6 +12,9 @@ char *filename;
 
 static GtkTextBuffer *buffer;
 static GtkImage *image;
+GtkFileChooser *trainingFileChooser, *solutionFileChooser;
+GtkWidget *startButton;
+GtkProgressBar *trainingProgress;
 
 /**
  * Loads the UI and display it on the screen
@@ -35,24 +38,29 @@ int setup()
         return 1;
     }
 
-    window = GTK_WIDGET
-            (
-                    gtk_builder_get_object(builder, "Main_window")
-            );
+    window = GTK_WIDGET(
+            gtk_builder_get_object(builder, "Main_window"));
 
-    textView = GTK_WIDGET
-            (
-                    gtk_builder_get_object(builder, "imageContent")
-            );
+    textView = GTK_WIDGET(
+            gtk_builder_get_object(builder, "imageContent"));
 
     buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textView));
 
-    imageWidget = GTK_WIDGET
-            (
-                    gtk_builder_get_object(builder, "chosenImage")
-            );
+    imageWidget = GTK_WIDGET(
+            gtk_builder_get_object(builder, "chosenImage"));
 
     image = GTK_IMAGE(imageWidget);
+
+    trainingFileChooser = GTK_FILE_CHOOSER(
+            gtk_builder_get_object(builder, "trainingFileChooser"));
+    solutionFileChooser = GTK_FILE_CHOOSER(
+            gtk_builder_get_object(builder, "solutionFileChooser"));
+
+    startButton = GTK_WIDGET(
+            gtk_builder_get_object(builder, "startTrainingButton"));
+
+    trainingProgress = GTK_PROGRESS_BAR(
+            gtk_builder_get_object(builder, "trainingProgressBar"));
 
     gtk_builder_connect_signals(builder, NULL);
 
@@ -125,6 +133,23 @@ void on_imageAnalyse_clicked(
         return;
 
     loadImage(filename);
+}
+
+/**
+ * A function to launch the training of the neural network
+ *
+ * @author Yvon Morice
+ * @param button, the button that launched the action
+ * @param user_data, unused, data sent through the action
+ */
+void on_startTrainingButton_clicked(GtkButton *button,
+                                    __attribute__ ((unused)) gpointer user_data)
+{
+    gtk_widget_set_sensitive(GTK_WIDGET(button), FALSE);
+    gtk_widget_set_sensitive(GTK_WIDGET(), FALSE);
+
+    //GSList *
+    size_t nbFiles = 0;
 }
 
 /**

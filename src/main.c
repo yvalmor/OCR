@@ -8,7 +8,7 @@ int main(__attribute((unused)) int argc, __attribute((unused))char **argv)
 {
     if (Init_Sdl())
         return EXIT_FAILURE;
-  
+
     // GTK+ initialisation
     gtk_init(&argc, &argv);
 
