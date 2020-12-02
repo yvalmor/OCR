@@ -442,7 +442,9 @@ int main()
     double ok[4] = {0, 1, 1, 0};
     printf("Error for output: %f\n", ErrorOutput(net->output, ok));
     */
+
     freeNetwork(net);
     free(net);
+
     return 0;
 }
