@@ -445,5 +445,6 @@ int main()
 
     freeNetwork(net);
     free(net);
+
     return 0;
 }
