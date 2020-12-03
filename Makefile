@@ -25,13 +25,13 @@ all: $(EXEC_OCR) $(EXEC_XOR)
 
 $(EXEC_OCR): $(HDR)
 	@mkdir -p bin
-	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -g -o $(BIN_DIR)/$@
 
 $(EXEC_XOR): $(XOR_OBJ)
 	@$(CC) -g -lm -Wall -Wextra -Werror -std=c99 obj/network.o -o $(BIN_DIR)/$@
 
 $(XOR_OBJ):
-	@$(CC) -g -lm -c src/network.c -o obj/$@
+	@$(CC) -g -lm -c src/network.c -o $@
 
 .PHONY: clean
 

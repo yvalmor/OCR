@@ -260,5 +260,6 @@ int Save_segmentation(int rows, const int *matrix, CHARACTERS *firstChar)
 
     fclose(file);
     printf("file: \"%s\": saved successfully!\n", filename);
+
     return 0;
 }
