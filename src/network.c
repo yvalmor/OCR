@@ -199,6 +199,8 @@ double ErrorOutput(Layer *output, double *expected)
     {
         output->neurons[i].error = output->neurons[i].activated - expected[i];
         total += mse(expected[i], output->neurons[i].activated);
+
+        printf("Error at neuron %i: %d\n", i, output->neurons[i].error);
     }
     return total / 2;
 }
@@ -433,15 +435,14 @@ int main()
 
     create_network(net, 4, 2, 2);
     //trainNetwork(net, 1.248, 1000, arr);
+    
+    printf("aaa\n");
 
     testNET(net);
 
-    //printLayer(net->output, 0);
-
-    /*
     double ok[4] = {0, 1, 1, 0};
-    printf("Error for output: %f\n", ErrorOutput(net->output, ok));
-    */
+    printf("Error for output: %d\n", ErrorOutput(net->output, ok));
+
     freeNetwork(net);
     free(net);
     return 0;
