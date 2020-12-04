@@ -28,10 +28,10 @@ $(EXEC_OCR): $(HDR)
 	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
 
 $(EXEC_XOR): $(XOR_OBJ)
-	@$(CC) $(XOR_CFLAGS) $(XOR_OBJ) $(XOR_LDFLAGS) -o $(BIN_DIR)/$@
+	@$(CC) -g -lm -Wall -Wextra -Werror -std=c99 obj/network.o -o $(BIN_DIR)/$@
 
 $(XOR_OBJ):
-	@$(CC) $(XOR_CFLAGS) -g -c $(XOR) -o $@
+	@$(CC) -g -lm -Wall -Wextra -Werror -c src/network.c -o obj/$@
 
 .PHONY: clean
 
