@@ -66,4 +66,9 @@ Network *parse_network(char *filename)
     do{
         mystring = 
     }
-}/*
+}*/
+
+int main()
+{
+    
+}
