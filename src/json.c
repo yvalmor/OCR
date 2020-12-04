@@ -22,7 +22,7 @@ void write_layer(Layer *layer, int index, FILE *fp)
     fprintf(fp, " \"layer%d\" : {\n\"len_neurons\" : %d,\n\"neurons\" : [\n", index, n);
 
     for(int i = 0; i < n; i++)
-        write_neuron(&layer->neurons[i], i, fp);
+        write_neuron(layer->neurons[i], i, fp);
 
     fprintf(fp, " ]\n}");
 }
@@ -33,13 +33,15 @@ void write_network(Network *network, char *filename)
     FILE *fp = fopen(filename, "a");
 
     if(!fp)
+    {
         fprintf(stderr, "write_network() error: file open failed '%s'.\n", fname);
-    return;
+        return;
+    }
 
     fprintf(fp, "{\"network\" : {\n\"nbLayers\" : %d,\n\"layers\" : [\n", n);
 
     for(int i = 0; i < n; i++)
-        write_layer(&network->layers[i], i, fp);
+        write_layer(network->layers[i], i, fp);
 
     fprintf(fp, " ]\n}");
     fclose(fp);
