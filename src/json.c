@@ -26,11 +26,11 @@ void write_layer(Layer *layer, int index, int index_max, FILE *fp)
 
     fprintf(fp, " \"layer%d\" : {\n\"len_neurons\" : %d,\n\"neurons\" : [\n", index, n);
 
-    for(int i = 0; i < n-1; i++)
+    for(int i = 0; i < n; i++)
         write_neuron(&layer->neurons[i], i, n-1, fp);
-    
+
     if (index != index_max)
-        fprintf(fp, " ]\n}, ");
+        fprintf(fp, " \n}, ");
     else
         fprintf(fp, " ]\n} ");
 }
