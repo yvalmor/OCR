@@ -1,7 +1,6 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include "../hdr/segmentation.h"
 #include "../hdr/bitmap.h"
 
 gboolean on_Main_window_delete(GtkWidget * widget, gpointer data);
