@@ -88,9 +88,9 @@ void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW)
  * @param outputNbneurons, number of neurons wanted for the ouptut layer
  * @return new Network fully operational
  */
-void create_network(Network *net, int nbNeurons, int inputNbNeurons, int outputNbneurons)
+void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeurons, int outputNbneurons)
 {
-    int len = net->nbLayers;
+    int len = nbLayers;
 
     //allocate memory for the input
     Layer *inp = calloc(len, sizeof(Layer));
@@ -115,6 +115,7 @@ void create_network(Network *net, int nbNeurons, int inputNbNeurons, int outputN
     create_layer(currentLayer, outputNbneurons, previousLayer, 0);
     currentLayer->NextLayer = NULL;
 
+    (*net).nbLayers = nbLayers;
     (*net).layers = inp;
     (*net).input = inp;
     (*net).output = currentLayer;
@@ -431,9 +432,8 @@ int main()
 
     //allocate memory for whole Network
     Network *net = malloc(sizeof(Network));
-    net->nbLayers = 4;
 
-    create_network(net, 4, 2, 2);
+    create_network(net, 4, 4, 2, 2);
     //trainNetwork(net, 1.248, 1000, arr);
     
     printf("aaa\n");

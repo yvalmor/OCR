@@ -36,17 +36,6 @@ typedef struct Network
 } Network;
 
 
-
-const double training_data[4][2] =
-{
-    {0, 0},
-    {0, 1},
-    {1, 0},
-    {1, 1}
-};
-
-const double expected_res[4] = {0, 1, 1, 0};
-
 void rndNeuron(Neuron *neuron, int len_weight);
 void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, double wtedValue, double wtedA);
 double sigmoid(double x);
@@ -56,7 +45,7 @@ double rdmDouble(double min, double max);
 void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW);
 void feedForward(Network *net);
 void propagation_layer(Layer *layer);
-void create_network(Network *net, int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
+void create_network(Network *net, int nbLayer,int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
 
 double backpropagation(Network *net, double *expected);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
