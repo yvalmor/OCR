@@ -70,5 +70,8 @@ Network *parse_network(char *filename)
 
 int main()
 {
-    
+   Network *network = malloc(sizeof(network));
+   create_network(network, 3, 2, 2);
+
+   write_network(network, "network.json");
 }
