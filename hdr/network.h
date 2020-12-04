@@ -35,17 +35,6 @@ typedef struct Network
 } Network;
 
 
-
-const double training_data[4][2] = 
-{
-    {0, 0},
-    {0, 1},
-    {1, 0},
-    {1, 1}
-};
-
-const double expected_res[4][1] = { {0}, {1}, {1}, {0}};
-
 void rndNeuron(Neuron *neuron, int len_weight);
 void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, double wtedValue, double wtedA);
 double sigmoid(double x);
