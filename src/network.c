@@ -201,7 +201,7 @@ double ErrorOutput(Layer *output, double *expected)
         output->neurons[i].error = output->neurons[i].activated - expected[i];
         total += mse(expected[i], output->neurons[i].activated);
 
-        printf("Error at neuron %i: %d\n", i, output->neurons[i].error);
+//        printf("Error at neuron %i: %d\n", i, output->neurons[i].error);
     }
     return total / 2;
 }
@@ -425,7 +425,7 @@ void testNET(Network *n)
 
 
 //need to create a main.c lazy :c
-int main()
+/*int main()
 {
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
@@ -447,4 +447,4 @@ int main()
     free(net);
 
     return 0;
-}
+}*/
