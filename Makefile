@@ -29,10 +29,7 @@ $(EXEC_OCR): $(HDR)
 
 $(EXEC_XOR): $(XOR_OBJ)
 	@mkdir -p bin
-	@$(CC) $(XOR_LDFLAGS) $(XOR_CFLAGS) $(XOR_OBJ) -o $(BIN_DIR)/$@
-
-$(XOR_OBJ):
-	@$(CC) $(XOR_LDFLAGS) $(XOR_CFLAGS) -c obj/network.o -o $@
+	@$(CC) -g -lm -Wall -Wextra -std=c99 src/network.c -o $(BIN_DIR)/$@
 
 .PHONY: clean
 
