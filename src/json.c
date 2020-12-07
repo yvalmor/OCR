@@ -101,14 +101,19 @@ void parse_neuron_from_file(struct json_object *neuron_object, Neuron *neuron)
     json_object_object_get_ex(neuron_object, "error", &error);
     json_object_object_get_ex(neuron_object, "biais", &biais);
 
+    int len = json_object_get_int(len_weight);
+
     neuron->len_weight = json_object_get_int(len_weight);
     neuron->biais = json_object_get_int(biais);
     neuron->error = json_object_get_double(error);
     neuron->value = json_object_get_double(value);
     neuron->activated = json_object_get_double(activated);
-    neuron->weights = calloc(neuron->len_weight, sizeof(double));
+    if (len > 1)
+        neuron->weights = calloc(len, sizeof(double));
+    else
+        neuron->weights = malloc(sizeof(double));
 
-    for(int i = 0; i < neuron->len_weight; i++)
+    for(int i = 0; i < len; i++)
         neuron->weights[i] = json_object_get_double(json_object_array_get_idx(weights, i));
 }
 
@@ -118,9 +123,12 @@ void parse_layer_from_file(struct json_object *layer_object, Layer *layer)
     struct json_object *neurons;
     layer->NextLayer = NULL;
     layer->PreviousLayer = NULL;
-    layer->neurons = calloc(layer->len_neurons, sizeof(Neuron));
 
     json_object_object_get_ex(layer_object, "len_neurons", &len_neurons);
+    layer->len_neurons = json_object_get_int(len_neurons);
+
+    layer->neurons = calloc(layer->len_neurons, sizeof(Neuron));
+
     json_object_object_get_ex(layer_object, "neurons", &neurons);
 
     for(int i = 0; i < json_object_get_int(len_neurons); i++)
@@ -145,7 +153,9 @@ Network *parse_network_from_file(char *filename)
 
     for(int i = 0; i < nbLayers_val; i++)
     {
-        parse_layer_from_file(json_object_array_get_idx(layers, i), &network->layers[i]);
+        struct json_object *layer_val;
+        layer_val = json_object_array_get_idx(layers, i);
+        parse_layer_from_file(layer_val, &network->layers[i]);
         if(i > 0)
         {
             network->layers[i].PreviousLayer = &network->layers[i-1];
@@ -155,30 +165,6 @@ Network *parse_network_from_file(char *filename)
 
     return network;
 }
-
-/*
-Network *parse_network(char *filename)
-{
-    json_tokener *tok = json_tokener_new();
-
-    FILE *fp = fopen(filename, "r");
-
-    if(fp == NULL)
-    {
-        perror("Error while opening the file.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    json_object *jobj = NULL;
-    const char *mystring = NULL;
-    int stringlen = 0;
-
-    enum json_tokener_error jerr;
-
-    do{
-        mystring =
-    }
-}*/
 
 int main()
 {
