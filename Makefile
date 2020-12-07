@@ -31,7 +31,7 @@ $(EXEC_XOR): $(XOR_OBJ)
 	@$(CC) -g -lm -Wall -Wextra -Werror -std=c99 obj/network.o -o $(BIN_DIR)/$@
 
 $(XOR_OBJ):
-	@$(CC) -g -lm -Wall -Wextra -Werror -c src/network.c -o obj/$@
+	@$(CC) -g -lm -Wall -Wextra -Werror -c src/network.c -o $@
 
 .PHONY: clean
 
