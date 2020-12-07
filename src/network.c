@@ -57,16 +57,15 @@ void rndNeuron(Neuron *neuron, int len_weight)
  * @param size, number of neurons for this layer
  * @param prev, pointer for the previous layer
  * @param next, pointer for the next layer
- * @param poss_lenW, useless param which will be removed soon
  */
-void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW)
+void create_layer(Layer *layer, int size, Layer *prev)
 {
     Neuron *neuron = calloc(size, sizeof(Neuron));
 
     if (neuron == NULL || layer == NULL)
         errx(1, "*neuron or *layer is NULL at create_layer.\n");
 
-    int l = (prev == NULL) ? poss_lenW : prev->len_neurons;
+    int l = (prev == NULL) ? 1 : prev->len_neurons;
     //if to check if not in input cuz input does not has weights etc
     //nber of weights in neuron == nber of neurons in previous layer
 
@@ -88,13 +87,13 @@ void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW)
  * @param outputNbneurons, number of neurons wanted for the ouptut layer
  * @return new Network fully operational
  */
-void create_network(Network *net, int nbNeurons, int inputNbNeurons, int outputNbneurons)
+void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeurons, int outputNbneurons)
 {
-    int len = net->nbLayers;
+    int len = nbLayers;
 
     //allocate memory for the input
-    Layer *inp = calloc(len, sizeof(Layer));
-    create_layer(inp, inputNbNeurons, NULL, 0);
+    Layer *inp = calloc(len, sizeof(struct Layer));
+    create_layer(inp, inputNbNeurons, NULL);
 
     Layer *currentLayer = inp;
     Layer *previousLayer = NULL;
@@ -105,16 +104,17 @@ void create_network(Network *net, int nbNeurons, int inputNbNeurons, int outputN
         currentLayer = inp + i;
         previousLayer->NextLayer = currentLayer;
 
-        create_layer(currentLayer, nbNeurons, previousLayer, 0);
+        create_layer(currentLayer, nbNeurons, previousLayer);
     }
 
     previousLayer = currentLayer;
     currentLayer = inp + len - 1;
     previousLayer->NextLayer = currentLayer;
 
-    create_layer(currentLayer, outputNbneurons, previousLayer, 0);
+    create_layer(currentLayer, outputNbneurons, previousLayer);
     currentLayer->NextLayer = NULL;
 
+    (*net).nbLayers = nbLayers;
     (*net).layers = inp;
     (*net).input = inp;
     (*net).output = currentLayer;
@@ -199,6 +199,8 @@ double ErrorOutput(Layer *output, double *expected)
     {
         output->neurons[i].error = output->neurons[i].activated - expected[i];
         total += mse(expected[i], output->neurons[i].activated);
+
+        printf("Error at neuron %i: %f\n", i, output->neurons[i].error);
     }
     return total / 2;
 }
@@ -422,29 +424,26 @@ void testNET(Network *n)
 
 
 //need to create a main.c lazy :c
-int main()
+/*int main()
 {
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
 
     //allocate memory for whole Network
     Network *net = malloc(sizeof(Network));
-    net->nbLayers = 4;
 
-    create_network(net, 4, 2, 2);
+    create_network(net, 4, 4, 2, 2);
     //trainNetwork(net, 1.248, 1000, arr);
+
+    printf("aaa\n");
 
     testNET(net);
 
-    //printLayer(net->output, 0);
-
-    /*
     double ok[4] = {0, 1, 1, 0};
     printf("Error for output: %f\n", ErrorOutput(net->output, ok));
-    */
 
     freeNetwork(net);
     free(net);
 
     return 0;
-}
+}*/
