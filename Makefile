@@ -17,7 +17,7 @@ HDR_DIR=hdr
 XOR=$(SRC_DIR)/network.c
 XOR_OBJ=$(OBJ_DIR)/network.o
 
-SRC=$(filter-out $(XOR), $(wildcard $(SRC_DIR)/*.c))
+SRC=$(filter-out $(XOR) src/json.c, $(wildcard $(SRC_DIR)/*.c))
 OBJ=$(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 HDR=$(wildcard $(HDR_DIR)/*.h)
 
@@ -28,11 +28,11 @@ $(EXEC_OCR): $(HDR)
 	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
 
 $(EXEC_XOR): $(XOR_OBJ)
+	@mkdir -p bin
 	@$(CC) $(XOR_LDFLAGS) $(XOR_CFLAGS) $(XOR_OBJ) -o $(BIN_DIR)/$@
 
 $(XOR_OBJ):
-	@mkdir -p bin
-	@$(CC) $(XOR_LDFLAGS) $(XOR_CFLAGS) -c $(XOR) -o $@
+	@$(CC) $(XOR_LDFLAGS) $(XOR_CFLAGS) -c obj/network.o -o $@
 
 .PHONY: clean
 
