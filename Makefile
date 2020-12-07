@@ -15,7 +15,7 @@ OBJ_DIR=obj
 HDR_DIR=hdr
 
 XOR=$(SRC_DIR)/network.c
-XOR_OBJ=obj/network.o
+XOR_OBJ=$(OBJ_DIR)/network.o
 
 SRC=$(filter-out $(XOR), $(wildcard $(SRC_DIR)/*.c))
 OBJ=$(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
@@ -28,10 +28,11 @@ $(EXEC_OCR): $(HDR)
 	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
 
 $(EXEC_XOR): $(XOR_OBJ)
-	@$(CC) $(XOR_CFLAGS) $(XOR_OBJ) $(XOR_LDFLAGS) -o $(BIN_DIR)/$@
+	@$(CC) $(XOR_LDFLAGS) $(XOR_CFLAGS) $(XOR_OBJ) -o $(BIN_DIR)/$@
 
 $(XOR_OBJ):
-	@$(CC) $(XOR_CFLAGS) -g -c $(XOR) -o $@
+	@mkdir -p bin
+	@$(CC) $(XOR_LDFLAGS) $(XOR_CFLAGS) -c $(XOR) -o $@
 
 .PHONY: clean
 
