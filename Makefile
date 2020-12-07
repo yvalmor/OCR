@@ -15,7 +15,7 @@ OBJ_DIR=obj
 HDR_DIR=hdr
 
 XOR=$(SRC_DIR)/network.c
-XOR_OBJ=obj/network.o
+XOR_OBJ=$(OBJ_DIR)/network.o
 
 SRC=$(filter-out $(XOR), $(wildcard $(SRC_DIR)/*.c))
 OBJ=$(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
