@@ -47,10 +47,9 @@ void feedForward(Network *net);
 void propagation_layer(Layer *layer);
 void create_network(Network *net, int nbLayer,int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
 
-double backpropagation(Network *net, double *expected);
+double backpropagation(Network *net, double *expected, double learningRate);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
 
-double sqr(double a, double b);
 double mse(double expctd, double output);
 double ErrorOutput(Layer *layer, double *expected);
 double totalErrorOutput(Network *net, double *expected);

@@ -168,22 +168,13 @@ void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 //for backpropagation now
 /**
  * @authors Eliott Beguet
- * @param a, b, value to return the square of.
- */
-double sqr(double a, double b)
-{
-    return a * b;
-}
-
-/**
- * @authors Eliott Beguet
  * @param ouptut, the value we got thanks to the feed forward
  * @param expected, the value we expected output to be
  * @return the cost of one output's neuron
  */
 double mse(double expected, double output)
 {
-    return sqr(expected - output, expected - output);
+    return (expected - output) * (expected - output);
 }
 
 /**
@@ -203,7 +194,7 @@ double ErrorOutput(Layer *output, double *expected)
 
         printf("Error at neuron %i: %d\n", i, output->neurons[i].error);
     }
-    return total / 2;
+    return total / output->len_neurons;
 }
 
 /**
@@ -258,7 +249,7 @@ double totalErrorHidden(Layer *l)
   @param *n, network to apply backpropagation
   @param *expected, the expected output for the given input
   */
-double backpropagation(Network *n, double *expected)
+double backpropagation(Network *n, double *expected, double lR)
 {
     double error = 0;
 
@@ -272,7 +263,7 @@ double backpropagation(Network *n, double *expected)
         else
         {
             error += totalErrorHidden(n->layers + i);
-            updateLayer(n->layers + i, 0.4);
+            updateLayer(n->layers + i, lR);
         }
         //modify weight, bias with 2fctions
 
@@ -283,13 +274,12 @@ double backpropagation(Network *n, double *expected)
 
 void trainNetwork(Network *net, double lRate, int epoch, double *expected)
 {
-    lRate++;
     double err = 0;
 
     for (int i = 0; i < epoch; i++)
     {
         feedForward(net);
-        err += backpropagation(net, expected);
+        err += backpropagation(net, expected, lRate);
     }
 
     err *= (1.0 / epoch);
