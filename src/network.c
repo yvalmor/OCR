@@ -425,7 +425,7 @@ void testNET(Network *n)
 
 
 //need to create a main.c lazy :c
-int main()
+/*int main()
 {
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
@@ -447,4 +447,4 @@ int main()
     free(net);
 
     return 0;
-}
+}*/

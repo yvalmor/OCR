@@ -1,0 +1,199 @@
+{"network" : {
+"nbLayers" : 4,
+"layers" : [
+ "layer0" : {
+"len_neurons" : 2,
+"neurons" : [
+ "neuron0" : {
+"len_weight" : 0,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 0.000000
+ ]
+},  ]
+},  "layer1" : {
+"len_neurons" : 4,
+"neurons" : [
+ "neuron0" : {
+"len_weight" : 2,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 2.349298,
+ 2.395320
+ ]
+},  "neuron1" : {
+"len_weight" : 2,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 0.592654,
+ 1.005668
+ ]
+},  "neuron2" : {
+"len_weight" : 2,
+"biais" : 1,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 0.833324,
+ 1.661910
+ ]
+},  ]
+},  "layer2" : {
+"len_neurons" : 4,
+"neurons" : [
+ "neuron0" : {
+"len_weight" : 4,
+"biais" : 0,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 2.856689,
+ 2.748585,
+ 1.907135,
+ 2.151891
+ ]
+},  "neuron1" : {
+"len_weight" : 4,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 1.820907,
+ 0.048902,
+ 0.728660,
+ 0.411695
+ ]
+},  "neuron2" : {
+"len_weight" : 4,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 0.470037,
+ 1.202833,
+ 0.389371,
+ 0.326426
+ ]
+},  ]
+},  "layer3" : {
+"len_neurons" : 2,
+"neurons" : [
+ "neuron0" : {
+"len_weight" : 4,
+"biais" : 0,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 1.912657,
+ 1.572862,
+ 1.480749,
+ 2.918325
+ ]
+},  ]
+}  ]
+}{"network" : {
+"nbLayers" : 4,
+"layers" : [
+ "layer0" : {
+"len_neurons" : 2,
+"neurons" : [
+ "neuron0" : {
+"len_weight" : 0,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 0.000000
+ ]
+},  ]
+},  "layer1" : {
+"len_neurons" : 4,
+"neurons" : [
+ "neuron0" : {
+"len_weight" : 2,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 2.349298,
+ 2.395320
+ ]
+},  "neuron1" : {
+"len_weight" : 2,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 0.592654,
+ 1.005668
+ ]
+},  "neuron2" : {
+"len_weight" : 2,
+"biais" : 1,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 0.833324,
+ 1.661910
+ ]
+},  ]
+},  "layer2" : {
+"len_neurons" : 4,
+"neurons" : [
+ "neuron0" : {
+"len_weight" : 4,
+"biais" : 0,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 2.856689,
+ 2.748585,
+ 1.907135,
+ 2.151891
+ ]
+},  "neuron1" : {
+"len_weight" : 4,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 1.820907,
+ 0.048902,
+ 0.728660,
+ 0.411695
+ ]
+},  "neuron2" : {
+"len_weight" : 4,
+"biais" : 2,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 0.470037,
+ 1.202833,
+ 0.389371,
+ 0.326426
+ ]
+},  ]
+},  "layer3" : {
+"len_neurons" : 2,
+"neurons" : [
+ "neuron0" : {
+"len_weight" : 4,
+"biais" : 0,
+"value" : 0.000000,
+"activated" : 0.000000,
+"weights" : [
+ 1.912657,
+ 1.572862,
+ 1.480749,
+ 2.918325
+ ]
+},  ]
+}  ]
+}
