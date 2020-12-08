@@ -1,11 +1,13 @@
 #include <string.h>
 #include <SDL2/SDL.h>
+#include <stdio.h>
 
 #include "../hdr/bitmap.h"
 #include "../hdr/UI.h"
 #include "../hdr/text.h"
 #include "../hdr/processing.h"
 #include "../hdr/segmentation.h"
+#include "../hdr/rlsa.h"
 
 
 /**
@@ -143,12 +145,14 @@ void loadImage(char *path)
 
     Save_segmentation(rows, *intensity, firstChar);
 
-    const int sizeBW = (2 * columns + 1) * rows + 1;
+    const int sizeBW = (3 * columns + 1) * rows + 1;
     char textBW[sizeBW];
 
-    to_matrix_bw(textBW, rows, columns, *intensity);
+    int *rlsa_mat = calloc(rows * columns, sizeof(int));
+    rlsa(columns, rows, *intensity, rlsa_mat);
+    to_matrix_bw(textBW, rows, columns, rlsa_mat);
 
-    save_Text("bw.txt", textBW);
+    save_Text("rlsa.txt", textBW);
 
     set_text(path);
 }

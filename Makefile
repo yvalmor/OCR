@@ -25,9 +25,9 @@ all: $(EXEC_OCR) $(EXEC_XOR)
 
 $(EXEC_OCR): $(HDR)
 	@mkdir -p bin
-	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -g -o $(BIN_DIR)/$@
 
-$(EXEC_XOR): $(XOR_OBJ)
+$(EXEC_XOR):
 	@mkdir -p bin
 	@$(CC) -g -lm -Wall -Wextra -std=c99 src/network.c -o $(BIN_DIR)/$@
 

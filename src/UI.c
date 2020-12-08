@@ -146,10 +146,10 @@ void on_startTrainingButton_clicked(GtkButton *button,
                                     __attribute__ ((unused)) gpointer user_data)
 {
     gtk_widget_set_sensitive(GTK_WIDGET(button), FALSE);
-    gtk_widget_set_sensitive(GTK_WIDGET(), FALSE);
+    //gtk_widget_set_sensitive(GTK_WIDGET(), FALSE);
 
     //GSList *
-    size_t nbFiles = 0;
+    //size_t nbFiles = 0;
 }
 
 /**
