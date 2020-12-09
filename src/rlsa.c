@@ -37,16 +37,29 @@ void horizontal_rlsa(int rows, int cols, int *matrix, int *hori, int threshold)
             }
 }
 
+int mcl()
+{
+    return 2;
+}
+
+int mtld()
+{
+    return 2;
+}
+
 void rlsa(int rows, int cols, int *matrix, int *rlsa_mat)
 {
     int *vert = calloc(rows * cols, sizeof(int));
     int *hori = calloc(rows * cols, sizeof(int));
 
-    vertical_rlsa(rows, cols, matrix, vert, 4);
-    horizontal_rlsa(rows, cols, matrix, hori, 2);
+    vertical_rlsa(rows, cols, matrix, vert, 2 * mcl());
+    horizontal_rlsa(rows, cols, matrix, hori, mtld());
 
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
             *(rlsa_mat + i * rows + j) = *(vert + i * rows + j) & *(hori + i * rows + j);
 }
+
+
+
 

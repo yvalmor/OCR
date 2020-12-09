@@ -1,265 +1,202 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include "../hdr/list.h"
 
-#include "../hdr/segmentation.h"
-
-// Prototypes
-static LINES *Get_lines(int rows, int columns, const int *pixels);
-static void Push_line(LINES *head, int upper, int lower);
-
-static CHARACTERS *Get_char(
-        int rows, int columns, const int *pixels, LINES *firstLine);
-static void Push_char(CHARACTERS *head, BOUNDS bounds);
-
-
-// Functions
-// Image segmentation
-
-/**
- * Segments the image and returns the rectangle containing the characters
- *
- * @author Yvon Morice
- * @param rows, the number of rows of pixels in the image
- * @param columns, the number of columns of pixels in the image
- * @param pixels, the matrix of pixels after the binarization of the image
- * @return a linked list of the rectangle containing the characters
- */
-CHARACTERS *Segment_image(int rows, int columns, int *pixels)
+int is_blank_line(ImagePart *image, int height)
 {
-    LINES *lines = Get_lines(rows, columns, pixels);
-    CHARACTERS *characters = Get_char(rows, columns, pixels, lines);
+    int cols = image->cols,
+        rows = image->rows;
 
-    return characters;
-}
+    int *matrix = image->img;
 
-// Line segmentation
+    if (height > rows || height < 0)
+        return 0;
 
-/**
- * Segments the image into different lines
- *
- * @author Yvon Morice
- * @param rows, the number of rows of pixels in the image
- * @param columns, the number of columns of pixels in the image
- * @param pixels, the matrix of pixels after the binarization of the image
- * @return a linked list of the lines as rectangles
- *         (we only save the upper and lower bounds of the rectangle)
- */
-static LINES *Get_lines(int rows, int columns, const int *pixels)
-{
-    int histogram[rows];
-
-    int sum;
-    int mean_val = 0;
-    for (int i = 0; i < rows; ++i)
+    for (int i = 0; i < cols; i++)
     {
-        sum = 0;
-        for (int j = 0; j < columns; ++j) {
-            sum += *((pixels + i * rows) + j);
-        }
-        mean_val += sum;
-        histogram[i] = sum;
+        if (*(matrix + height * rows + i) == 1)
+            return 0;
     }
 
-    int threshold = (mean_val / rows)/2;
-
-
-    LINES *first = malloc(sizeof(LINES));
-    first -> next = NULL;
-    first -> upper = 0;
-
-    int start;
-    int end;
-
-    for (int i = 0; i < rows; ++i)
-    {
-        if (histogram[i] > threshold)
-        {
-            start = i++;
-
-            while (i < rows && histogram[i++] > threshold)
-                ;
-
-            end = i - 1;
-
-            Push_line(first, start, end);
-        }
-    }
-
-    return first;
+    return 1;
 }
 
-/**
- * Pushes a new element into the linked list of lines
- *
- * @author Yvon Morice
- * @param head, the first line of the list
- * @param upper, the upper bound value of the new element
- * @param lower, the lower bound value of the new element
- */
-static void Push_line(LINES *head, int upper, int lower)
+int is_blank_column(ImagePart *image, int width)
 {
-    if (head -> upper == 0)
+    int cols = image->cols,
+        rows = image->rows;
+
+    int *matrix = image->img;
+
+    if (width > cols || width < 0)
+        return 0;
+
+    for (int i = 0; i < rows; i++)
     {
-        head -> upper = upper;
-        head -> lower = lower;
-        return;
+        if (*(matrix + i * rows + width) == 1)
+            return 0;
     }
 
-    LINES *current = head;
-    while (current -> next != NULL)
-        current = current -> next;
-
-    current -> next = malloc(sizeof(LINES));
-    current -> next -> upper = upper;
-    current -> next -> lower = lower;
-    current -> next -> next = NULL;
+    return 1;
 }
 
-// Character segmentation
-
-/**
- * Segments the image into different characters using
- * the lines determined with Get_lines.
- *
- * @author Yvon Morice
- * @param rows, the number of rows of pixels in the image
- * @param columns, the number of columns of pixels in the image
- * @param pixels, the matrix of pixels after the binarization of the image
- * @param firstLine, the first element of the linked list of lines
- * @return the first element of the linked list of characters
- */
-static CHARACTERS *Get_char(
-        int rows, int columns, const int *pixels, LINES *firstLine)
+ImagePart get_all_text(ImagePart *image)
 {
-    LINES *currentLine = firstLine;
-    CHARACTERS *first = malloc(sizeof(CHARACTERS));
-    first -> next = NULL;
-    first -> bounds.upper = 0;
-    first -> bounds.lower = 0;
+    int left = image->cols,
+        right = 0,
+        top = image->rows,
+        bottom = 0;
 
-    int histogram[columns];
-    int sum, mean_val, threshold;
-
-    while (currentLine != NULL)
-    {
-        mean_val = 0;
-
-        for (int j = 0; j < columns; ++j)
+    for (int i = 0; i < image->rows; i++)
+        for (int j = 0; j < image->cols; j++)
         {
-            sum = 0;
-            for (int i = currentLine -> upper; i < currentLine -> lower; ++i)
-                sum += *((pixels + i * rows) + j);
+            int val = *(image->img + i * rows + j);
 
-            histogram[j] = sum;
-            mean_val += sum;
+            if (!val && x < left)
+                left = x;
+            if (!val && x > right)
+                right = x;
+            if (!val && y < top)
+                top = y;
+            if (!val && y > bottom)
+                bottom = y;
         }
 
-        threshold = (mean_val / columns)/3;
+    ImagePart *new_img = cut_image(image, left, top,
+                                   right - left + 1, bottom - top + 1);
+    return new_img;
+}
 
-        int left;
+int get_paragraph_space(ImagePart *image)
+{
+    int paragraphSpace = 0;
+    int lineHeight = 0;
 
-        for (int j = 0; j < columns; ++j)
+    int spaceCount = 0;
+    int lineHeightCount = 0;
+
+    int rows = image->rows,
+        cols = image->cols;
+
+    for (int i = 0; i < rows; i++)
+    {
+        if (is_blank_line(image, i))
         {
-            if (histogram[j] > threshold)
+            if (lineHeightCount != 0 && lineHeightCount > lineHeight)
             {
-                left = j++;
-
-                while (j < columns && histogram[j++] > threshold)
-                    ;
-
-                BOUNDS bounds =
-                        {
-                                currentLine -> upper, currentLine -> lower, left, j - 1
-                        };
-
-                Push_char(first, bounds);
+                lineHeight = lineHeightCount;
             }
+
+            spaceCount++;
+            lineHeightCount = 0;
         }
-
-        currentLine = currentLine -> next;
-    }
-
-    return first;
-}
-
-/**
- * Pushes a new element into the linked list of characters
- *
- * @author Yvon Morice
- * @param head, the first character of the list
- * @param bounds, the bounds of the rectangle containing the character
- */
-static void Push_char(CHARACTERS *head, BOUNDS bounds)
-{
-    if (head -> bounds.upper == 0)
-    {
-        head -> bounds = bounds;
-        return;
-    }
-
-    CHARACTERS *current = head;
-    while (current -> next != NULL)
-        current = current -> next;
-
-    current -> next = malloc(sizeof(CHARACTERS));
-    current -> next -> bounds = bounds;
-    current -> next -> next = NULL;
-}
-
-// Save
-
-/**
- * Saves the result of the segmentation in a file
- *
- * @param text, the string that will contain the result
- * @param rows, the number of rows of pixels in the image
- * @param matrix, the values of the pixels after having been binarized
- * @param firstChar, the linked list of characters
- */
-int Save_segmentation(int rows, const int *matrix, CHARACTERS *firstChar)
-{
-    FILE *file;
-    char *filename = "seg.txt";
-
-    if ((file = fopen(filename, "w+")) == NULL)
-    {
-        printf("Impossible to open the file \"%s\"", filename);
-        return 1;
-    }
-
-    CHARACTERS *current = firstChar;
-
-    int upper;
-    int lower;
-    int left;
-    int right;
-
-    while (current != NULL)
-    {
-        upper = (current -> bounds).upper;
-        lower = (current -> bounds).lower;
-        left = (current -> bounds).left;
-        right = (current -> bounds).right;
-
-        fprintf(file, "word: %3d %3d %3d %3d\n", upper, lower, left, right);
-
-        for (int i = upper; i < lower ; ++i)
+        else
         {
-            for (int j = left; j < right; ++j)
+            if (spaceCount != 0 && spaceCount > paragraphSpace)
             {
-                fprintf(file, "%2d", *(matrix + i * rows + j));
+                paragraphSpace = spaceCount;
             }
-            fprintf(file, "\n");
+
+            spaceCount = 0;
+            lineHeightCount++;
         }
-
-        fprintf(file, "\n");
-
-        current = current -> next;
     }
 
-    fclose(file);
-    printf("file: \"%s\": saved successfully!\n", filename);
+    return paragraphSpace;
+}
 
-    return 0;
+ImagePart *cut_image(int *image, int rows, int x, int y, int w, int h)
+{
+    ImagePart *new_img = malloc(sizeof(ImagePart));
+
+    new_img->rows = h - y;
+    new_img->cols = w - x;
+
+    int *matrix = calloc(new_img->rows * new_img * cols, sizeof(int));
+
+    for (int i = y; i < h; i++)
+        for (int j = x; j < w; j++)
+            *(matrix + i * rows + j) = *(image + i * rows + j);
+
+    return new_image;
+}
+
+ImagePart *cut_image(Imagepart *image, int x, int y, int w, int h)
+{
+    ImagePart *new_img = malloc(sizeof(ImagePart));
+
+    new_img->rows = h - y;
+    new_img->cols = w - x;
+
+    int *matrix = calloc(new_img->rows * new_img * cols, sizeof(int));
+
+    for (int i = y; i < h; i++)
+        for (int j = x; j < w; j++)
+            *(matrix + i * image->rows + j) =
+                *(image->img + i * image->rows + j);
+
+    return new_image;
+}
+
+List get_paragraphs_lines(ImagePart *image, int paragraphSpace)
+{
+    int s_index = 0;
+    int index = 0;
+    int white = 0;
+
+    List paragraphs = new_list();
+    List lines = new_list();
+
+    while (index < image->rows)
+    {
+        if (is_blank_line(image, index))
+        {
+            if (white == 0)
+            {
+                white++;
+
+                ImagePart *new_img =
+                    cut_image(image, 0, s_index, cols, index - s_index);
+
+                List l = get_words_letters(new_img);
+                void *elt = l;
+
+                lines = push_last_list(lines, elt, LineType);
+            }
+            else
+                white++;
+
+            index++;
+        }
+        else
+        {
+            if (white != 0)
+            {
+                s_index = index;
+
+                if (white > 0.9 * paragraphSpace)
+                {
+                    void *elt = line;
+                    paragraphs = push_last_list(paragraphs, elt, ParagraphType);
+                    line = new_list();
+                }
+
+                white++;
+                index += 5;
+            }
+            else
+                index++;
+        }
+    }
+
+    return paragraphs;
+}
+
+List get_paragraphs(int *image, int rows, int cols)
+{
+    ImagePart *img = cut_image(image, rows, 0, 0, rows, cols);
+
+    int paragraphSpace = get_paragraph_space(img);
+
+    List paragraphs = get_paragraphs_lines(img, paragraphSpace);
+
+    return paragraphs;
 }

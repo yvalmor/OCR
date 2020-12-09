@@ -1,34 +1,16 @@
-#ifndef OCR_HISTOGRAM_H
-#define OCR_HISTOGRAM_H
+#ifndef SEG_H
+#define SEG_H
 
-// Structures
+int is_blank_line(ImagePart *image, int height)
 
-/**
- * Used to store the bounds of the rectangle containing a character
- */
-typedef struct tagBOUNDS
-{
-    int upper;
-    int lower;
-    int left;
-    int right;
-} BOUNDS;
+int is_blank_column(ImagePart *image, int width)
 
-typedef struct tagLINES
-{
-    int upper;
-    int lower;
-    struct tagLINES *next;
-} LINES;
+int get_paragraph_space(ImagePart *image)
 
-typedef struct tagCHARACTERS
-{
-    BOUNDS bounds;
-    struct tagCHARACTERS *next;
-} CHARACTERS;
+ImagePart *cut_image(Imagepart *image, int x, int y, int w, int h)
 
-// Prototypes
-CHARACTERS *Segment_image(int rows, int columns, int *pixels);
-int Save_segmentation(int rows, const int *matrix, CHARACTERS *firstChar);
+List get_paragraphs_lines(ImagePart *image, int paragraphSpace)
 
-#endif //OCR_HISTOGRAM_H
+List get_paragraphs(int *image, int rows, int cols)
+
+#endif

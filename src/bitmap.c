@@ -8,6 +8,7 @@
 #include "../hdr/processing.h"
 #include "../hdr/segmentation.h"
 #include "../hdr/rlsa.h"
+#include "../hdr/list.h"
 
 
 /**
@@ -126,14 +127,7 @@ void loadImage(char *path)
     PIXEL pixels[rows][columns];
 
     IMAGE image = {rows, columns, *pixels};
-
     create_Image(surface, image);
-
-    const int sizeColors = ((4 * columns + 1) * rows + 2) * 3 - 1;
-    char textColors[sizeColors];
-
-    get_matrix_text(image, textColors);
-    save_Text("colors.txt", textColors);
 
     int intensity[rows][columns];
 
@@ -141,20 +135,13 @@ void loadImage(char *path)
 
     toBlackAndWhite(image, *intensity);
 
-    CHARACTERS *firstChar = Segment_image(rows, columns, *intensity);
+    ImagePart *new_image = get_all_text(*intensity, rows, cols, 150);
 
-    Save_segmentation(rows, *intensity, firstChar);
+    char *result = build_text(new_image);
 
-    const int sizeBW = (3 * columns + 1) * rows + 1;
-    char textBW[sizeBW];
+    set_text(result);
 
-    int *rlsa_mat = calloc(rows * columns, sizeof(int));
-    rlsa(columns, rows, *intensity, rlsa_mat);
-    to_matrix_bw(textBW, rows, columns, rlsa_mat);
-
-    save_Text("rlsa.txt", textBW);
-
-    set_text(path);
+    free(result);
 }
 
 /**
