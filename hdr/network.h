@@ -43,7 +43,7 @@ double sigmoid_prime(double x);
 double rdmDouble(double min, double max);
 
 void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW);
-void feedForward(Network *net, int *input_to_add);
+void feedForward(Network *net, int *input_to_add, int len_value);
 void propagation_layer(Layer *layer);
 void create_network(Network *net, int nbLayer,int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
 

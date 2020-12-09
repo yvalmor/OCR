@@ -131,7 +131,7 @@ void feedForward(Network *net, int *value, int len)
         errx(1, "Different length for input of net and given values.");
     
     for (int i = 0; i < len; i++)
-        net->input->neurons[i] = value[i];
+        net->input->neurons[i] = (double) value[i];
 
     propagation_layer((*net).layers + 1);
 }
@@ -310,7 +310,7 @@ void trainNetwork(Network *net, double lRate, int epoch, double *expected)
 
     for (int i = 0; i < epoch; i++)
     {
-        feedForward(net);
+        propagation_layer(net->layers + 1);
         err += backpropagation(net, expected, lRate);
     }
 
