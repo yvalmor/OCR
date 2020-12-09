@@ -136,6 +136,30 @@ void feedForward(Network *net, int *value, int len)
     propagation_layer((*net).layers + 1);
 }
 
+char get_answer(Network *net)
+{
+    int max = net->output->neurons[0].activated;
+    int pos = 0;
+
+    for (int i = 0; i < net->output->len_neurons; i++)
+    {
+        if (net->output->neurons[i].activated > max)
+        {
+            max = net->output->neurons[i].activated;
+            pos = i;
+        }
+    }
+
+    if (pos >= 0 && pos < 10) //number
+        return 0;
+
+    else if (pos >= 10 && pos < 37) //caps
+        return 0;
+
+    else if (pos >= 37 && ) //alpha
+        return 0;
+}
+
 /**
  * Be carefull not to launch it on input layer.
  * @authors Eliott Beguet
