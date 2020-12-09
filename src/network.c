@@ -125,8 +125,14 @@ void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeuron
  * @authors Eliott Beguet
  * @param network to apply the feed forward
  */
-void feedForward(Network *net)
+void feedForward(Network *net, int *value, int len)
 {
+    if (len != net->input->len_neurons)
+        errx(1, "Different length for input of net and given values.");
+    
+    for (int i = 0; i < len; i++)
+        net->input->neurons[i] = value[i];
+
     propagation_layer((*net).layers + 1);
 }
 
