@@ -151,13 +151,15 @@ char get_answer(Network *net)
     }
 
     if (pos >= 0 && pos < 10) //number
-        return 0;
+        return '0' + (char) pos;
 
-    else if (pos >= 10 && pos < 37) //caps
-        return 0;
+    else if (pos >= 10 && pos < 36) //caps
+        return 'A' + (char) pos - 10;
 
-    else if (pos >= 37 && ) //alpha
-        return 0;
+    else if (pos >= 36 && pos < 63) //alpha
+        return 'a' + (char) pos - 36;
+
+    return ' ';
 }
 
 /**
