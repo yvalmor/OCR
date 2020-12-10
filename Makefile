@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
-LDFLAGS=-I"include" -L"lib" -lSDL2
+LDFLAGS=-I"include" -L"lib" -lSDL2 -lSDL2_image
 
 XOR_CFLAGS=-Wall -Wextra -Werror -std=c99
 XOR_LDFLAGS=-lm

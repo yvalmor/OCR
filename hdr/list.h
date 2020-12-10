@@ -33,27 +33,27 @@ typedef struct List {
 
 
 
-List new_list(void);
+List *new_list(void);
 
-int empty(List list);
+int empty(List *list);
 
-unsigned long get_length(List list);
+unsigned long get_length(List *list);
 
-Element *get_first(List list);
+Element *get_first(List *list);
 
-Element *get_last(List list);
+Element *get_last(List *list);
 
-List push_last_list(List list, void *x, ElementType elementType);
+List *push_last_list(List *list, void *x, ElementType elementType);
 
-List push_first_list(List list, void *x, ElementType elementType);
+List *push_first_list(List *list, void *x, ElementType elementType);
 
-List pop_last_list(List list);
+List *pop_last_list(List *list);
 
-List pop_first_list(List list);
+List *pop_first_list(List *list);
 
-Element *get_element(List list, int i);
+Element *get_element(List *list, int i);
 
-List clear_list(List list);
+List *clear_list(List *list);
 
 
 #endif

@@ -1,32 +1,32 @@
 #include <stdlib.h>
 #include "../hdr/list.h"
 
-List new_list(void)
+List *new_list(void)
 {
     return NULL;
 }
 
-int empty(List list)
+int empty(List *list)
 {
     return list == NULL || list->length == 0 ? 1 : 0;
 }
 
-size_t get_length(List list)
+size_t get_length(List *list)
 {
     return empty(list) ? 0 : list->length;
 }
 
-Element *get_first(List list)
+Element *get_first(List *list)
 {
     return empty(list) ? NULL : list->first;
 }
 
-Element *get_last(List list)
+Element *get_last(List *list)
 {
     return empty(list) ? NULL : list->last;
 }
 
-List push_last_list(List list, void *x, ElementType elementType)
+List *push_last_list(List *list, void *x, ElementType elementType)
 {
     Element *elt;
     elt = malloc(sizeof(*elt));
@@ -58,8 +58,8 @@ List push_last_list(List list, void *x, ElementType elementType)
             exit(1);
 
         list->last->next = elt;
-        elt->previous = list->last;
-        list->last = elt:
+        elt->prev = list->last;
+        list->last = elt;
     }
 
     (list->length)++;
@@ -67,7 +67,7 @@ List push_last_list(List list, void *x, ElementType elementType)
     return list;
 }
 
-List push_first_list(List list, void *x, ElementType elementType)
+List *push_first_list(List *list, void *x, ElementType elementType)
 {
     Element *elt;
     elt = malloc(sizeof(*elt));
@@ -100,7 +100,7 @@ List push_first_list(List list, void *x, ElementType elementType)
 
         list->first->prev = elt;
         elt->next = list->first;
-        list->first = elt:
+        list->first = elt;
     }
 
     list->length++;
@@ -108,7 +108,7 @@ List push_first_list(List list, void *x, ElementType elementType)
     return list;
 }
 
-List pop_last_list(List list)
+List *pop_last_list(List *list)
 {
     if (empty(list))
     {
@@ -119,7 +119,7 @@ List pop_last_list(List list)
     {
         free(list);
         list = NULL;
-        return create_list();
+        return new_list();
     }
 
     Element *temp = list->last;
@@ -137,7 +137,7 @@ List pop_last_list(List list)
     return list;
 }
 
-List pop_first_list(List list)
+List *pop_first_list(List *list)
 {
     if (empty(list))
     {
@@ -148,7 +148,7 @@ List pop_first_list(List list)
     {
         free(list);
         list = NULL;
-        return create_list();
+        return new_list();
     }
 
     Element *temp = list->first;
@@ -166,14 +166,14 @@ List pop_first_list(List list)
     return list;
 }
 
-Element *get_element(List list, int i)
+Element *get_element(List *list, int i)
 {
     unsigned long index = i;
 
     if (index >= list->length)
         exit(1);
 
-    Element elt = list->first;
+    Element *elt = list->first;
 
     while (i-- > 0)
         elt = elt->next;
@@ -181,7 +181,7 @@ Element *get_element(List list, int i)
     return elt;
 }
 
-List clear_list(List list)
+List *clear_list(List *list)
 {
     while (!empty(list))
         list = pop_last_list(list);

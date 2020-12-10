@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
+#include "../hdr/list.h"
 #include "../hdr/text.h"
+#include "../hdr/segmentation.h"
 
 int save_Text(char *file_name, char *text)
 {
@@ -20,7 +23,7 @@ int save_Text(char *file_name, char *text)
     return 0;
 }
 
-void build_word(List letters, char **content)
+void build_word(List *letters, char **content)
 {
     Element *letter = letters->first;
 
@@ -36,7 +39,7 @@ void build_word(List letters, char **content)
     }
 }
 
-void build_line(List words, char **content)
+void build_line(List *words, char **content)
 {
     Element *word = words->first;
 
@@ -44,7 +47,7 @@ void build_line(List words, char **content)
     {
         char *new_content = calloc(10000, sizeof(char));
 
-        List *letters = word->value;
+        List *letters = word->val;
         build_word(letters, &new_content);
 
         *content = strcat(*content, new_content);
@@ -54,15 +57,15 @@ void build_line(List words, char **content)
     }
 }
 
-void build_paragraph(List paragraphs, char **content)
+void build_paragraph(List *lines, char **content)
 {
-    Element *line = paragraphs->first;
+    Element *line = lines->first;
 
     while (line != NULL)
     {
         char *new_content = calloc(10000, sizeof(char));
 
-        List *words = line->value;
+        List *words = line->val;
         build_line(words, &new_content);
 
         *content = strcat(*content, new_content);
@@ -72,9 +75,9 @@ void build_paragraph(List paragraphs, char **content)
     }
 }
 
-char *build_text(ImagePart image)
+char *build_text(int *image, int rows, int cols)
 {
-    List paragraphs = get_paragraphs(image);
+    List *paragraphs = get_paragraphs(image, rows, cols);
 
     char *content = calloc(1000000, sizeof(char));
 
@@ -82,6 +85,18 @@ char *build_text(ImagePart image)
 
     while (paragraph != NULL)
     {
-        //TODO
+        char *new_content = calloc(10000, sizeof(char));
+
+        List *lines = paragraph->val;
+        build_paragraph(lines, &new_content);
+
+        content = strcat(content, new_content);
+
+        if (paragraph->next != NULL)
+            content = strcat(content, "\n\n");
+
+        paragraph = paragraph->next;
     }
+
+    return content;
 }

@@ -1,11 +1,14 @@
+#include <string.h>
+#include <SDL2/SDL.h>
+
 #include "../hdr/list.h"
-#include "../hdr/paragraphs.h"
-#include "../hdr/seg2.h"
+#include "../hdr/segmentation.h"
+#include "../hdr/bitmap.h"
 
 int get_words_space(ImagePart *image)
 {
     unsigned int max_count = 0,
-                 min_count = cols,
+                 min_count = image->cols,
                  count = 0;
 
     for (int x = 0; x < image->cols; ++x)
@@ -25,9 +28,9 @@ int get_words_space(ImagePart *image)
     return max_count - (min_count) / 2;
 }
 
-List get_letters(ImagePart *image)
+List *get_letters(ImagePart *image)
 {
-    List letters_l = new_list();
+    List *letters_l = new_list();
     int s_index = 0;
 
     for (int x = 0; x <= image->cols; x++)
@@ -40,8 +43,8 @@ List get_letters(ImagePart *image)
             {
                 ImagePart *new_img = cut_image(image, s_index, 0, x - s_index,
                                                image->rows);
-                new_img = get_all_text(new_img, 50);
-                new_img = resize_image(new_img, 32);
+                new_img = get_all_text(new_img);
+                //new_img = resize_image(new_img, 32);
 
                 letters_l = push_last_list(letters_l, new_img, LetterType);
 
@@ -53,14 +56,14 @@ List get_letters(ImagePart *image)
     return letters_l;
 }
 
-List get_words_letters(ImagePart *image)
+List *get_words_letters(ImagePart *image)
 {
-    image = get_all_text(image, 50);
+    image = get_all_text(image);
     int space_limit = get_words_space(image);
     space_limit -= space_limit * 0.4;
 
     int wait_for_b_col = 0;
-    List words_l = new_list();
+    List *words_l = new_list();
     int s_index = 0;
     int blank_count = 0;
 

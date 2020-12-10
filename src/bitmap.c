@@ -60,7 +60,7 @@ SDL_Surface* load_image_surface(char *path)
  * @param image, contains the pixel matrix which we want to extract data from
  * @param text, the string that contains the extracted data
  */
-
+/*
 static void get_matrix_text(IMAGE image, char *text)
 {
     int rows = image.rows;
@@ -103,6 +103,40 @@ static void get_matrix_text(IMAGE image, char *text)
         }
         index += sprintf(&text[index], "\n");
     }
+}*/
+void put_pixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel)
+{
+    Uint8 *p = pixel_ref(surface, x, y);
+
+    switch(surface->format->BytesPerPixel)
+    {
+        case 1:
+            *p = pixel;
+            break;
+
+        case 2:
+            *(Uint16 *)p = pixel;
+            break;
+
+        case 3:
+            if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+            {
+                p[0] = (pixel >> 16) & 0xff;
+                p[1] = (pixel >> 8) & 0xff;
+                p[2] = pixel & 0xff;
+            }
+            else
+            {
+                p[0] = pixel & 0xff;
+                p[1] = (pixel >> 8) & 0xff;
+                p[2] = (pixel >> 16) & 0xff;
+            }
+            break;
+
+        case 4:
+            *(Uint32 *)p = pixel;
+            break;
+    }
 }
 
 /**
@@ -135,11 +169,10 @@ void loadImage(char *path)
 
     toBlackAndWhite(image, *intensity);
 
-    ImagePart *new_image = get_all_text(*intensity, rows, cols, 150);
-
-    char *result = build_text(new_image);
+    char *result = build_text(*intensity, rows, columns);
 
     set_text(result);
+    save_Text("result_ocr.txt", result);
 
     free(result);
 }
@@ -219,9 +252,9 @@ void create_Matrix(SDL_Surface *surface, IMAGE image)
             Uint8 r = 0, g = 0, b = 0;
             Uint32 pixel = get_pixel(surface, j, i);
             SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-            (image.pixels + i * row + j) -> r = r;
-            (image.pixels + i * row + j) -> g = g;
-            (image.pixels + i * row + j) -> b = b;
+            (image.pixels + i * columns + j) -> r = r;
+            (image.pixels + i * columns + j) -> g = g;
+            (image.pixels + i * columns + j) -> b = b;
         }
     }
 
