@@ -41,7 +41,7 @@ void toBlackAndWhite(IMAGE image, int intensity[image.rows][image.columns])
     }
 }
 
-/*
+
 int* histogramme(int intensity[][],int row,int column)
 {
     int histo[255];
@@ -113,8 +113,6 @@ int treshold(size)
             T = j;
         }
     }
-
-
 }
 
 void toBlackAndWhite2(PIXEL *pixels,int row, int column,int intensity[row][column])
@@ -127,14 +125,13 @@ void toBlackAndWhite2(PIXEL *pixels,int row, int column,int intensity[row][colum
     {
         for (int j = 0; j < column; j++)
         {
-            if (intensity[i][j] >= T)
-                intensity[i][j] = 255;
+            if (intensity[i][j] < T)
+                intensity[i][j] = 1;
             else
                 intensity[i][j] = 0;
         }
     }
 }
-*/
 
 void toMatrix(char *text, int rows, int columns, int *matrix)
 {
