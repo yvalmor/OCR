@@ -44,7 +44,7 @@ void rndNeuron(Neuron *neuron, int len_weight)
     for (int i = 0; i < len_weight; i++)
     {
         *(weights + i) = rdmDouble(-1.5, 1.5);
-        *(old_w + i) = 0;
+        *(old_w + i) = (*weights + i);
     }
 
     (*neuron).error = 0;
@@ -369,6 +369,7 @@ void updateLayer(Layer *layer, double lR)
  */
 void freeNeuron(Neuron *n)
 {
+    free(n->old_weights);
     free(n->weights);
 }
 
