@@ -6,9 +6,10 @@
     <property name="height_request">720</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">OCR</property>
-    <property name="window_position">center</property>
+    <property name="resizable">False</property>
     <property name="default_width">1280</property>
     <property name="default_height">720</property>
+    <property name="has_resize_grip">False</property>
     <signal name="destroy" handler="on_Main_window_destroy" swapped="no"/>
     <signal name="delete-event" handler="on_Main_window_delete" swapped="no"/>
     <child>
@@ -19,14 +20,6 @@
           <object class="GtkFixed" id="fixed1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <child>
-              <object class="GtkImage" id="chosenImage">
-                <property name="width_request">600</property>
-                <property name="height_request">600</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-            </child>
             <child>
               <object class="GtkSeparator" id="separator1">
                 <property name="width_request">590</property>
@@ -51,8 +44,8 @@
                 <signal name="file-set" handler="on_imageChooser_file_set" swapped="no"/>
               </object>
               <packing>
-                <property name="x">88</property>
-                <property name="y">630</property>
+                <property name="x">18</property>
+                <property name="y">634</property>
               </packing>
             </child>
             <child>
@@ -66,8 +59,8 @@
                 <signal name="clicked" handler="on_imageAnalyse_clicked" swapped="no"/>
               </object>
               <packing>
-                <property name="x">304</property>
-                <property name="y">630</property>
+                <property name="x">192</property>
+                <property name="y">633</property>
               </packing>
             </child>
             <child>
@@ -84,16 +77,82 @@
               </packing>
             </child>
             <child>
-              <object class="GtkTextView" id="imageContent">
-                <property name="width_request">650</property>
-                <property name="height_request">695</property>
+              <object class="GtkImage" id="chosenImage">
+                <property name="width_request">600</property>
+                <property name="height_request">600</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can_focus">False</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolledwindow1">
+                <property name="width_request">657</property>
+                <property name="height_request">690</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="editable">False</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkTextView" id="imageContent">
+                    <property name="width_request">650</property>
+                    <property name="height_request">690</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                  </object>
+                </child>
               </object>
               <packing>
-                <property name="x">624</property>
-                <property name="y">8</property>
+                <property name="x">618</property>
+                <property name="y">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="autoRotationCheckButton">
+                <property name="label" translatable="yes">Automatic
+  rotation</property>
+                <property name="width_request">100</property>
+                <property name="height_request">38</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="xalign">0</property>
+                <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="on_autoRotationCheckButton_toggled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="x">359</property>
+                <property name="y">639</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="angleScale">
+                <property name="width_request">100</property>
+                <property name="height_request">24</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="fill_level">360</property>
+                <property name="round_digits">1</property>
+                <property name="digits">0</property>
+                <property name="has_origin">False</property>
+                <property name="value_pos">left</property>
+              </object>
+              <packing>
+                <property name="x">470</property>
+                <property name="y">666</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="angleLabel">
+                <property name="width_request">100</property>
+                <property name="height_request">23</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Angle</property>
+              </object>
+              <packing>
+                <property name="x">471</property>
+                <property name="y">634</property>
               </packing>
             </child>
           </object>
@@ -180,7 +239,7 @@
             </child>
             <child>
               <object class="GtkButton" id="startTrainingButton">
-                <property name="label" translatable="yes">button</property>
+                <property name="label" translatable="yes">Start training</property>
                 <property name="width_request">120</property>
                 <property name="height_request">50</property>
                 <property name="visible">True</property>
@@ -199,7 +258,7 @@
                 <property name="height_request">35</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Trainging files</property>
+                <property name="label" translatable="yes">Training files</property>
                 <property name="justify">center</property>
               </object>
               <packing>

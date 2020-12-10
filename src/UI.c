@@ -12,9 +12,12 @@ char *filename;
 
 static GtkTextBuffer *buffer;
 static GtkImage *image;
+static GtkScale *angleScale;
 GtkFileChooser *trainingFileChooser, *solutionFileChooser;
 GtkWidget *startButton;
 GtkProgressBar *trainingProgress;
+
+static int autoRot;
 
 /**
  * Loads the UI and display it on the screen
@@ -61,6 +64,12 @@ int setup()
 
     trainingProgress = GTK_PROGRESS_BAR(
             gtk_builder_get_object(builder, "trainingProgressBar"));
+
+    angleScale = GTK_SCALE(
+            gtk_builder_get_object(builder, "angleScale"));
+
+    gtk_range_set_range(GTK_RANGE(angleScale), 0, 360);
+    gtk_range_set_value(GTK_RANGE(angleScale), 0);
 
     gtk_builder_connect_signals(builder, NULL);
 
@@ -114,7 +123,15 @@ void on_Main_window_destroy(
 void on_imageChooser_file_set(GtkFileChooserButton *button)
 {
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(button));
-    gtk_image_set_from_file(image, filename);
+
+    GdkPixbuf *pixBuf =
+        gdk_pixbuf_new_from_file_at_scale(filename,
+                                          600,
+                                          600,
+                                          TRUE,
+                                          NULL);
+
+    gtk_image_set_from_pixbuf(image, pixBuf);
 }
 
 /**
@@ -132,7 +149,8 @@ void on_imageAnalyse_clicked(
     if (filename == NULL)
         return;
 
-    loadImage(filename);
+    int rotationAngle = gtk_range_get_value(GTK_RANGE(angleScale));
+    loadImage(filename, autoRot, rotationAngle);
 }
 
 /**
@@ -150,6 +168,17 @@ void on_startTrainingButton_clicked(GtkButton *button,
 
     //GSList *
     //size_t nbFiles = 0;
+}
+
+void on_autoRotationCheckButton_toggled(
+            __attribute__ ((unused)) GtkToggleButton *button,
+            __attribute__ ((unused)) gpointer user_data)
+{
+    autoRot = !autoRot;
+
+    gtk_widget_set_sensitive(
+            GTK_WIDGET(angleScale),
+            autoRot ? FALSE : TRUE);
 }
 
 /**

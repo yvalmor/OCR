@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <SDL2/SDL.h>
 
+#include "../hdr/bitmap.h"
 #include "../hdr/list.h"
 #include "../hdr/text.h"
 #include "../hdr/segmentation.h"
@@ -69,7 +71,7 @@ void build_paragraph(List *lines, char **content)
         build_line(words, &new_content);
 
         *content = strcat(*content, new_content);
-        *content = strcat(*content, "\n");
+        *content = strcat(*content, "\n\n");
 
         line = line->next;
     }
@@ -93,7 +95,7 @@ char *build_text(int *image, int rows, int cols)
         content = strcat(content, new_content);
 
         if (paragraph->next != NULL)
-            content = strcat(content, "\n\n");
+            content = strcat(content, "\n\n\n\n");
 
         paragraph = paragraph->next;
     }

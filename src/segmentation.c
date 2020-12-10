@@ -3,7 +3,6 @@
 #include "../hdr/list.h"
 #include "../hdr/segmentation.h"
 #include "../hdr/lines.h"
-#include "../hdr/bitmap.h"
 
 int is_blank_line(ImagePart *image, int height)
 {
@@ -51,13 +50,13 @@ ImagePart *get_all_text(ImagePart *image)
         {
             int val = image->img[i * image->cols + j];
 
-            if (!val && j < left)
+            if (val && j < left)
                 left = j;
-            if (!val && j > right)
+            if (val && j > right)
                 right = j;
-            if (!val && i < top)
+            if (val && i < top)
                 top = i;
-            if (!val && i > bottom)
+            if (val && i > bottom)
                 bottom = i;
         }
 
@@ -143,9 +142,11 @@ ImagePart *cut_image(ImagePart *image, int x, int y, int w, int h)
 
 List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
 {
+    image = get_all_text(image);
+
     int s_index = 0;
     int index = 0;
-    int white = 1;
+    int white = 0;
 
     List *paragraphs = new_list();
     List *lines = new_list();
@@ -154,7 +155,7 @@ List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
     {
         if (is_blank_line(image, index))
         {
-            if (white == 0)
+            if (white == 0 && index != 0)
             {
                 white++;
 
@@ -177,7 +178,7 @@ List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
             {
                 s_index = index;
 
-                if (white > 0.9 * paragraphSpace)
+                if (white > 0.9 * paragraphSpace && lines != NULL)
                 {
                     void *elt = lines;
                     paragraphs = push_last_list(paragraphs, elt, ParagraphType);
@@ -190,6 +191,12 @@ List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
             else
                 index++;
         }
+    }
+
+    if (lines != NULL)
+    {
+        void *elt = lines;
+        paragraphs = push_last_list(paragraphs, elt, ParagraphType);
     }
 
     return paragraphs;

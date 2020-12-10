@@ -12,10 +12,10 @@
 
 
 /**
- * Initializes the SDL library 
+ * Initializes the SDL library
  *
- *@author Souleymane Sentici
- *@returns 1 if there is an error, 0 otherwise
+ * @author Souleymane Sentici
+ * @returns 1 if there is an error, 0 otherwise
  */
 int Init_Sdl()
 {
@@ -53,57 +53,6 @@ SDL_Surface* load_image_surface(char *path)
     return img;
 }
 
-/**
- * Gathers a colored image's pixel data in a string
- *
- * @author Yvon Morice
- * @param image, contains the pixel matrix which we want to extract data from
- * @param text, the string that contains the extracted data
- */
-/*
-static void get_matrix_text(IMAGE image, char *text)
-{
-    int rows = image.rows;
-    int columns = image.columns;
-
-    int index = 0;
-
-    int val;
-
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < columns; ++j)
-        {
-            val = (image.pixels + i * rows + j)->r;
-            index += sprintf(&text[index], "%3d ", val);
-        }
-        index += sprintf(&text[index], "\n");
-    }
-
-    index += sprintf(&text[index], "\n\n");
-
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < columns; ++j)
-        {
-            val = (image.pixels + i * rows + j)->r;
-            index += sprintf(&text[index], "%3d ", val);
-        }
-        index += sprintf(&text[index], "\n");
-    }
-
-    index += sprintf(&text[index], "\n\n");
-
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < columns; ++j)
-        {
-            val = (image.pixels + i * rows + j)->r;
-            index += sprintf(&text[index], "%3d ", val);
-        }
-        index += sprintf(&text[index], "\n");
-    }
-}*/
 void put_pixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel)
 {
     Uint8 *p = pixel_ref(surface, x, y);
@@ -150,10 +99,16 @@ void put_pixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel)
  * @see to_matrix_bw that saves a black and white matrix's pixel data in a
  *      string
  */
-
-void loadImage(char *path)
+void loadImage(char *path, int autoRot, int rotationAngle)
 {
     SDL_Surface *surface = load_image_surface(path);
+
+    autoRot = autoRot;
+    rotationAngle = rotationAngle;
+    //if (autoRot)
+    //    rotation(-1, surface);
+    //else
+    //    rotation(rotationAngle, surface);
 
     int rows = surface->h;
     int columns = surface->w;
@@ -168,22 +123,6 @@ void loadImage(char *path)
     toGrayscale(image, *intensity);
 
     toBlackAndWhite2(image, *intensity);
-
-    SDL_Surface *surface_x;
-    surface_x = SDL_CreateRGBSurface(0, columns, rows, 32, 0, 0, 0, 0);
-
-    for (unsigned int x = 0; x < (unsigned int)columns; x++)
-        for (unsigned int y = 0; y < (unsigned int)rows; y++)
-        {
-            int val = intensity[y][x];
-            Uint32 value = SDL_MapRGB(surface->format, val * 255, val * 255, val * 255);
-            put_pixel(surface_x, x, y, value);
-        }
-
-    char *name = "bw.bmp";
-
-    SDL_SaveBMP(surface_x, name);
-    SDL_FreeSurface(surface_x);
 
     char *result = build_text(*intensity, rows, columns);
 

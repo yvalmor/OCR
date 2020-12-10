@@ -19,7 +19,7 @@ typedef struct tagIMAGE
 
 int Init_Sdl();
 SDL_Surface* load_image_surface(char *path);
-void loadImage(char *path);
+void loadImage(char *path, int autoRot, int rotationAngle);
 void create_Image(SDL_Surface *surface, IMAGE image);
 Uint8* pixel_ref(SDL_Surface *surf, unsigned x, unsigned y);
 void put_pixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel);
