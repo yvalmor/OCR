@@ -167,7 +167,23 @@ void loadImage(char *path)
 
     toGrayscale(image, *intensity);
 
-    toBlackAndWhite(image, *intensity);
+    toBlackAndWhite2(image, *intensity);
+
+    SDL_Surface *surface_x;
+    surface_x = SDL_CreateRGBSurface(0, columns, rows, 32, 0, 0, 0, 0);
+
+    for (unsigned int x = 0; x < (unsigned int)columns; x++)
+        for (unsigned int y = 0; y < (unsigned int)rows; y++)
+        {
+            int val = intensity[y][x];
+            Uint32 value = SDL_MapRGB(surface->format, val * 255, val * 255, val * 255);
+            put_pixel(surface_x, x, y, value);
+        }
+
+    char *name = "bw.bmp";
+
+    SDL_SaveBMP(surface_x, name);
+    SDL_FreeSurface(surface_x);
 
     char *result = build_text(*intensity, rows, columns);
 

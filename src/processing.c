@@ -41,45 +41,55 @@ void toBlackAndWhite(IMAGE image, int *intensity)
     }
 }
 
-int* histogramme(int intensity[][],int row,int column)
+int* histogram(int *intensity, int row, int column)
 {
-    int histo[255];
+    int *histo = malloc(255 * sizeof(int));
+
     for (int i = 0;i<row;i++)
     {
         for (int j = 0;j<column;j++)
-            histo[intensity[i][j]]+=1;
+            histo[intensity[i * column + j]]++;
     }
+
     return histo;
 }
 
-float muValue(histo[],int size)
+float muValue(int *histo, int size)
 {
     float mu = 0;
+
     for (int i = 0;i<255;i++)
     {
         mu+= i*histo[i];
     }
+
     mu = mu/size;
+
+    return mu;
 }
 
-float sigmaPower_of_2(float mu,int size)
+float sigmaPower_of_2(float mu, int *histo, int size)
 {
     float sigmPower2 = 0;
+
     for(int i = 0;i<255;i++)
     {
         sigmPower2 += ((i-mu)*(i-mu))*histo[i];
     }
+
     sigmPower2 = sigmPower2/size;
-    return sigmPower2,mu;
+
+    return sigmPower2;
 }
 
-int treshold(size)
+int treshold(int *histo, int size)
 {
     int nbPixel1 = 0;
     int nbPixel2 = 0;
 
     float vB;
     float T;
+
     for(int j = 1;j<255;j++)
     {
         int class1[j];
@@ -101,8 +111,9 @@ int treshold(size)
 
         float mu1 = muValue(class1, size);
         float mu2 = muValue(class2, size);
-        float sigm1 = sigmaPower_of_2(mu1, size);
-        float sigm2 = sigmaPower_of_2(mu2, size);
+
+        //float sigm1 = sigmaPower_of_2(mu1, histo, size);
+        //float sigm2 = sigmaPower_of_2(mu2, size);
 
         float vB2 = (nbPixel1 / size) * (nbPixel2 / size) * ((mu1 - mu2) * (mu1 - mu2));
 
@@ -112,22 +123,29 @@ int treshold(size)
             T = j;
         }
     }
+
+    return T;
 }
 
-void toBlackAndWhite2(PIXEL *pixels,int row, int column,int intensity[row][column])
+void toBlackAndWhite2(IMAGE image, int *intensity)
 {
+    int row = image.rows;
+    int column = image.columns;
+
     int size = row*column;
-    int histo[255] = histogramme(intensity,row,column);
-    int T = treshold(size);
+    int *histo = histogram(intensity, row, column);
+    int T = treshold(histo, size);
 
     for (int i = 0;i<row;i++)
     {
         for (int j = 0; j < column; j++)
         {
-            if (intensity[i][j] < T)
-                intensity[i][j] = 1;
+            if (intensity[i * column + j] < T)
+                intensity[i * column + j] = 1;
             else
-                intensity[i][j] = 0;
+                intensity[i * column + j] = 0;
         }
     }
+
+    free(histo);
 }

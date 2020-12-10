@@ -5,6 +5,8 @@
 #include "../hdr/segmentation.h"
 #include "../hdr/bitmap.h"
 
+static int cpt = 0;
+
 int get_words_space(ImagePart *image)
 {
     unsigned int max_count = 0,
@@ -45,6 +47,31 @@ List *get_letters(ImagePart *image)
                                                image->rows);
                 new_img = get_all_text(new_img);
                 //new_img = resize_image(new_img, 32);
+
+                SDL_Surface *surface;
+                surface = SDL_CreateRGBSurface(0, new_img->cols, new_img->rows, 32, 0, 0, 0, 0);
+
+                for (unsigned int x = 0; x < (unsigned int)new_img->cols; x++)
+                    for (unsigned int y = 0; y < (unsigned int)new_img->rows; y++)
+                    {
+                        int val = new_img->img[y * new_img->cols + x];
+                        Uint32 value = SDL_MapRGB(surface->format, val * 255, val * 255, val * 255);
+                        put_pixel(surface, x, y, value);
+                    }
+
+                int x1 = cpt/100;
+                int x2 = cpt%100/10;
+                int x3 = cpt%10;
+
+                char name[20] = {'l', 'e', 't', 't', 'e', 'r', 's',
+                    cpt < 100 ? '0' : (char) x1 + '0',
+                    cpt < 10 ? '0' : (char) x2 + '0',
+                    (char) x3 + '0',
+                    '.', 'b', 'm', 'p', '\0'};
+                cpt++;
+
+                SDL_SaveBMP(surface, name);
+                SDL_FreeSurface(surface);
 
                 letters_l = push_last_list(letters_l, new_img, LetterType);
 

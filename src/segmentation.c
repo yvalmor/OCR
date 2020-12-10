@@ -5,8 +5,6 @@
 #include "../hdr/lines.h"
 #include "../hdr/bitmap.h"
 
-static int cpt = 0;
-
 int is_blank_line(ImagePart *image, int height)
 {
     int cols = image->cols;
@@ -17,7 +15,7 @@ int is_blank_line(ImagePart *image, int height)
 
     for (int i = 0; i < cols; i++)
     {
-        if (image->img[height * cols + i] == 0)
+        if (image->img[height * cols + i] == 1)
             return 0;
     }
 
@@ -34,7 +32,7 @@ int is_blank_column(ImagePart *image, int width)
 
     for (int i = 0; i < rows; i++)
     {
-        if (image->img[i * cols + width] == 0)
+        if (image->img[i * cols + width] == 1)
             return 0;
     }
 
@@ -162,31 +160,6 @@ List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
 
                 ImagePart *new_img =
                     cut_image(image, 0, s_index, image->cols, index - s_index);
-
-                SDL_Surface *surface;
-                surface = SDL_CreateRGBSurface(0, new_img->cols, new_img->rows, 32, 0, 0, 0, 0);
-
-                for (unsigned int x = 0; x < (unsigned int)new_img->cols; x++)
-                    for (unsigned int y = 0; y < (unsigned int)new_img->rows; y++)
-                    {
-                        int val = new_img->img[y * new_img->cols + x];
-                        Uint32 value = SDL_MapRGB(surface->format, val * 255, val * 255, val * 255);
-                        put_pixel(surface, x, y, value);
-                    }
-
-                int x1 = cpt/100;
-                int x2 = cpt%100/10;
-                int x3 = cpt%10;
-
-                char name[12] = {'p', 'a', 'r', 'a',
-                    cpt < 100 ? '0' : (char) x1 + '0',
-                    cpt < 10 ? '0' : (char) x2 + '0',
-                    (char) x3 + '0',
-                    '.', 'b', 'm', 'p', '\0'};
-                cpt++;
-
-                SDL_SaveBMP(surface, name);
-                SDL_FreeSurface(surface);
 
                 List *l = get_words_letters(new_img);
                 void *elt = l;

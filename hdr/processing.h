@@ -5,7 +5,6 @@
 
 void toGrayscale(IMAGE image, int *intensity);
 void toBlackAndWhite(IMAGE image, int *intensity);
-
-void to_matrix_bw(char *text, int rows, int columns, int *matrix);
+void toBlackAndWhite2(IMAGE image, int *intensity);
 
 #endif //OCR_PROCESSING_H
