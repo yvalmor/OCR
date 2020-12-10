@@ -12,6 +12,7 @@ typedef struct Neuron
     int len_weight;                 //nber of weight
     int biais;                      //corresponging bias
 
+    double *old_weights;
     double error;                   //error stored
     double value;                   //weighted sum
     double activated;               //sigmoid value
@@ -49,6 +50,7 @@ void create_network(Network *net, int nbLayer,int neuronsPerLayer, int inputNbNe
 
 double backpropagation(Network *net, double *expected, double learningRate);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
+void trainNetwork(Network *n, double lrate, int epoch, double *expected);
 
 double mse(double expctd, double output);
 double ErrorOutput(Layer *layer, double *expected);

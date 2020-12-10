@@ -3,7 +3,7 @@
 #include <math.h>
 #include <err.h>
 
-#include "../hdr/network.h"
+#include "network.h"
 
 /**
  * @authors Eliott Beguet
@@ -36,16 +36,21 @@ double rdmDouble(double min, double max)
 void rndNeuron(Neuron *neuron, int len_weight)
 {
     double *weights = calloc(len_weight, sizeof(double));
+    double *old_w = calloc(len_weight, sizeof(double));
 
     if (neuron == NULL || weights == NULL)
         errx(1, "*neuron or *weights is NULL at rndNeuron.\n");
 
     for (int i = 0; i < len_weight; i++)
+    {
         *(weights + i) = rdmDouble(-1.5, 1.5);
+        *(old_w + i) = 0;
+    }
 
     (*neuron).error = 0;
     (*neuron).biais = rdmDouble(-1.5, 1.5);
     (*neuron).weights = weights;
+    (*neuron).old_weights = old_w;
     (*neuron).len_weight = len_weight;
 }
 
@@ -224,7 +229,7 @@ double ErrorOutput(Layer *output, double *expected)
         output->neurons[i].error = output->neurons[i].activated - expected[i];
         total += mse(expected[i], output->neurons[i].activated);
 
-        printf("Error at neuron %i: %f\n", i, output->neurons[i].error);
+        //printf("Error at neuron %i: %f\n", i, output->neurons[i].error);
     }
     return total / output->len_neurons;
 }
@@ -312,6 +317,12 @@ void trainNetwork(Network *net, double lRate, int epoch, double *expected)
     {
         propagation_layer(net->layers + 1);
         err += backpropagation(net, expected, lRate);
+ 
+        if (epoch % 100 == 0)
+            printf("A random weight: %f | activated: %f\n",
+                net->layers[1].neurons[0].weights[0],
+                net->layers[1].neurons[0].activated);
+        //printf("got: %c\n", get_answer(net));
     }
 
     err *= (1.0 / epoch);
@@ -348,7 +359,7 @@ void updateLayer(Layer *layer, double lR)
             (*layer).neurons + i,
             (*layer).PreviousLayer->neurons + i,
             lR,
-            42.2);
+            0.4);
     }
 }
 
@@ -447,26 +458,26 @@ void testNET(Network *n)
 
 
 //need to create a main.c lazy :c
-/*int main()
+int main()
 {
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
 
     //allocate memory for whole Network
     Network *net = malloc(sizeof(Network));
+    int it[2] = {1, 1};
+    double ex[2] = {0, 0};
 
     create_network(net, 4, 4, 2, 2);
-    //trainNetwork(net, 1.248, 1000, arr);
+    feedForward(net, it, 2);
+    trainNetwork(net, 1.2, 50000, ex);
+    printf("got: %c\n", get_answer(net));
 
-    printf("aaa\n");
 
-    testNET(net);
-
-    double ok[4] = {0, 1, 1, 0};
-    printf("Error for output: %f\n", ErrorOutput(net->output, ok));
+    printf("FNISHED\n");
 
     freeNetwork(net);
     free(net);
 
     return 0;
-}*/
+}
