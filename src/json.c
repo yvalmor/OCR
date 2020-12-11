@@ -58,7 +58,7 @@ void write_network(Network *network, char *filename)
 struct json_object *parse_network(char *filename)
 {
     char *buffer;
-    long length;
+    unsigned long length;
     FILE *fp = fopen(filename, "r");
 
     if(fp)
@@ -68,7 +68,8 @@ struct json_object *parse_network(char *filename)
         fseek(fp, 0, SEEK_SET);
         buffer = malloc(length + 1);
         if(buffer)
-            fread(buffer, 1024, length, fp);
+            if (fread(buffer, 1, length, fp) != length)
+                printf("error parsing file!");
         fclose(fp);
     }
 
@@ -136,9 +137,8 @@ void parse_layer_from_file(struct json_object *layer_object, Layer *layer)
 
 }
 
-Network *parse_network_from_file(char *filename)
+void parse_network_from_file(char *filename, Network *network)
 {
-    Network *network = malloc(sizeof(Network));
     struct json_object *network_object = parse_network(filename);
     struct json_object *layers;
     struct json_object *nbLayers;
@@ -162,10 +162,9 @@ Network *parse_network_from_file(char *filename)
             network->layers[i-1].NextLayer = &network->layers[i];
         }
     }
-
-    return network;
 }
 
+/*
 int main()
 {
    Network *network = malloc(sizeof(network));
@@ -173,4 +172,4 @@ int main()
    write_network(network, "network.json");
    Network *network2 = parse_network_from_file("network.json");
    write_network(network2, "network2.json");
-}
+}*/

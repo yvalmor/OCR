@@ -60,6 +60,9 @@ void updateLayer(Layer *l, double LearningRate);
 double errorHiddenLayer(Neuron *neuronCalculateErr, Layer *toSearchWeight, int posW);
 double totalErrorHidden(Layer *toCalculateError);
 
+void delta_network(Network *network);
+void update_network(Network *network);
+
 void freeNetwork(Network *net);
 void freeLayer(Layer *l);
 

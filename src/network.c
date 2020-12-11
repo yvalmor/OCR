@@ -363,7 +363,7 @@ void freeNetwork(Network *n)
 // ALL FCTIONS BELOW ARE FOR TEST ONLY
 /**
  * @authors Eliott Beguet
- * @param ?, whatever we wanna print to see what we have
+ * @param neuron, whatever we wanna print to see what we have
  */
 void printNeuron(Neuron *neuron)
 {
@@ -424,7 +424,7 @@ void testNET(Network *n)
 
 
 //need to create a main.c lazy :c
-int main()
+/*int main()
 {
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
@@ -446,4 +446,4 @@ int main()
     free(net);
 
     return 0;
-}
+}*/
