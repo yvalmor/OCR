@@ -318,7 +318,7 @@ void trainNetwork(Network *net, double lRate, int epoch, double *expected)
     {
         propagation_layer(net->layers + 1);
         err += backpropagation(net, expected, lRate);
- 
+
         if (epoch % 100 == 0)
             printf("A random weight: %f | activated: %f\n",
                 net->layers[1].neurons[0].weights[0],

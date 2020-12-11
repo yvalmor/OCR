@@ -15,6 +15,7 @@ static GtkImage *image;
 static GtkScale *angleScale;
 GtkFileChooser *trainingFileChooser, *solutionFileChooser;
 GtkWidget *startButton;
+GtkWidget *trainingStartButton;
 GtkProgressBar *trainingProgress;
 
 static int autoRot;
@@ -60,6 +61,9 @@ int setup()
             gtk_builder_get_object(builder, "solutionFileChooser"));
 
     startButton = GTK_WIDGET(
+            gtk_builder_get_object(builder, "imageAnalyse"));
+
+    trainingStartButton = GTK_WIDGET(
             gtk_builder_get_object(builder, "startTrainingButton"));
 
     trainingProgress = GTK_PROGRESS_BAR(
@@ -142,15 +146,20 @@ void on_imageChooser_file_set(GtkFileChooserButton *button)
  * @param widget, unused parameter, passed by gtk, the widget button
  * @param data, unused parameter, passed by gtk
  */
-void on_imageAnalyse_clicked(
-        __attribute__ ((unused)) GtkWidget *widget,
+void on_imageAnalyse_clicked(GtkWidget *widget,
         __attribute__ ((unused)) gpointer data)
 {
     if (filename == NULL)
         return;
 
+    gtk_widget_set_sensitive(widget, FALSE);
+    gtk_widget_set_sensitive(trainingStartButton, FALSE);
+
     int rotationAngle = gtk_range_get_value(GTK_RANGE(angleScale));
     loadImage(filename, autoRot, rotationAngle);
+
+    gtk_widget_set_sensitive(widget, TRUE);
+    gtk_widget_set_sensitive(trainingStartButton, TRUE);
 }
 
 /**
@@ -164,10 +173,64 @@ void on_startTrainingButton_clicked(GtkButton *button,
                                     __attribute__ ((unused)) gpointer user_data)
 {
     gtk_widget_set_sensitive(GTK_WIDGET(button), FALSE);
-    //gtk_widget_set_sensitive(GTK_WIDGET(), FALSE);
+    gtk_widget_set_sensitive(startButton, FALSE);
 
-    //GSList *
-    //size_t nbFiles = 0;
+    GSList *trainingList = gtk_file_chooser_get_filenames(
+                        GTK_FILE_CHOOSER(trainingFileChooser));
+    GSList *solutionList = gtk_file_chooser_get_filenames(
+                        GTK_FILE_CHOOSER(solutionFileChooser));
+
+    if (trainingList == NULL || solutionList == NULL)
+    {
+        gtk_widget_set_sensitive(GTK_WIDGET(button), TRUE);
+        gtk_widget_set_sensitive(startButton, TRUE);
+        return;
+    }
+
+    guint nbTrainingFiles = g_slist_length(trainingList);
+    guint nbSolutionFiles = g_slist_length(solutionList);
+
+    if (nbTrainingFiles != nbSolutionFiles)
+    {
+        g_slist_free(trainingList);
+        g_slist_free(solutionList);
+
+        gtk_widget_set_sensitive(GTK_WIDGET(button), TRUE);
+        gtk_widget_set_sensitive(startButton, TRUE);
+        return;
+    }
+
+    int rotationAngle = gtk_range_get_value(GTK_RANGE(angleScale));
+
+    guint index = 0;
+    gdouble value = 0.0;
+
+    while (trainingList != NULL)
+    {
+        char *trainingFile = trainingList->data;
+        char *solutionFile = solutionList->data;
+
+        FILE *fp = fopen(solutionFile, "r");
+        if (fp)
+        {
+            loadImage_with_training(trainingFile, autoRot, rotationAngle, fp);
+            fclose(fp);
+        }
+
+        index++;
+
+        value = index / nbTrainingFiles;
+        gtk_progress_bar_set_fraction(trainingProgress, value);
+
+        trainingList = trainingList->next;
+        solutionList = solutionList->next;
+    }
+
+    g_slist_free(trainingList);
+    g_slist_free(solutionList);
+
+    gtk_widget_set_sensitive(GTK_WIDGET(button), TRUE);
+    gtk_widget_set_sensitive(startButton, TRUE);
 }
 
 void on_autoRotationCheckButton_toggled(

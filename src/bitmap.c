@@ -132,6 +132,45 @@ void loadImage(char *path, int autoRot, int rotationAngle)
 }
 
 /**
+ * Loads a bitmap file, creates an IMAGE structure from it, preprocess it and
+ * saves its processed pixel data in a file
+ *
+ * @author Yvon Morice
+ * @param path the path of the bitmap file to load
+ * @see toBlackAndWhite that makes all pixels in the loaded image into either
+ *      black or white pixels != to_matrix_bw
+ * @see to_matrix_bw that saves a black and white matrix's pixel data in a
+ *      string
+ */
+void loadImage_with_training(char *path, int autoRot, int rotationAngle, FILE *fp)
+{
+    SDL_Surface *surface = load_image_surface(path);
+
+    autoRot = autoRot;
+    rotationAngle = rotationAngle;
+    //if (autoRot)
+    //    rotation(-1, surface);
+    //else
+    //    rotation(rotationAngle, surface);
+
+    int rows = surface->h;
+    int columns = surface->w;
+
+    PIXEL pixels[rows][columns];
+
+    IMAGE image = {rows, columns, *pixels};
+    create_Image(surface, image);
+
+    int intensity[rows][columns];
+
+    toGrayscale(image, *intensity);
+
+    toBlackAndWhite2(image, *intensity);
+
+    build_text_with_training(*intensity, rows, columns, fp);
+}
+
+/**
  * Gets the pixel in the (x, y) position of a given SDL_Surface while taking
  * in account its bpp (Bytes per pixel) format
  *
