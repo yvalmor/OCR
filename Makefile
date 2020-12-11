@@ -17,7 +17,7 @@ HDR_DIR=hdr
 XOR=$(SRC_DIR)/network.c
 XOR_OBJ=$(OBJ_DIR)/network.o
 
-SRC=$(wildcard $(SRC_DIR)/*.c)
+SRC=$(filter-out $(SRC_DIR)/rotation.c, $(wildcard $(SRC_DIR)/*.c))
 OBJ=$(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 HDR=$(wildcard $(HDR_DIR)/*.h)
 

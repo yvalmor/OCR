@@ -12,6 +12,8 @@
 
 extern Network *net;
 
+int cpt = 0;
+
 int save_Text(char *file_name, char *text)
 {
     FILE *file = fopen(file_name, "w+");
@@ -29,16 +31,109 @@ int save_Text(char *file_name, char *text)
     return 0;
 }
 
+ImagePart *imageResize(ImagePart *toResize, int new_w, int new_h)
+{
+    int width = toResize->cols;
+    int height = toResize->rows;
+
+    ImagePart *new_image = malloc(sizeof(ImagePart));
+    new_image->rows = new_h;
+    new_image->cols = new_w;
+    new_image->img = calloc(new_h * new_w, sizeof(int));
+
+    double xscale = (new_w+0.0) / width;
+    double yscale = (new_h+0.0) / height;
+    double threshold = 0.5 / (xscale * yscale);
+    double yend = 0.0;
+
+    for (int f = 0; f < new_h; f++)
+    {
+        double ystart = yend;
+        yend = (f + 1) / yscale;
+        if (yend >= height)
+            yend = height - 0.000001;
+
+        double xend = 0.0;
+
+        for (int g = 0; g < new_w; g++)
+        {
+            double xstart = xend;
+            xend = (g + 1) / xscale;
+            if (xend >= width)
+                xend = width - 0.000001;
+
+            double sum = 0.0;
+
+            int yst = ystart,
+                yse = yend;
+            for (int y = yst; y <= yse; y++)
+            {
+                double yportion = 1.0;
+                if (y == yst)
+                    yportion -= ystart - y;
+                if (y == yse)
+                    yportion -= y + 1 - yend;
+
+                int xst = xstart,
+                    xse = xend;
+                for (int x = xst; x < xse; x++)
+                {
+                    double xportion = 1.0;
+                    if (x == xst)
+                        xportion -= xstart - x;
+                    if (x == xse)
+                        xportion -= x + 1 - xend;
+                    sum += toResize->img[y * width + x];
+                }
+            }
+            new_image->img[f * new_w + g] = sum > threshold ? 1 : 0;
+        }
+    }
+
+    free(toResize->img);
+    free(toResize);
+
+    SDL_Surface *surface;
+    surface = SDL_CreateRGBSurface(0, new_image->cols, new_image->rows,
+                                   32, 0, 0, 0, 0);
+
+    for (unsigned int x = 0; x < (unsigned int)new_image->cols; x++)
+        for (unsigned int y = 0; y < (unsigned int)new_image->rows; y++)
+            {
+                int val = new_image->img[y * new_image->cols + x];
+                Uint32 value = SDL_MapRGB(surface->format, val*255, val*255, val*255);
+                put_pixel(surface, x, y, value);
+            }
+
+    int x1 = cpt/1000;
+    int x2 = cpt%1000/100;
+    int x3 = cpt%100/10;
+    int x4 = cpt%10;
+
+    char name[20] = {'l','e','t','t','e','r','s',
+        (char) x1+'0', (char) x2+'0', (char) x3+'0', (char) x4+'0', 
+        '.','b','m','p'};
+    cpt++;
+
+    SDL_SaveBMP(surface, name);
+    SDL_FreeSurface(surface);
+
+    return new_image;
+}
+
 void build_word(List *letters, char **content)
 {
     Element *letter = letters->first;
 
     while (letter != NULL)
     {
-        /*
         ImagePart *image = letter->val;
-        resize_image(image, 32, 32);
-        feedForward(net, image->img, 1024);
+        /*ImagePart *new_img =*/ imageResize(image, 15, 15);
+        /*
+        feedForward(net, new_img->img, 1024);
+
+        free(new_img->img);
+        free(new_img);
         */
 
         char new_content = 'x';//get_answer(net);
@@ -145,8 +240,11 @@ int build_word_with_training(List *letters, char **content, FILE *fp)
 
         /*
         ImagePart *image = letter->val;
-        resize_image(image, 32, 32);
-        feedForward(net, image->img, 1024);
+        ImagePart *new_img = imageResize(image, 32, 32);
+        feedForward(net, new_img->img, 1024);
+
+        free(new_img->img);
+        free(new_img);
         */
 
         expected_result[index] = 0;
