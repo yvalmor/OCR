@@ -62,7 +62,7 @@ double errorHiddenLayer(Neuron *neuronCalculateErr, Layer *toSearchWeight, int p
 double totalErrorHidden(Layer *toCalculateError);
 
 void delta_network(Network *network);
-void update_network(Network *network)
+void update_network(Network *network);
 
 void freeNetwork(Network *net);
 void freeLayer(Layer *l);

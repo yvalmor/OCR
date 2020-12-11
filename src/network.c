@@ -3,7 +3,7 @@
 #include <math.h>
 #include <err.h>
 
-#include "network.h"
+#include "../hdr/network.h"
 
 /**
  * @authors Eliott Beguet
@@ -62,15 +62,16 @@ void rndNeuron(Neuron *neuron, int len_weight)
  * @param size, number of neurons for this layer
  * @param prev, pointer for the previous layer
  * @param next, pointer for the next layer
+ * @param poss_lenW, useless param which will be removed soon
  */
-void create_layer(Layer *layer, int size, Layer *prev)
+void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW)
 {
     Neuron *neuron = calloc(size, sizeof(Neuron));
 
     if (neuron == NULL || layer == NULL)
         errx(1, "*neuron or *layer is NULL at create_layer.\n");
 
-    int l = (prev == NULL) ? 1 : prev->len_neurons;
+    int l = (prev == NULL) ? poss_lenW : prev->len_neurons;
     //if to check if not in input cuz input does not has weights etc
     //nber of weights in neuron == nber of neurons in previous layer
 
@@ -97,8 +98,8 @@ void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeuron
     int len = nbLayers;
 
     //allocate memory for the input
-    Layer *inp = calloc(len, sizeof(struct Layer));
-    create_layer(inp, inputNbNeurons, NULL);
+    Layer *inp = calloc(len, sizeof(Layer));
+    create_layer(inp, inputNbNeurons, NULL, 0);
 
     Layer *currentLayer = inp;
     Layer *previousLayer = NULL;
@@ -109,14 +110,14 @@ void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeuron
         currentLayer = inp + i;
         previousLayer->NextLayer = currentLayer;
 
-        create_layer(currentLayer, nbNeurons, previousLayer);
+        create_layer(currentLayer, nbNeurons, previousLayer, 0);
     }
 
     previousLayer = currentLayer;
     currentLayer = inp + len - 1;
     previousLayer->NextLayer = currentLayer;
 
-    create_layer(currentLayer, outputNbneurons, previousLayer);
+    create_layer(currentLayer, outputNbneurons, previousLayer, 0);
     currentLayer->NextLayer = NULL;
 
     (*net).nbLayers = nbLayers;
@@ -124,6 +125,7 @@ void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeuron
     (*net).input = inp;
     (*net).output = currentLayer;
 }
+
 
 /**
  * @authors Eliott Beguet
@@ -133,7 +135,7 @@ void feedForward(Network *net, int *value, int len)
 {
     if (len != net->input->len_neurons)
         errx(1, "Different length for input of net and given values.");
-    
+
     for (int i = 0; i < len; i++)
         net->input->neurons[i].activated = (double) value[i];
 
@@ -456,7 +458,7 @@ void testNET(Network *n)
     }
 }
 
-
+/*
 //need to create a main.c lazy :c
 int main()
 {
@@ -480,4 +482,4 @@ int main()
     free(net);
 
     return 0;
-}
+}*/

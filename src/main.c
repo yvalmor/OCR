@@ -7,10 +7,10 @@
 #include "../hdr/network.h"
 #include "../hdr/json.h"
 
+Network *net;
+
 int main(__attribute((unused)) int argc, __attribute((unused))char **argv)
 {
-    Network *net;
-
     if (Init_Sdl())
         return EXIT_FAILURE;
 

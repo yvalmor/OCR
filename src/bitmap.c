@@ -10,7 +10,6 @@
 #include "../hdr/rlsa.h"
 #include "../hdr/list.h"
 
-
 /**
  * Initializes the SDL library
  *

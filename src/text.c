@@ -7,6 +7,10 @@
 #include "../hdr/list.h"
 #include "../hdr/text.h"
 #include "../hdr/segmentation.h"
+#include "../hdr/network.h"
+#include "../hdr/main.h"
+
+extern Network *net;
 
 int save_Text(char *file_name, char *text)
 {
@@ -31,7 +35,13 @@ void build_word(List *letters, char **content)
 
     while (letter != NULL)
     {
-        char new_content = 'x'; //TODO Replace by feed forward
+        /*
+        ImagePart *image = letter->val;
+        resize_image(image, 32, 32);
+        feedForward(net, image->img, 1024);
+        */
+
+        char new_content = 'x';//get_answer(net);
 
         char *c = calloc(2, sizeof(char));
         c[0] = new_content;
