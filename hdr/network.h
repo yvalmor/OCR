@@ -12,6 +12,7 @@ typedef struct Neuron
     int len_weight;                 //nber of weight
     int biais;                      //corresponging bias
 
+    double *old_weights;
     double error;                   //error stored
     double value;                   //weighted sum
     double activated;               //sigmoid value
@@ -42,15 +43,15 @@ double sigmoid(double x);
 double sigmoid_prime(double x);
 double rdmDouble(double min, double max);
 
-void create_layer(Layer *layer, int size, Layer *prev);
-void feedForward(Network *net);
+void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW);
+void feedForward(Network *net, int *input_to_add, int len_value);
 void propagation_layer(Layer *layer);
 void create_network(Network *net, int nbLayer,int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
 
-double backpropagation(Network *net, double *expected);
+double backpropagation(Network *net, double *expected, double learningRate);
 void sumNeuron(Neuron *neuron, Neuron *neededForA);
+void trainNetwork(Network *n, double lrate, int epoch, double *expected);
 
-double sqr(double a, double b);
 double mse(double expctd, double output);
 double ErrorOutput(Layer *layer, double *expected);
 double totalErrorOutput(Network *net, double *expected);
@@ -61,7 +62,7 @@ double errorHiddenLayer(Neuron *neuronCalculateErr, Layer *toSearchWeight, int p
 double totalErrorHidden(Layer *toCalculateError);
 
 void delta_network(Network *network);
-void update_network(Network *network);
+void update_network(Network *network)
 
 void freeNetwork(Network *net);
 void freeLayer(Layer *l);

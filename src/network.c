@@ -3,7 +3,7 @@
 #include <math.h>
 #include <err.h>
 
-#include "../hdr/network.h"
+#include "network.h"
 
 /**
  * @authors Eliott Beguet
@@ -36,16 +36,21 @@ double rdmDouble(double min, double max)
 void rndNeuron(Neuron *neuron, int len_weight)
 {
     double *weights = calloc(len_weight, sizeof(double));
+    double *old_w = calloc(len_weight, sizeof(double));
 
     if (neuron == NULL || weights == NULL)
         errx(1, "*neuron or *weights is NULL at rndNeuron.\n");
 
     for (int i = 0; i < len_weight; i++)
+    {
         *(weights + i) = rdmDouble(-1.5, 1.5);
+        *(old_w + i) = (*weights + i);
+    }
 
     (*neuron).error = 0;
     (*neuron).biais = rdmDouble(-1.5, 1.5);
     (*neuron).weights = weights;
+    (*neuron).old_weights = old_w;
     (*neuron).len_weight = len_weight;
 }
 
@@ -124,9 +129,41 @@ void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeuron
  * @authors Eliott Beguet
  * @param network to apply the feed forward
  */
-void feedForward(Network *net)
+void feedForward(Network *net, int *value, int len)
 {
+    if (len != net->input->len_neurons)
+        errx(1, "Different length for input of net and given values.");
+    
+    for (int i = 0; i < len; i++)
+        net->input->neurons[i].activated = (double) value[i];
+
     propagation_layer((*net).layers + 1);
+}
+
+char get_answer(Network *net)
+{
+    int max = net->output->neurons[0].activated;
+    int pos = 0;
+
+    for (int i = 0; i < net->output->len_neurons; i++)
+    {
+        if (net->output->neurons[i].activated > max)
+        {
+            max = net->output->neurons[i].activated;
+            pos = i;
+        }
+    }
+
+    if (pos >= 0 && pos < 10) //number
+        return '0' + (char) pos;
+
+    else if (pos >= 10 && pos < 36) //caps
+        return 'A' + (char) pos - 10;
+
+    else if (pos >= 36 && pos < 63) //alpha
+        return 'a' + (char) pos - 36;
+
+    return ' ';
 }
 
 /**
@@ -167,22 +204,13 @@ void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
 //for backpropagation now
 /**
  * @authors Eliott Beguet
- * @param a, b, value to return the square of.
- */
-double sqr(double a, double b)
-{
-    return a * b;
-}
-
-/**
- * @authors Eliott Beguet
  * @param ouptut, the value we got thanks to the feed forward
  * @param expected, the value we expected output to be
  * @return the cost of one output's neuron
  */
 double mse(double expected, double output)
 {
-    return sqr(expected - output, expected - output);
+    return (expected - output) * (expected - output);
 }
 
 /**
@@ -200,9 +228,9 @@ double ErrorOutput(Layer *output, double *expected)
         output->neurons[i].error = output->neurons[i].activated - expected[i];
         total += mse(expected[i], output->neurons[i].activated);
 
-        printf("Error at neuron %i: %f\n", i, output->neurons[i].error);
+        //printf("Error at neuron %i: %f\n", i, output->neurons[i].error);
     }
-    return total / 2;
+    return total / output->len_neurons;
 }
 
 /**
@@ -257,7 +285,7 @@ double totalErrorHidden(Layer *l)
   @param *n, network to apply backpropagation
   @param *expected, the expected output for the given input
   */
-double backpropagation(Network *n, double *expected)
+double backpropagation(Network *n, double *expected, double lR)
 {
     double error = 0;
 
@@ -271,7 +299,7 @@ double backpropagation(Network *n, double *expected)
         else
         {
             error += totalErrorHidden(n->layers + i);
-            updateLayer(n->layers + i, 0.4);
+            updateLayer(n->layers + i, lR);
         }
         //modify weight, bias with 2fctions
 
@@ -282,13 +310,18 @@ double backpropagation(Network *n, double *expected)
 
 void trainNetwork(Network *net, double lRate, int epoch, double *expected)
 {
-    lRate++;
     double err = 0;
 
     for (int i = 0; i < epoch; i++)
     {
-        feedForward(net);
-        err += backpropagation(net, expected);
+        propagation_layer(net->layers + 1);
+        err += backpropagation(net, expected, lRate);
+ 
+        if (epoch % 100 == 0)
+            printf("A random weight: %f | activated: %f\n",
+                net->layers[1].neurons[0].weights[0],
+                net->layers[1].neurons[0].activated);
+        //printf("got: %c\n", get_answer(net));
     }
 
     err *= (1.0 / epoch);
@@ -325,7 +358,7 @@ void updateLayer(Layer *layer, double lR)
             (*layer).neurons + i,
             (*layer).PreviousLayer->neurons + i,
             lR,
-            42.2);
+            0.4);
     }
 }
 
@@ -335,6 +368,7 @@ void updateLayer(Layer *layer, double lR)
  */
 void freeNeuron(Neuron *n)
 {
+    free(n->old_weights);
     free(n->weights);
 }
 
@@ -424,26 +458,26 @@ void testNET(Network *n)
 
 
 //need to create a main.c lazy :c
-/*int main()
+int main()
 {
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
 
     //allocate memory for whole Network
     Network *net = malloc(sizeof(Network));
+    int it[2] = {1, 1};
+    double ex[2] = {0, 0};
 
     create_network(net, 4, 4, 2, 2);
-    //trainNetwork(net, 1.248, 1000, arr);
+    feedForward(net, it, 2);
+    trainNetwork(net, 1.2, 50000, ex);
+    printf("got: %c\n", get_answer(net));
 
-    printf("aaa\n");
 
-    testNET(net);
-
-    double ok[4] = {0, 1, 1, 0};
-    printf("Error for output: %f\n", ErrorOutput(net->output, ok));
+    printf("FNISHED\n");
 
     freeNetwork(net);
     free(net);
 
     return 0;
-}*/
+}
