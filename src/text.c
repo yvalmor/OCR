@@ -127,9 +127,9 @@ void build_word(List *letters, char **content)
 
     while (letter != NULL)
     {
-        ImagePart *image = letter->val;
-        /*ImagePart *new_img =*/ imageResize(image, 15, 15);
         /*
+        ImagePart *image = letter->val;
+        ImagePart *new_img = imageResize(image, 15, 15);
         feedForward(net, new_img->img, 1024);
 
         free(new_img->img);
