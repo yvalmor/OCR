@@ -11,8 +11,7 @@
 #include "../hdr/main.h"
 
 extern Network *net;
-
-int cpt = 0;
+extern int debugMode;
 
 int save_Text(char *file_name, char *text)
 {
@@ -93,31 +92,6 @@ ImagePart *imageResize(ImagePart *toResize, int new_w, int new_h)
     free(toResize->img);
     free(toResize);
 
-    SDL_Surface *surface;
-    surface = SDL_CreateRGBSurface(0, new_image->cols, new_image->rows,
-                                   32, 0, 0, 0, 0);
-
-    for (unsigned int x = 0; x < (unsigned int)new_image->cols; x++)
-        for (unsigned int y = 0; y < (unsigned int)new_image->rows; y++)
-            {
-                int val = new_image->img[y * new_image->cols + x];
-                Uint32 value = SDL_MapRGB(surface->format, val*255, val*255, val*255);
-                put_pixel(surface, x, y, value);
-            }
-
-    int x1 = cpt/1000;
-    int x2 = cpt%1000/100;
-    int x3 = cpt%100/10;
-    int x4 = cpt%10;
-
-    char name[20] = {'l','e','t','t','e','r','s',
-        (char) x1+'0', (char) x2+'0', (char) x3+'0', (char) x4+'0', 
-        '.','b','m','p'};
-    cpt++;
-
-    SDL_SaveBMP(surface, name);
-    SDL_FreeSurface(surface);
-
     return new_image;
 }
 
@@ -176,7 +150,7 @@ void build_paragraph(List *lines, char **content)
         build_line(words, &new_content);
 
         *content = strcat(*content, new_content);
-        *content = strcat(*content, "\n\n");
+        *content = strcat(*content, "\n");
 
         line = line->next;
     }
@@ -184,6 +158,23 @@ void build_paragraph(List *lines, char **content)
 
 char *build_text(int *image, int rows, int cols)
 {
+    if (debugMode)
+    {
+        ImagePart *image_p = malloc(sizeof(ImagePart));
+        image_p->img = calloc(rows * cols, sizeof(int));
+        image_p->rows = rows;
+        image_p->cols = cols;
+
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                image_p->img[i * cols + j] = image[i * cols + j];
+
+        saveImageAsBMP(image_p, "binarization.bmp");
+
+        free(image_p->img);
+        free(image_p);
+    }
+
     List *paragraphs = get_paragraphs(image, rows, cols);
 
     char *content = calloc(1000000, sizeof(char));
@@ -200,7 +191,7 @@ char *build_text(int *image, int rows, int cols)
         content = strcat(content, new_content);
 
         if (paragraph->next != NULL)
-            content = strcat(content, "\n\n\n\n");
+            content = strcat(content, "\n\n");
 
         paragraph = paragraph->next;
     }
@@ -295,7 +286,7 @@ int build_paragraph_with_training(List *lines, char **content, FILE *fp)
             return 1;
 
         *content = strcat(*content, new_content);
-        *content = strcat(*content, "\n\n");
+        *content = strcat(*content, "\n");
 
         line = line->next;
     }
@@ -305,6 +296,23 @@ int build_paragraph_with_training(List *lines, char **content, FILE *fp)
 
 void build_text_with_training(int *image, int rows, int cols, FILE *fp)
 {
+    if (debugMode)
+    {
+        ImagePart *image_p = malloc(sizeof(ImagePart));
+        image_p->img = calloc(rows * cols, sizeof(int));
+        image_p->rows = rows;
+        image_p->cols = cols;
+
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                image_p->img[i * cols + j] = image[i * cols + j];
+
+        saveImageAsBMP(image_p, "binarization.bmp");
+
+        free(image_p->img);
+        free(image_p);
+    }
+
     List *paragraphs = get_paragraphs(image, rows, cols);
 
     char *content = calloc(1000000, sizeof(char));
@@ -325,7 +333,7 @@ void build_text_with_training(int *image, int rows, int cols, FILE *fp)
         content = strcat(content, new_content);
 
         if (paragraph->next != NULL)
-            content = strcat(content, "\n\n\n\n");
+            content = strcat(content, "\n\n");
 
         paragraph = paragraph->next;
     }

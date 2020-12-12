@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "list.h"
+
 typedef struct Tag_PIXEL
 {
     Uint8 r;
@@ -29,5 +31,7 @@ void put_pixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel);
 Uint32 get_pixel(SDL_Surface *surface, unsigned x, unsigned y);
 
 void create_Matrix(SDL_Surface *surface, IMAGE image);
+
+void saveImageAsBMP(ImagePart *image, char *filename);
 
 #endif //OCR_BITMAP_H

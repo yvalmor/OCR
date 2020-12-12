@@ -1,8 +1,13 @@
 #include <stdlib.h>
 
+#include "../hdr/bitmap.h"
 #include "../hdr/list.h"
 #include "../hdr/segmentation.h"
 #include "../hdr/lines.h"
+#include "../hdr/main.h"
+
+extern int debugMode;
+static int cpt = 0;
 
 int is_blank_line(ImagePart *image, int height)
 {
@@ -151,9 +156,9 @@ List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
     List *paragraphs = new_list();
     List *lines = new_list();
 
-    while (index < image->rows)
+    while (index <= image->rows)
     {
-        if (is_blank_line(image, index))
+        if (index == image->rows || is_blank_line(image, index))
         {
             if (white == 0 && index != 0)
             {
@@ -161,6 +166,23 @@ List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
 
                 ImagePart *new_img =
                     cut_image(image, 0, s_index, image->cols, index - s_index);
+
+                if (debugMode)
+                {
+                    char x1 = cpt/1000 + '0',
+                         x2 = cpt/100%10 + '0',
+                         x3 = cpt/10%10 + '0',
+                         x4 = cpt%1000 + '0';
+
+                    char name[20] = {
+                        'l', 'i', 'n', 'e', 's', '/',
+                        'l', 'i', 'n', 'e', 's',
+                        x1, x2, x3, x4, '.', 'b', 'm', 'p'
+                    };
+
+                    saveImageAsBMP(new_img, name);
+                    cpt++;
+                }
 
                 List *l = get_words_letters(new_img);
                 void *elt = l;
@@ -178,7 +200,7 @@ List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
             {
                 s_index = index;
 
-                if (white > 0.9 * paragraphSpace && lines != NULL)
+                if (white > 0.95 * paragraphSpace && lines != NULL)
                 {
                     void *elt = lines;
                     paragraphs = push_last_list(paragraphs, elt, ParagraphType);

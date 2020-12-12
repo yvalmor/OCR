@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkFileFilter" id="filefilter1">
+    <patterns>
+      <pattern>*.bmp</pattern>
+    </patterns>
+  </object>
+  <object class="GtkFileFilter" id="solutionFileFilter">
+    <patterns>
+      <pattern>*.txt</pattern>
+    </patterns>
+  </object>
   <object class="GtkWindow" id="Main_window">
     <property name="width_request">1280</property>
     <property name="height_request">720</property>
@@ -89,7 +99,7 @@
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow1">
                 <property name="width_request">657</property>
-                <property name="height_request">690</property>
+                <property name="height_request">602</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="shadow_type">in</property>
@@ -154,6 +164,33 @@
               <packing>
                 <property name="x">471</property>
                 <property name="y">634</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="separator5">
+                <property name="width_request">658</property>
+                <property name="height_request">10</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="x">618</property>
+                <property name="y">610</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="saveButton">
+                <property name="label" translatable="yes">Save Result</property>
+                <property name="width_request">175</property>
+                <property name="height_request">48</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_saveButton_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="x">1090</property>
+                <property name="y">635</property>
               </packing>
             </child>
           </object>
@@ -305,16 +342,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkFileFilter" id="filefilter1">
-    <patterns>
-      <pattern>*.bmp</pattern>
-    </patterns>
-  </object>
-  <object class="GtkFileFilter" id="solutionFileFilter">
-    <patterns>
-      <pattern>*.txt</pattern>
-    </patterns>
   </object>
   <object class="GtkFileFilter" id="trainingFileFilter">
     <patterns>

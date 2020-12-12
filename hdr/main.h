@@ -5,4 +5,6 @@
 
 extern Network *net;
 
+extern int debugMode;
+
 #endif

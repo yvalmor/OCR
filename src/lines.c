@@ -1,7 +1,13 @@
 #include <string.h>
 
+#include "../hdr/bitmap.h"
 #include "../hdr/list.h"
 #include "../hdr/segmentation.h"
+#include "../hdr/main.h"
+
+extern int debugMode;
+static int cpt = 0;
+
 
 int get_words_space(ImagePart *image)
 {
@@ -44,9 +50,9 @@ List *get_words_letters(ImagePart *image)
     int index = 0;
     int white = 0;
 
-    while (index < image->cols)
+    while (index <= image->cols)
     {
-        if (is_blank_column(image, index))
+        if (index == image->cols || is_blank_column(image, index))
         {
             if (white == 0 && index != 0)
             {
@@ -54,6 +60,23 @@ List *get_words_letters(ImagePart *image)
 
                 ImagePart *new_img =
                     cut_image(image, s_index, 0, index - s_index, image->rows);
+
+                if (debugMode)
+                {
+                    char x1 = cpt/1000 + '0',
+                         x2 = cpt/100%10 + '0',
+                         x3 = cpt/10%10 + '0',
+                         x4 = cpt%10 + '0';
+
+                    char name[24] = {
+                        'l', 'e', 't', 't', 'e', 'r', 's', '/',
+                        'l', 'e', 't', 't', 'e', 'r', 's',
+                        x1, x2, x3, x4, '.', 'b', 'm', 'p'
+                    };
+
+                    saveImageAsBMP(new_img, name);
+                    cpt++;
+                }
 
                 ImagePart *l = get_letters(new_img);
                 void *elt = l;
@@ -71,7 +94,7 @@ List *get_words_letters(ImagePart *image)
             {
                 s_index = index;
 
-                if (white >= words_space)
+                if (white >= 0.6 * words_space)
                 {
                     void *elt = letters;
                     words_l = push_last_list(words_l, elt, WordType);

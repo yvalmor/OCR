@@ -2,6 +2,7 @@
 #include <gtk/gtk.h>
 
 #include "../hdr/bitmap.h"
+#include "../hdr/text.h"
 
 gboolean on_Main_window_delete(GtkWidget * widget, gpointer data);
 void on_Main_window_destroy(GtkWidget *widget, gpointer data);
@@ -13,6 +14,8 @@ char *filename;
 static GtkTextBuffer *buffer;
 static GtkImage *image;
 static GtkScale *angleScale;
+static GtkWidget *window;
+
 GtkFileChooser *trainingFileChooser, *solutionFileChooser;
 GtkWidget *startButton;
 GtkWidget *trainingStartButton;
@@ -29,7 +32,6 @@ static int autoRot;
 int setup()
 {
     GtkBuilder *builder;
-    GtkWidget *window;
     GtkWidget *textView;
     GtkWidget *imageWidget;
     GError *err = NULL;
@@ -243,6 +245,59 @@ void on_autoRotationCheckButton_toggled(
             GTK_WIDGET(angleScale),
             autoRot ? FALSE : TRUE);
 }
+
+void on_saveButton_clicked(
+            __attribute__ ((unused)) GtkButton *button,
+            __attribute__ ((unused)) gpointer user_data)
+{
+    gchar *text;
+    GtkTextIter start, end;
+
+    gtk_text_buffer_get_bounds(buffer, &start, &end);
+    text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
+
+    if (strlen(text) == 0)
+    {
+        g_free(text);
+        return;
+    }
+
+    GtkWidget *dialog;
+    GtkFileChooser *chooser;
+    GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+    gint res;
+
+    dialog = gtk_file_chooser_dialog_new("Save file",
+                                         GTK_WINDOW(window),
+                                         action,
+                                         "Cancel",
+                                         GTK_RESPONSE_CANCEL,
+                                         "Save",
+                                         GTK_RESPONSE_ACCEPT,
+                                         NULL);
+
+    chooser = GTK_FILE_CHOOSER(dialog);
+
+    gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
+
+    gtk_file_chooser_set_current_name(chooser, "OCR result.txt");
+
+    gtk_window_set_default_size(GTK_WINDOW(dialog), 400, 400);
+    gtk_window_set_resizable(GTK_WINDOW(dialog), TRUE);
+
+    res = gtk_dialog_run(GTK_DIALOG(dialog));
+
+    if (res == GTK_RESPONSE_ACCEPT)
+    {
+        char *filename;
+        filename = gtk_file_chooser_get_filename(chooser);
+        save_Text(filename, text);
+        g_free(filename);
+    }
+
+    g_free(text);
+}
+
 
 /**
  * A function to set the text of the text view at the right of the UI

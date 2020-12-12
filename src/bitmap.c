@@ -126,7 +126,6 @@ void loadImage(char *path, int autoRot, int rotationAngle)
     char *result = build_text(*intensity, rows, columns);
 
     set_text(result);
-    save_Text("result_ocr.txt", result);
 
     free(result);
 }
@@ -268,3 +267,26 @@ void create_Image(SDL_Surface  *surface, IMAGE image)
 
     SDL_FreeSurface(surface);
 }
+
+
+void saveImageAsBMP(ImagePart *image, char *filename)
+{
+    SDL_Surface *surface;
+    surface = SDL_CreateRGBSurface(0, image->cols, image->rows,
+                                   32, 0, 0, 0, 0);
+
+    unsigned int cols = image->cols,
+                 rows = image->rows;
+
+    for (unsigned int x = 0; x < cols; x++)
+        for (unsigned int y = 0; y < rows; y++)
+            {
+                int val = image->img[y * image->cols + x];
+                Uint32 value = SDL_MapRGB(surface->format, val*255, val*255, val*255);
+                put_pixel(surface, x, y, value);
+            }
+
+    SDL_SaveBMP(surface, filename);
+    SDL_FreeSurface(surface);
+}
+
