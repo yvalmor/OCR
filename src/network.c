@@ -427,8 +427,9 @@ void testNET(Network *n)
 //need to create a main.c lazy :c
 int main()
 {
-    double INPUT [4][2] = { {0, 0}, {1, 1}, {0, 1}, {1, 0} };
-    double EXPECTED [4] = {0, 0, 1, 1};
+    // var used to train with different input
+    //double INPUT [4][2] = { {0, 0}, {1, 1}, {0, 1}, {1, 0} };
+    //double EXPECTED [4] = {0, 0, 1, 1};
 
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
