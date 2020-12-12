@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <json-c/json.h>
+#include <stdio.h>
+
 #include "../hdr/network.h"
 
 void write_neuron(Neuron *neuron, int index, int index_max, FILE *fp)

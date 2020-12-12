@@ -1,6 +1,8 @@
 #ifndef BITMAP_H
 #define BITMAP_H
 
+#include <stdio.h>
+
 /**
  * Saves a string inside a file
  *
