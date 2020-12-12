@@ -13,7 +13,7 @@ typedef struct Neuron
     int biais;                      //corresponging bias
 
     double *old_weights;
-    double error;                   //error stored
+    double delta;                   //delta stored
     double value;                   //weighted sum
     double activated;               //sigmoid value
 } Neuron;
@@ -53,16 +53,9 @@ void sumNeuron(Neuron *neuron, Neuron *neededForA);
 void trainNetwork(Network *n, double lrate, int epoch, double *expected);
 
 double mse(double expctd, double output);
-double ErrorOutput(Layer *layer, double *expected);
-double totalErrorOutput(Network *net, double *expected);
-void updateWeightsNeuron(Neuron *n, Neuron *previousN, double LearningRate, double desired);
-void updateLayer(Layer *l, double LearningRate);
-
-double errorHiddenLayer(Neuron *neuronCalculateErr, Layer *toSearchWeight, int posW);
-double totalErrorHidden(Layer *toCalculateError);
+double ErrorTotal(Layer *layer, double *expected);
 
 void delta_network(Network *network);
-void update_network(Network *network)
 
 void freeNetwork(Network *net);
 void freeLayer(Layer *l);

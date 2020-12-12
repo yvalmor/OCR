@@ -221,13 +221,15 @@ double mse(double expected, double output)
  * @param *expected, the array of expected value
  * @return the tocal cost of the output layer
  */
-double ErrorOutput(Layer *output, double *expected)
+double ErrorTotal(Layer *output, double *expected)
 {
     double total = 0;
     for (int i = 0; i < output->len_neurons; i++)
     {
-        output->neurons[i].error = output->neurons[i].activated - expected[i];
-        total += mse(expected[i], output->neurons[i].activated);
+        output->neurons[i].delta = (output->neurons[i].activated - expected[i])*
+            output->neurons[i].activated * (1 - neurons[i].activated);
+
+        total += 1/2 * mse(expected[i], output->neurons[i].activated);
 
         //printf("Error at neuron %i: %f\n", i, output->neurons[i].error);
     }
@@ -235,51 +237,15 @@ double ErrorOutput(Layer *output, double *expected)
 }
 
 /**
- * @authors Eliott Beguet
- * @param net, network to calculate the cost
- * @return double error
+ @authors Eliott Beguet
+ @param *net, Network where we wanna update hidden layers delta F.E neurons
  */
-double totalErrorOutput(Network *net, double *expected)
+void delta_network(Network *net)
 {
-    //expected : 0 0 with 1 1 || 0 1 with 0 1 || 1 0 with 1 0 etc
-    return ErrorOutput((*net).output, expected);
+    double aa[4] = {0, 1, 2, 3};
+    ErrorTotal(n->output, aa) 
 }
 
-/**
- * @authors Eliott Beguet
- * @param *n, neuron to calculate the error
- * @param *lWeight, layer to pick corresponding weight
- * @param posi, position of *n in layer to pick the right weight in nextLayer
- * @return the error of this neuron and store it
- */
-double errorHiddenLayer(Neuron *n, Layer *lWeight, int posi)
-{
-     double res = 0;
-     posi += 0;
-
-     for (int i = 0; i < lWeight->len_neurons; i++)
-        res += (lWeight->neurons[i].error * lWeight->neurons[i].weights[posi]);
-
-    //to check
-    double err = res * sigmoid_prime(n->value);
-    //end check
-    return err;
-}
-
-/**
- * @authors Eliott Beguet
- * @param *l, layer to calculate error of neurons in
- * @see errorHiddenLayer
- */
-double totalErrorHidden(Layer *l)
-{
-    double err = 0;
-
-    for (int i = 0; i < l->len_neurons; i++)
-        err += errorHiddenLayer((*l).neurons + i, l->NextLayer, i);
-
-    return err;
-}
 
 /**
   @authors Eliott Beguet
@@ -288,22 +254,42 @@ double totalErrorHidden(Layer *l)
   */
 double backpropagation(Network *n, double *expected, double lR)
 {
-    double error = 0;
-
-    for (int i = n->nbLayers - 1; i > 0; i--)
+    // compute delta for each output neuron and return total error of net
+    double error = ErrorTotal(n->output, expected);
+    
+   // now we update the weight of the outputLayer
+    for (int i = 0; i < n->output->len_neurons; i++)
     {
-        if (i == n->nbLayers - 1)
+        for (int j = 0; j < n->output->neurons[i].len_weight; j++)
         {
-            error += totalErrorOutput(n, expected);
+            n->output->neurons[i].old_weights[j] = n->output->neurons[i].weights[j];
+            
+            n->output->neurons[i].weights[j] =
+                n->output->neurons[i].old_weights[j] -
+                lR * n->output->previousLayer->neurons[j].activated *
+                n->output->neurons[i].activated;
         }
+    }
 
-        else
+    // compute delta for all hidden layers
+    delta_hidden(n);
+
+    // now the same with the weights of the hidden layer
+    for (int i = n->nbLayers - 1; n > 0; n--)
+    {
+        for (int j = 0; j < n->layers[i]->len_neurons; j++)
         {
-            error += totalErrorHidden(n->layers + i);
-            updateLayer(n->layers + i, lR);
-        }
-        //modify weight, bias with 2fctions
+            double delta_w = n->layers[i].neurons[j].delta;
 
+            for (int k = 0; k < n->layers[i].neurons[j].len_weight; k++)
+            {
+                n->layers[i].neurons[j].old_weights[k] = n->layers[i].neurons[i].weights[k];
+
+                n->layers[i].neurons[j].weights[k] =
+                    n->layers[i].neurons[j].old_weights[k] -
+                    lR * delta_w * n->layers[i - 1].neurons[j].activated;
+            }
+        }
     }
 
     return error;
@@ -329,39 +315,6 @@ void trainNetwork(Network *net, double lRate, int epoch, double *expected)
     printf("Error: %f\n", err);
 }
 
-
-/*
-double deltaw = l_rate * actu->err[actun] * done->out[donen];
-                actu->w[i] += deltaw + 0.1 * actu->previous_dw[i];
-                actu->previous_dw[i] = deltaw
-*/
-void updateWeightsNeuron(Neuron *neuron, Neuron *prev, double lR, double desired)
-{
-    double deltaW = prev->activated *
-        sigmoid_prime(neuron->value) *
-        2 * (neuron->activated - desired);
-
-    double deltaB = sigmoid_prime(neuron->value) *
-        2 * (neuron->activated - desired);
-
-    for (int i = 0; i < neuron->len_weight; i++)
-       neuron->weights[i] = -(lR * deltaW) + (neuron->weights[i]); 
-
-    (*neuron).biais = neuron->biais - (lR * deltaB);
-}
-
-void updateLayer(Layer *layer, double lR)
-{
-    for (int i = 0; i < layer->len_neurons; i++)
-    {
-        //change desired not 1.2
-        updateWeightsNeuron(
-            (*layer).neurons + i,
-            (*layer).PreviousLayer->neurons + i,
-            lR,
-            0.4);
-    }
-}
 
 /**
  * @authors Eliott Beguet
