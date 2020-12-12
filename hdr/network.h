@@ -38,7 +38,7 @@ typedef struct Network
 
 
 void rndNeuron(Neuron *neuron, int len_weight);
-void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, double wtedValue, double wtedA);
+void SetNeuron(Neuron *neuron, int len_weight, double *weight, int biais);
 double sigmoid(double x);
 double sigmoid_prime(double x);
 double rdmDouble(double min, double max);
@@ -55,7 +55,7 @@ void trainNetwork(Network *n, double lrate, int epoch, double *expected);
 double mse(double expctd, double output);
 double ErrorTotal(Layer *layer, double *expected);
 
-void delta_network(Network *network);
+void delta_hidden(Network *network);
 
 void freeNetwork(Network *net);
 void freeLayer(Layer *l);

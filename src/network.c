@@ -3,7 +3,7 @@
 #include <math.h>
 #include <err.h>
 
-#include "network.h"
+#include "../hdr/network.h"
 
 /**
  * @authors Eliott Beguet
@@ -27,6 +27,21 @@ double rdmDouble(double min, double max)
 
 //NN functions
 
+/**
+ * @authors Eliott Beguet
+ * @param neuron, to add desired value
+ * @param len_weight, number of weight in neuron
+ * @param weight, weights to assign
+ * @param biais, biais to assign
+ */
+void SetNeuron(Neuron *neuron, int l_w, double *weight, int biais)
+{
+    for (int i = 0; i < l_w; i ++)
+        neuron->weights[i] = weight[i];
+
+    neuron->biais = biais;
+}
+
 //return neuron initialised randomly
 /**
  * @authors Eliott Beguet
@@ -47,7 +62,7 @@ void rndNeuron(Neuron *neuron, int len_weight)
         *(old_w + i) = (*weights + i);
     }
 
-    (*neuron).error = 0;
+    (*neuron).delta = 0;
     (*neuron).biais = rdmDouble(-1.5, 1.5);
     (*neuron).weights = weights;
     (*neuron).old_weights = old_w;
@@ -75,8 +90,12 @@ void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW)
     //if to check if not in input cuz input does not has weights etc
     //nber of weights in neuron == nber of neurons in previous layer
 
+    
     for (int i = 0; i < size; i++)
+    {
         rndNeuron(neuron + i, l);
+        neuron[i].biais = rdmDouble(-1, 1);
+    }
 
     (*layer).neurons = neuron;
     (*layer).len_neurons = size;
@@ -198,8 +217,11 @@ void sumNeuron(Neuron *neuron, Neuron *prevNeurons)
     for (int i = 0; i < neuron->len_weight; i++)
         sum += (neuron->weights[i]) * (prevNeurons + i)->activated;
 
+    double out = sigmoid(sum);
+
     (*neuron).value = sum;
-    (*neuron).activated = sigmoid(sum);
+    (*neuron).activated = out;
+    (*neuron).delta = out * (1 - out) * sum;
 }
 
 //for backpropagation now
@@ -224,28 +246,16 @@ double mse(double expected, double output)
 double ErrorTotal(Layer *output, double *expected)
 {
     double total = 0;
+
     for (int i = 0; i < output->len_neurons; i++)
     {
         output->neurons[i].delta = (output->neurons[i].activated - expected[i])*
-            output->neurons[i].activated * (1 - neurons[i].activated);
+            output->neurons[i].activated * (1 - output->neurons[i].activated);
 
-        total += 1/2 * mse(expected[i], output->neurons[i].activated);
-
-        //printf("Error at neuron %i: %f\n", i, output->neurons[i].error);
+        total += mse(expected[i], output->neurons[i].activated);
     }
-    return total / output->len_neurons;
+    return total * 0.5;
 }
-
-/**
- @authors Eliott Beguet
- @param *net, Network where we wanna update hidden layers delta F.E neurons
- */
-void delta_network(Network *net)
-{
-    double aa[4] = {0, 1, 2, 3};
-    ErrorTotal(n->output, aa) 
-}
-
 
 /**
   @authors Eliott Beguet
@@ -256,7 +266,7 @@ double backpropagation(Network *n, double *expected, double lR)
 {
     // compute delta for each output neuron and return total error of net
     double error = ErrorTotal(n->output, expected);
-    
+
    // now we update the weight of the outputLayer
     for (int i = 0; i < n->output->len_neurons; i++)
     {
@@ -266,28 +276,32 @@ double backpropagation(Network *n, double *expected, double lR)
             
             n->output->neurons[i].weights[j] =
                 n->output->neurons[i].old_weights[j] -
-                lR * n->output->previousLayer->neurons[j].activated *
+                lR * n->output->PreviousLayer->neurons[j].activated *
                 n->output->neurons[i].activated;
         }
     }
 
-    // compute delta for all hidden layers
-    delta_hidden(n);
-
+    // delta for all hidden layers already stored with the forward pass
     // now the same with the weights of the hidden layer
-    for (int i = n->nbLayers - 1; n > 0; n--)
+
+    for (int i = n->nbLayers - 1; i > 0; i--)
     {
-        for (int j = 0; j < n->layers[i]->len_neurons; j++)
+        for (int j = 0; j < n->layers[i].len_neurons; j++)
         {
             double delta_w = n->layers[i].neurons[j].delta;
 
             for (int k = 0; k < n->layers[i].neurons[j].len_weight; k++)
             {
-                n->layers[i].neurons[j].old_weights[k] = n->layers[i].neurons[i].weights[k];
+                n->layers[i].neurons[j].old_weights[k] = n->layers[i].neurons[j].weights[k];
+
+                /*n->layers[i].neurons[j].weights[k] =
+                    n->layers[i].neurons[j].old_weights[k] -
+                    lR * delta_w * n->layers[i - 1].neurons[j].activated;
+                */
 
                 n->layers[i].neurons[j].weights[k] =
                     n->layers[i].neurons[j].old_weights[k] -
-                    lR * delta_w * n->layers[i - 1].neurons[j].activated;
+                    lR * delta_w;
             }
         }
     }
@@ -301,14 +315,12 @@ void trainNetwork(Network *net, double lRate, int epoch, double *expected)
 
     for (int i = 0; i < epoch; i++)
     {
+        if (lRate > 1.1 && i % 100 == 0)
+            lRate--;
+
         propagation_layer(net->layers + 1);
-        err += backpropagation(net, expected, lRate);
- 
-        if (epoch % 100 == 0)
-            printf("A random weight: %f | activated: %f\n",
-                net->layers[1].neurons[0].weights[0],
-                net->layers[1].neurons[0].activated);
-        //printf("got: %c\n", get_answer(net));
+        double e = backpropagation(net, expected, lRate);
+        err += e;
     }
 
     err *= (1.0 / epoch);
@@ -353,8 +365,9 @@ void freeNetwork(Network *n)
  * @authors Eliott Beguet
  * @param ?, whatever we wanna print to see what we have
  */
-void printNeuron(Neuron *neuron)
+void printNeuron(Neuron *neuron, int i)
 {
+    printf("Neurons at pos i: %d\n.", i);
     printf("biais: %d\n", neuron->biais);
     printf("value: %f\n", neuron->value);
     printf("activated: %f\n", neuron->activated);
@@ -374,7 +387,7 @@ void printLayer(Layer *layer, int rec)
     printf("\nbegining print of neuron at: %p\n", &layer);
 
     for (int i = 0; i < layer->len_neurons; i++)
-        printNeuron((*layer).neurons + i);
+        printNeuron((*layer).neurons + i, i);
 
     printf("=================================\n");
 
@@ -414,20 +427,32 @@ void testNET(Network *n)
 //need to create a main.c lazy :c
 int main()
 {
+    double INPUT [4][2] = { {0, 0}, {1, 1}, {0, 1}, {1, 0} };
+    double EXPECTED [4] = {0, 0, 1, 1};
+
     //:%s/foo/bar/gc
     srand((unsigned int) time (NULL));
 
     //allocate memory for whole Network
     Network *net = malloc(sizeof(Network));
-    int it[2] = {1, 1};
-    double ex[2] = {0, 0};
-
+    int it[2] = {0, 1};
+    double ex[2] = {0, 1};
+    
     create_network(net, 4, 4, 2, 2);
     feedForward(net, it, 2);
-    trainNetwork(net, 1.2, 50000, ex);
+
+
+    trainNetwork(net, 5, 50000, ex);
     printf("got: %c\n", get_answer(net));
 
+    printf("Neurons output value:\n");
+    for (int i = 0; i < net->output->len_neurons; i++)
+        printNeuron(net->output->neurons + i, i);
 
+    printf("INPUT: %d and %d\n", it[0], it[1]);
+    printf("OUTPUT: %f and %f\n.", net->output->neurons[0].activated,
+        net->output->neurons[1].activated);
+    
     printf("FNISHED\n");
 
     freeNetwork(net);
