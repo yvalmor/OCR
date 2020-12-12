@@ -118,7 +118,7 @@ void loadImage(char *path, int autoRot, int rotationAngle)
     create_Image(surface, image);
 
     if (debugMode)
-        saveRGBImageAsBMP(&image, "loadedImage");
+        saveRGBImageAsBMP(&image, "loadedImage.bmp");
 
     autoRot = autoRot;
     rotationAngle = rotationAngle;
