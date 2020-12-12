@@ -10,6 +10,7 @@
 #include "../hdr/rlsa.h"
 #include "../hdr/list.h"
 #include "../hdr/main.h"
+#include "../hdr/rotation.h"
 
 extern int debugMode;
 
@@ -109,6 +110,14 @@ void loadImage(char *path, int autoRot, int rotationAngle)
 {
     SDL_Surface *surface = load_image_surface(path);
 
+    if (autoRot)
+    {
+        double angle = find_angle(surface);
+        surface = SDL_RotateImage(surface, -angle);
+    }
+    else
+        surface = SDL_RotateImage(surface, -rotationAngle);
+
     int rows = surface->h;
     int columns = surface->w;
 
@@ -120,20 +129,13 @@ void loadImage(char *path, int autoRot, int rotationAngle)
     if (debugMode)
         saveRGBImageAsBMP(&image, "loadedImage.bmp");
 
-    autoRot = autoRot;
-    rotationAngle = rotationAngle;
-    //if (autoRot)
-    //    rotation(-1, surface);
-    //else
-    //    rotation(rotationAngle, surface);
+    int *intensity = calloc(rows * columns, sizeof(int));
 
-    int intensity[rows][columns];
+    toGrayscale(image, intensity);
 
-    toGrayscale(image, *intensity);
+    toBlackAndWhite2(image, intensity);
 
-    toBlackAndWhite2(image, *intensity);
-
-    char *result = build_text(*intensity, rows, columns);
+    char *result = build_text(intensity, rows, columns);
 
     set_text(result);
 
@@ -155,12 +157,13 @@ void loadImage_with_training(char *path, int autoRot, int rotationAngle, FILE *f
 {
     SDL_Surface *surface = load_image_surface(path);
 
-    autoRot = autoRot;
-    rotationAngle = rotationAngle;
-    //if (autoRot)
-    //    rotation(-1, surface);
-    //else
-    //    rotation(rotationAngle, surface);
+    if (autoRot)
+    {
+        double angle = find_angle(surface);
+        surface = SDL_RotateImage(surface, -angle);
+    }
+    else
+        surface = SDL_RotateImage(surface, -rotationAngle);
 
     int rows = surface->h;
     int columns = surface->w;
