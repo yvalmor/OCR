@@ -9,6 +9,13 @@
 #include "../hdr/segmentation.h"
 #include "../hdr/rlsa.h"
 #include "../hdr/list.h"
+#include "../hdr/main.h"
+
+extern int debugMode;
+
+
+void saveRGBImageAsBMP(IMAGE *image, char *filename);
+
 
 /**
  * Initializes the SDL library
@@ -102,13 +109,6 @@ void loadImage(char *path, int autoRot, int rotationAngle)
 {
     SDL_Surface *surface = load_image_surface(path);
 
-    autoRot = autoRot;
-    rotationAngle = rotationAngle;
-    //if (autoRot)
-    //    rotation(-1, surface);
-    //else
-    //    rotation(rotationAngle, surface);
-
     int rows = surface->h;
     int columns = surface->w;
 
@@ -116,6 +116,16 @@ void loadImage(char *path, int autoRot, int rotationAngle)
 
     IMAGE image = {rows, columns, *pixels};
     create_Image(surface, image);
+
+    if (debugMode)
+        saveRGBImageAsBMP(&image, "loadedImage");
+
+    autoRot = autoRot;
+    rotationAngle = rotationAngle;
+    //if (autoRot)
+    //    rotation(-1, surface);
+    //else
+    //    rotation(rotationAngle, surface);
 
     int intensity[rows][columns];
 
@@ -283,6 +293,30 @@ void saveImageAsBMP(ImagePart *image, char *filename)
             {
                 int val = image->img[y * image->cols + x];
                 Uint32 value = SDL_MapRGB(surface->format, val*255, val*255, val*255);
+                put_pixel(surface, x, y, value);
+            }
+
+    SDL_SaveBMP(surface, filename);
+    SDL_FreeSurface(surface);
+}
+
+void saveRGBImageAsBMP(IMAGE *image, char *filename)
+{
+    unsigned int cols = image->columns,
+                 rows = image->rows;
+
+    SDL_Surface *surface;
+    surface = SDL_CreateRGBSurface(0, cols, rows,
+                                   32, 0, 0, 0, 0);
+
+    for (unsigned int x = 0; x < cols; x++)
+        for (unsigned int y = 0; y < rows; y++)
+            {
+                Uint8 r = image->pixels[y * cols + x].r,
+                      g = image->pixels[y * cols + x].g,
+                      b = image->pixels[y * cols + x].b;
+
+                Uint32 value = SDL_MapRGB(surface->format, r, g, b);
                 put_pixel(surface, x, y, value);
             }
 

@@ -2,6 +2,8 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "../hdr/UI.h"
 #include "../hdr/bitmap.h"
@@ -22,10 +24,20 @@ int main(int argc, char **argv)
         (strcmp(argv[1], "-d") == 0 ||
          strcmp(argv[1], "--debug") == 0) ? 1 : 0;
 
+    if (debugMode)
+    {
+        struct stat st = {0};
+
+        if (stat("letters/", &st) == -1)
+            mkdir("letters/", 0700);
+        if (stat("lines/", &st) == -1)
+            mkdir("lines/", 0700);
+    }
+
     if (Init_Sdl())
         return EXIT_FAILURE;
 
-    char *network_save = "network.json";
+    char *network_save = "../network.json";
 
     net = malloc(sizeof(Network));
     if (access(network_save, F_OK) == 0)
