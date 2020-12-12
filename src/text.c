@@ -199,7 +199,7 @@ char *build_text(int *image, int rows, int cols)
     return content;
 }
 
-int build_word_with_training(List *letters, char **content, FILE *fp)
+int build_word_with_training(List *letters, FILE *fp)
 {
     Element *letter = letters->first;
 
@@ -240,11 +240,7 @@ int build_word_with_training(List *letters, char **content, FILE *fp)
 
         expected_result[index] = 0;
 
-        char new_content = 'x';//get_answer(net);
-
-        char *c = calloc(2, sizeof(char));
-        c[0] = new_content;
-        *content = strcat(*content, c);
+        //get_answer(net);
 
         letter = letter->next;
     }
@@ -252,20 +248,16 @@ int build_word_with_training(List *letters, char **content, FILE *fp)
     return 0;
 }
 
-int build_line_with_training(List *words, char **content, FILE *fp)
+int build_line_with_training(List *words,  FILE *fp)
 {
     Element *word = words->first;
 
     while (word != NULL)
     {
-        char *new_content = calloc(10000, sizeof(char));
 
         List *letters = word->val;
-        if (build_word_with_training(letters, &new_content, fp))
+        if (build_word_with_training(letters, fp))
             return 1;;
-
-        *content = strcat(*content, new_content);
-        *content = strcat(*content, " ");
 
         word = word->next;
     }
@@ -273,20 +265,15 @@ int build_line_with_training(List *words, char **content, FILE *fp)
     return 0;
 }
 
-int build_paragraph_with_training(List *lines, char **content, FILE *fp)
+int build_paragraph_with_training(List *lines, FILE *fp)
 {
     Element *line = lines->first;
 
     while (line != NULL)
     {
-        char *new_content = calloc(10000, sizeof(char));
-
         List *words = line->val;
-        if (build_line_with_training(words, &new_content, fp))
+        if (build_line_with_training(words, fp))
             return 1;
-
-        *content = strcat(*content, new_content);
-        *content = strcat(*content, "\n");
 
         line = line->next;
     }
@@ -315,25 +302,13 @@ void build_text_with_training(int *image, int rows, int cols, FILE *fp)
 
     List *paragraphs = get_paragraphs(image, rows, cols);
 
-    char *content = calloc(1000000, sizeof(char));
-
     Element *paragraph = paragraphs->first;
 
     while (paragraph != NULL)
     {
-        char *new_content = calloc(10000, sizeof(char));
-
         List *lines = paragraph->val;
-        if (build_paragraph_with_training(lines, &new_content, fp))
-        {
-            content = strcat(content, new_content);
+        if (build_paragraph_with_training(lines, fp))
             break;
-        }
-
-        content = strcat(content, new_content);
-
-        if (paragraph->next != NULL)
-            content = strcat(content, "\n\n");
 
         paragraph = paragraph->next;
     }
