@@ -10,10 +10,9 @@ typedef struct Neuron
 {
     double *weights;                //those arriving
     int len_weight;                 //nber of weight
-    int biais;                      //corresponging bias
+    double biais;                      //corresponging bias
 
-    double *old_weights;
-    double error;                   //error stored
+    double delta;                   //delta stored
     double value;                   //weighted sum
     double activated;               //sigmoid value
 } Neuron;
@@ -38,7 +37,7 @@ typedef struct Network
 
 
 void rndNeuron(Neuron *neuron, int len_weight);
-void initNeuron(Neuron *neuron, int len_weight, double *weight, int biais, double wtedValue, double wtedA);
+void SetNeuron(Neuron *neuron, int len_weight, double *weight, int biais);
 double sigmoid(double x);
 double sigmoid_prime(double x);
 double rdmDouble(double min, double max);
@@ -49,20 +48,14 @@ void propagation_layer(Layer *layer);
 void create_network(Network *net, int nbLayer,int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
 
 double backpropagation(Network *net, double *expected, double learningRate);
-void sumNeuron(Neuron *neuron, Neuron *neededForA);
+void sumNeuron(Neuron *neuron, Neuron *neededForA, int isOutput);
 void trainNetwork(Network *n, double lrate, int epoch, double *expected);
 
 double mse(double expctd, double output);
-double ErrorOutput(Layer *layer, double *expected);
-double totalErrorOutput(Network *net, double *expected);
-void updateWeightsNeuron(Neuron *n, Neuron *previousN, double LearningRate, double desired);
-void updateLayer(Layer *l, double LearningRate);
+double ErrorTotal(Layer *layer, double *expected);
 
-double errorHiddenLayer(Neuron *neuronCalculateErr, Layer *toSearchWeight, int posW);
-double totalErrorHidden(Layer *toCalculateError);
-
-void delta_network(Network *network);
-void update_network(Network *network);
+void delta_hidden(Layer *layer);
+void update_weights_layer(Layer *layer_working_on, double learning_rate);
 
 void freeNetwork(Network *net);
 void freeLayer(Layer *l);
