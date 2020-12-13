@@ -15,7 +15,8 @@ struct result {
 //acc[maxIndexTheta][maxIndexRho] : int[][] -> the max value of rho
 
 //return rho and theta value
-struct result *winner(int maxRho, int maxIndexTheta, int maxIndexRho, int acc[maxIndexTheta][maxIndexRho]);
+struct result *winner(int maxRho, int maxIndexTheta, int maxIndexRho,
+        int acc[maxIndexTheta][maxIndexRho]);
 
 //Input :
 //x :                               int -> the x position of the pixel
@@ -27,8 +28,8 @@ struct result *winner(int maxRho, int maxIndexTheta, int maxIndexRho, int acc[ma
 //img :                             SDL_Surface()
 
 //add a vote to calculate degree
-void vote(int x, int y, int maxRho, int maxIndexTheta, int maxIndexRho, int acc[maxIndexTheta][maxIndexRho],
-          SDL_Surface *img);
+void vote(int x, int y, int maxRho, int maxIndexTheta, int maxIndexRho,
+          int acc[maxIndexTheta][maxIndexRho],SDL_Surface *img);
 
 //Input :
 //*image :                          SDL_Surface -> the image to get angle
