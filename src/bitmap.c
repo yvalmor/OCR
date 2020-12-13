@@ -18,12 +18,6 @@ extern int debugMode;
 void saveRGBImageAsBMP(IMAGE *image, char *filename);
 
 
-/**
- * Initializes the SDL library
- *
- * @author Souleymane Sentici
- * @returns 1 if there is an error, 0 otherwise
- */
 int Init_Sdl()
 {
     if((SDL_Init(SDL_INIT_VIDEO) == -1))
@@ -36,14 +30,6 @@ int Init_Sdl()
 
     return 0;
 }
-
-/**
- * Loads a bitmap file into an SDL_Surface structure
- *
- * @author Souleymane Sentici
- * @returns a pointer to an SDL_Surface
- * @param path the path to the bitmap file
- */
 
 SDL_Surface* load_image_surface(char *path)
 {
@@ -95,17 +81,7 @@ void put_pixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel)
     }
 }
 
-/**
- * Loads a bitmap file, creates an IMAGE structure from it, preprocess it and
- * saves its processed pixel data in a file
- *
- * @author Souleymane Sentici
- * @param path the path of the bitmap file to load
- * @see toBlackAndWhite that makes all pixels in the loaded image into either
- *      black or white pixels != to_matrix_bw
- * @see to_matrix_bw that saves a black and white matrix's pixel data in a
- *      string
- */
+
 void loadImage(char *path, int autoRot, int rotationAngle)
 {
     SDL_Surface *surface = load_image_surface(path);
@@ -127,7 +103,7 @@ void loadImage(char *path, int autoRot, int rotationAngle)
     create_Image(surface, image);
 
     if (debugMode)
-        saveRGBImageAsBMP(&image, "loadedImage.bmp");
+        saveRGBImageAsBMP(&image, "rotated_image.bmp");
 
     int *intensity = calloc(rows * columns, sizeof(int));
 
@@ -142,17 +118,7 @@ void loadImage(char *path, int autoRot, int rotationAngle)
     free(result);
 }
 
-/**
- * Loads a bitmap file, creates an IMAGE structure from it, preprocess it and
- * saves its processed pixel data in a file
- *
- * @author Yvon Morice
- * @param path the path of the bitmap file to load
- * @see toBlackAndWhite that makes all pixels in the loaded image into either
- *      black or white pixels != to_matrix_bw
- * @see to_matrix_bw that saves a black and white matrix's pixel data in a
- *      string
- */
+
 void loadImage_with_training(char *path, int autoRot, int rotationAngle, FILE *fp)
 {
     SDL_Surface *surface = load_image_surface(path);
@@ -173,6 +139,9 @@ void loadImage_with_training(char *path, int autoRot, int rotationAngle, FILE *f
     IMAGE image = {rows, columns, *pixels};
     create_Image(surface, image);
 
+    if (debugMode)
+        saveRGBImageAsBMP(&image, "rotated_image.bmp");
+
     int intensity[rows][columns];
 
     toGrayscale(image, *intensity);
@@ -182,33 +151,14 @@ void loadImage_with_training(char *path, int autoRot, int rotationAngle, FILE *f
     build_text_with_training(*intensity, rows, columns, fp);
 }
 
-/**
- * Gets the pixel in the (x, y) position of a given SDL_Surface while taking
- * in account its bpp (Bytes per pixel) format
- *
- * @author Souleymane Sentici
- * @returns a Uint8 pixel from a given image
- * @param surf the surface containing the image to take a pixel from
- * @param x the x-axis coordinate of the pixel to return
- * @param y the y-axis coordinate of the pixel to return
- */
+
 Uint8* pixel_ref(SDL_Surface *surf, unsigned x, unsigned y)
 {
     int bpp = surf->format->BytesPerPixel;
     return (Uint8*)surf->pixels + y * surf->pitch + x * bpp;
 }
 
-/**
- * Gets the pixel in the (x, y) position of a given SDL_Surface while taking
- * in account its bpp (Bytes per pixel) format
- *
- * @author Souleymane Sentici
- * @returns a Uint32 pixel from a given image
- * @param surf the surface containing the image to take a pixel from
- * @param x the x-axis coordinate of the pixel to return
- * @param y the y-axis coordinate of the pixel to return
- * @see pixel_ref
- */
+
 Uint32 get_pixel(SDL_Surface *surface, unsigned x, unsigned y)
 {
     Uint8 *p = pixel_ref(surface, x, y);
@@ -234,15 +184,7 @@ Uint32 get_pixel(SDL_Surface *surface, unsigned x, unsigned y)
     return 0;
 }
 
-/**
- * Creates a matrix containing the pixel data of an bitmap loaded in an
- * SDL_Surface and puts it in an IMAGE
- *
- * @author Souleymane Sentici
- * @param surface the surface in which the bitmap is loaded
- * @param image the IMAGE in which the pixel data matrix will be stored
- * @see get_pixel
- */
+
 void create_Matrix(SDL_Surface *surface, IMAGE image)
 {
     int row = image.rows;
@@ -266,14 +208,7 @@ void create_Matrix(SDL_Surface *surface, IMAGE image)
     SDL_UnlockSurface(surface);
 }
 
-/**
- * Fills a given IMAGE with the info of a bitmap loaded in a surface
- *
- * @author Souleymane Sentici
- * @param surface, the surface in which the bitmap is loaded
- * @param image, the IMAGE that will contain the bitmap info
- * @see create_Matrix
- */
+
 void create_Image(SDL_Surface  *surface, IMAGE image)
 {
     create_Matrix(surface, image);
@@ -302,6 +237,7 @@ void saveImageAsBMP(ImagePart *image, char *filename)
     SDL_SaveBMP(surface, filename);
     SDL_FreeSurface(surface);
 }
+
 
 void saveRGBImageAsBMP(IMAGE *image, char *filename)
 {

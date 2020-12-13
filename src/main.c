@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     if (access(network_save, F_OK) == 0)
         parse_network_from_file(network_save, net);
     else
-        create_network(net, 4, 4, 1024, 62);
+        create_network(net, 4, 4, 15*15, 62);
 
     // GTK+ initialisation
     gtk_init(&argc, &argv);

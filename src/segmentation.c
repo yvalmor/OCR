@@ -148,6 +148,7 @@ ImagePart *cut_image(ImagePart *image, int x, int y, int w, int h)
 List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
 {
     image = get_all_text(image);
+    saveImageAsBMP(image, "image.bmp");
 
     int s_index = 0;
     int index = 0;
