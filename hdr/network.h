@@ -10,9 +10,8 @@ typedef struct Neuron
 {
     double *weights;                //those arriving
     int len_weight;                 //nber of weight
-    int biais;                      //corresponging bias
+    double biais;                      //corresponging bias
 
-    double *old_weights;
     double delta;                   //delta stored
     double value;                   //weighted sum
     double activated;               //sigmoid value
@@ -49,13 +48,14 @@ void propagation_layer(Layer *layer);
 void create_network(Network *net, int nbLayer,int neuronsPerLayer, int inputNbNeurons, int outputNbneurons);
 
 double backpropagation(Network *net, double *expected, double learningRate);
-void sumNeuron(Neuron *neuron, Neuron *neededForA);
+void sumNeuron(Neuron *neuron, Neuron *neededForA, int isOutput);
 void trainNetwork(Network *n, double lrate, int epoch, double *expected);
 
 double mse(double expctd, double output);
 double ErrorTotal(Layer *layer, double *expected);
 
-void delta_hidden(Network *network);
+void delta_hidden(Layer *layer);
+void update_weights_layer(Layer *layer_working_on, double learning_rate);
 
 void freeNetwork(Network *net);
 void freeLayer(Layer *l);
