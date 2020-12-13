@@ -1,7 +1,7 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic
+CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic -lm
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
-LDFLAGS=-I"include" -L"lib" -lSDL2
+LDFLAGS=-I"include" -L"lib" -lSDL2 -ljson-c
 
 XOR_CFLAGS=-Wall -Wextra -Werror -std=c99
 XOR_LDFLAGS=-lm
@@ -15,23 +15,21 @@ OBJ_DIR=obj
 HDR_DIR=hdr
 
 XOR=$(SRC_DIR)/network.c
-XOR_OBJ=obj/network.o
+XOR_OBJ=$(OBJ_DIR)/network.o
 
-SRC=$(filter-out $(XOR), $(wildcard $(SRC_DIR)/*.c))
+SRC=$(wildcard $(SRC_DIR)/*.c)
 OBJ=$(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 HDR=$(wildcard $(HDR_DIR)/*.h)
 
-all: $(EXEC_OCR) $(EXEC_XOR)
+all: $(EXEC_OCR)
 
 $(EXEC_OCR): $(HDR)
 	@mkdir -p bin
-	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -g -o $(BIN_DIR)/$@
 
-$(EXEC_XOR): $(XOR_OBJ)
-	@$(CC) -g -lm -Wall -Wextra -Werror -std=c99 obj/network.o -o $(BIN_DIR)/$@
-
-$(XOR_OBJ):
-	@$(CC) -g -lm -Wall -Wextra -Werror -c src/network.c -o $@
+$(EXEC_XOR):
+	@mkdir -p bin
+	@$(CC) -g -lm -Wall -Wextra -std=c99 src/network.c -o $(BIN_DIR)/$@
 
 .PHONY: clean
 

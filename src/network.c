@@ -143,6 +143,7 @@ void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeuron
         net->input->neurons[i].biais = 0;
 }
 
+
 /**
  * @authors Eliott Beguet
  * @param network to apply the feed forward
@@ -151,7 +152,7 @@ void feedForward(Network *net, int *value, int len)
 {
     if (len != net->input->len_neurons)
         errx(1, "Different length for input of net and given values.");
-    
+
     for (int i = 0; i < len; i++)
         net->input->neurons[i].activated = (double) value[i];
 
@@ -413,7 +414,7 @@ void freeNetwork(Network *n)
 // ALL FCTIONS BELOW ARE FOR TEST ONLY
 /**
  * @authors Eliott Beguet
- * @param ?, whatever we wanna print to see what we have
+ * @param neuron, whatever we wanna print to see what we have
  */
 void printNeuron(Neuron *neuron, int i)
 {
@@ -473,7 +474,7 @@ void testNET(Network *n)
     }
 }
 
-
+/*
 //need to create a main.c lazy :c
 int main()
 {
@@ -560,4 +561,4 @@ int main()
     free(net);
 
     return 0;
-}
+}*/
