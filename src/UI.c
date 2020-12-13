@@ -168,6 +168,8 @@ void on_startTrainingButton_clicked(GtkButton *button,
     guint index = 0;
     gdouble value = 0.0;
 
+    gtk_progress_bar_set_fraction(trainingProgress, value);
+
     while (trainingList != NULL)
     {
         char *trainingFile = trainingList->data;

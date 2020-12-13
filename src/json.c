@@ -7,8 +7,8 @@ void write_neuron(Neuron *neuron, int index, int index_max, FILE *fp)
 {
     int n = neuron->len_weight;
 
-    fprintf(fp, "\t\t\t\t{\n\t\t\t\t\t\"len_weight\" : %d,\n\t\t\t\t\t\"biais\" : %d,\n\t\t\t\t\t\"value\" : %f,\n\t\t\t\t\t\"activated\" : %f,\n\t\t\t\t\t\"error\" : %f,\n\t\t\t\t\t\"weights\" : [\n",
-            n, neuron->biais, neuron->value, neuron->activated, neuron->error);
+    fprintf(fp, "\t\t\t\t{\n\t\t\t\t\t\"len_weight\" : %d,\n\t\t\t\t\t\"biais\" : %f,\n\t\t\t\t\t\"value\" : %f,\n\t\t\t\t\t\"activated\" : %f,\n\t\t\t\t\t\"weights\" : [\n",
+            n, neuron->biais, neuron->value, neuron->activated);
 
     for(int i = 0; i < n-1; i++)
         fprintf(fp, "\t\t\t\t\t\t%f,\n", neuron->weights[i]);
@@ -93,21 +93,18 @@ void parse_neuron_from_file(struct json_object *neuron_object, Neuron *neuron)
     struct json_object *len_weight;
     struct json_object *value;
     struct json_object *activated;
-    struct json_object *error;
     struct json_object *biais;
 
     json_object_object_get_ex(neuron_object, "weights", &weights);
     json_object_object_get_ex(neuron_object, "len_weight", &len_weight);
     json_object_object_get_ex(neuron_object, "value", &value);
     json_object_object_get_ex(neuron_object, "activated", &activated);
-    json_object_object_get_ex(neuron_object, "error", &error);
     json_object_object_get_ex(neuron_object, "biais", &biais);
 
     int len = json_object_get_int(len_weight);
 
     neuron->len_weight = json_object_get_int(len_weight);
     neuron->biais = json_object_get_int(biais);
-    neuron->error = json_object_get_double(error);
     neuron->value = json_object_get_double(value);
     neuron->activated = json_object_get_double(activated);
     if (len > 1)
@@ -163,14 +160,8 @@ void parse_network_from_file(char *filename, Network *network)
             network->layers[i-1].NextLayer = &network->layers[i];
         }
     }
+
+    network->input = network->layers;
+    network->output = &network->layers[nbLayers_val - 1];
 }
 
-/*
-int main()
-{
-   Network *network = malloc(sizeof(network));
-   create_network(network, 4, 4, 2, 2);
-   write_network(network, "network.json");
-   Network *network2 = parse_network_from_file("network.json");
-   write_network(network2, "network2.json");
-}*/

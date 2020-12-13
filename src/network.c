@@ -85,7 +85,6 @@ void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW)
     //if to check if not in input cuz input does not has weights etc
     //nber of weights in neuron == nber of neurons in previous layer
 
-    
     for (int i = 0; i < size; i++)
     {
         rndNeuron(neuron + i, l);
@@ -199,7 +198,7 @@ void propagation_layer(Layer *current)
         for (int i = 0; i < tmp->len_neurons; i++)
         {
             double net = tmp->neurons[i].biais;
-            
+
             for (int j = 0; j < tmp->neurons[i].len_weight; j++)
                 net += tmp->neurons[i].weights[j] * tmp->PreviousLayer->neurons[j].activated;
 
@@ -296,7 +295,7 @@ double backpropagation(Network *n, double *expected, double lR)
 
     for (int l = n->nbLayers - 2; l > 0; l--)
         delta_hidden(n->layers + l);
-    
+
     for (int i = n->nbLayers - 2; i > 0; i--)
         update_weights_layer(n->layers + i, lR);
 
@@ -474,91 +473,3 @@ void testNET(Network *n)
     }
 }
 
-/*
-//need to create a main.c lazy :c
-int main()
-{
-    //:%s/foo/bar/gc
-    srand((unsigned int) time (NULL));
-/*
-    Network *NET = malloc(sizeof(Network));
-    create_network(NET, 3, 2, 2, 2);
-    
-    NET->input->neurons[0].activated = 0.05;
-    NET->input->neurons[1].activated = 0.10;
-
-    NET->layers[1].neurons[0].weights[0] = 0.15;
-    NET->layers[1].neurons[0].weights[1] = 0.20;
-    NET->layers[1].neurons[0].biais = 0.35;
-
-    NET->layers[1].neurons[1].weights[0] = 0.25;
-    NET->layers[1].neurons[1].weights[1] = 0.30;
-    NET->layers[1].neurons[1].biais = 0.35;
-
-    NET->output->neurons[0].weights[0] = 0.40;
-    NET->output->neurons[0].weights[1] = 0.45;
-    NET->output->neurons[0].biais = 0.60;
-
-    NET->output->neurons[1].weights[0] = 0.50;
-    NET->output->neurons[1].weights[1] = 0.55;
-    NET->output->neurons[1].biais = 0.60;
-
-    double exxx[2] = {0.01, 0.99};
-    double err = 0;
-
-    for (int i = 0; i < 10000; i++)
-    {
-        propagation_layer(NET->layers + 1);
-        err += backpropagation(NET, exxx, 0.5);
-    }
-    
-    printf("Error: %f\n", err / 10000);
-    printf("out1 = %f | out2 = %f\n", NET->output->neurons[0].activated, NET->output->neurons[1].activated);
-*/
-
-
-
-    int INPUT [4][2] = { {0, 0}, {1, 1}, {0, 1}, {1, 0} };
-    double EXPECTED [4][1] = { {0}, {1}, {1}, {1} }; 
-
-    //:%s/foo/bar/gc
-    srand((unsigned int) time (NULL));
-
-    //allocate memory for whole Network
-    Network *net = malloc(sizeof(Network));
-    
-    create_network(net, 4, 4, 2, 1);
-
-    double er = 0;
-    double l = 1;
-    int limit = 400;
-    for (int i = 0; i < limit; i++)
-    {
-        if (i == 10)
-            l = 0.1;
-
-        int pos = rand() % 4;
-        printf("[%d] In: {%d, %d} |-> ", i, INPUT [pos][0], INPUT [pos][1]);
-        
-        double e = 0;
-        for (int p = 0; p < 80; p++)
-        {
-            feedForward(net, INPUT[pos], 2);
-            e = backpropagation(net, EXPECTED[pos], l); 
-        }
-        er += e;
-
-        //printf("%f and %f\n", net->output->neurons[0].activated, net->output->neurons[1].activated);
-        printf("%f\n", net->output->neurons[0].activated);
-        printf("ERROR: %f\n=================================\n", e);
-    }
-    
-    er *= (1.0 / limit);
-    printf("AND ERROR = %f\n", er);
-    printf("FNISHED\n");
-
-    freeNetwork(net);
-    free(net);
-
-    return 0;
-}*/

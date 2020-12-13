@@ -103,7 +103,7 @@ void loadImage(char *path, int autoRot, int rotationAngle)
     create_Image(surface, image);
 
     if (debugMode)
-        saveRGBImageAsBMP(&image, "loadedImage.bmp");
+        saveRGBImageAsBMP(&image, "rotated_image.bmp");
 
     int *intensity = calloc(rows * columns, sizeof(int));
 
@@ -138,6 +138,9 @@ void loadImage_with_training(char *path, int autoRot, int rotationAngle, FILE *f
 
     IMAGE image = {rows, columns, *pixels};
     create_Image(surface, image);
+
+    if (debugMode)
+        saveRGBImageAsBMP(&image, "rotated_image.bmp");
 
     int intensity[rows][columns];
 

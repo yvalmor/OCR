@@ -101,16 +101,14 @@ void build_word(List *letters, char **content)
 
     while (letter != NULL)
     {
-        /*
         ImagePart *image = letter->val;
         ImagePart *new_img = imageResize(image, 15, 15);
-        feedForward(net, new_img->img, 1024);
+        feedForward(net, new_img->img, 15*15);
 
-        free(new_img->img);
+        char new_content = get_answer(net);
+
+            free(new_img->img);
         free(new_img);
-        */
-
-        char new_content = 'x';//get_answer(net);
 
         char *c = calloc(2, sizeof(char));
         c[0] = new_content;
@@ -218,29 +216,36 @@ int build_word_with_training(List *letters, FILE *fp)
 
         int index = 0;
 
-        if (current >= 'A' && current <= 'Z')
-            index = current - 'A';
+        if (current >= '0' && current <= '9')
+            index = current - '0';
+        else if (current >= 'A' && current <= 'Z')
+            index  = current - 'A' + 10;
         else if (current >= 'a' && current <= 'z')
-            index  = current - 'a' + 26;
-        else if (current >= '0' && current <= '9')
-            index = current - '0' + 52;
+            index = current - 'a' + 36;
 
         expected_result[index] = 1;
 
-        index = expected_result[index]; // to delete, just avoiding a warning
-
-        /*
         ImagePart *image = letter->val;
-        ImagePart *new_img = imageResize(image, 32, 32);
-        feedForward(net, new_img->img, 1024);
+        ImagePart *new_img = imageResize(image, 15, 15);
+
+        double l = 500;
+        int limit = 400;
+        for (int i = 0; i < limit; i++)
+        {
+            if (i == 10)
+                l = 0.1;
+
+            for (int p = 0; p < 5; p++)
+            {
+                feedForward(net, new_img->img, 15*15);
+                backpropagation(net, expected_result, l);
+            }
+        }
 
         free(new_img->img);
         free(new_img);
-        */
 
         expected_result[index] = 0;
-
-        //get_answer(net);
 
         letter = letter->next;
     }
