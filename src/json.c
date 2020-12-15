@@ -1,5 +1,6 @@
 #include <json-c/json.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../hdr/network.h"
 
@@ -7,8 +8,15 @@ void write_neuron(Neuron *neuron, int index, int index_max, FILE *fp)
 {
     int n = neuron->len_weight;
 
-    fprintf(fp, "\t\t\t\t{\n\t\t\t\t\t\"len_weight\" : %d,\n\t\t\t\t\t\"biais\" : %f,\n\t\t\t\t\t\"value\" : %f,\n\t\t\t\t\t\"activated\" : %f,\n\t\t\t\t\t\"weights\" : [\n",
-            n, neuron->biais, neuron->value, neuron->activated);
+    char *str = calloc(256, sizeof(char));
+    strcat(str, "\t\t\t\t{\n\t\t\t\t\t\"len_weight\" : %d,\n\t\t\t\t\t\"biais\"");
+    strcat(str, " : %f,\n\t\t\t\t\t\"delta\" : %f,\n\t\t\t\t\t\"value\" : %f,\n");
+    strcat(str, "\t\t\t\t\t\"activated\" : %f,\n\t\t\t\t\t\"weights\" : [\n");
+
+    fprintf(fp, str, n, neuron->biais, neuron->delta,
+            neuron->value, neuron->activated);
+
+    free(str);
 
     for(int i = 0; i < n-1; i++)
         fprintf(fp, "\t\t\t\t\t\t%f,\n", neuron->weights[i]);
@@ -43,7 +51,8 @@ void write_network(Network *network, char *filename)
 
     if(!fp)
     {
-        fprintf(stderr, "write_network() error: file open failed '%s'.\n", filename);
+        fprintf(stderr, "write_network() error: file open failed '%s'.\n",
+                filename);
         return;
     }
 
@@ -58,7 +67,7 @@ void write_network(Network *network, char *filename)
 
 struct json_object *parse_network(char *filename)
 {
-    char *buffer;
+    char *buffer = "";
     unsigned long length;
     FILE *fp = fopen(filename, "r");
 
@@ -94,12 +103,14 @@ void parse_neuron_from_file(struct json_object *neuron_object, Neuron *neuron)
     struct json_object *value;
     struct json_object *activated;
     struct json_object *biais;
+    struct json_object *delta;
 
     json_object_object_get_ex(neuron_object, "weights", &weights);
     json_object_object_get_ex(neuron_object, "len_weight", &len_weight);
     json_object_object_get_ex(neuron_object, "value", &value);
     json_object_object_get_ex(neuron_object, "activated", &activated);
     json_object_object_get_ex(neuron_object, "biais", &biais);
+    json_object_object_get_ex(neuron_object, "delta", &delta);
 
     int len = json_object_get_int(len_weight);
 
@@ -107,6 +118,7 @@ void parse_neuron_from_file(struct json_object *neuron_object, Neuron *neuron)
     neuron->biais = json_object_get_int(biais);
     neuron->value = json_object_get_double(value);
     neuron->activated = json_object_get_double(activated);
+    neuron->delta = json_object_get_double(delta);
     if (len > 1)
         neuron->weights = calloc(len, sizeof(double));
     else
@@ -131,7 +143,8 @@ void parse_layer_from_file(struct json_object *layer_object, Layer *layer)
     json_object_object_get_ex(layer_object, "neurons", &neurons);
 
     for(int i = 0; i < json_object_get_int(len_neurons); i++)
-        parse_neuron_from_file(json_object_array_get_idx(neurons, i), &layer->neurons[i]);
+        parse_neuron_from_file(json_object_array_get_idx(neurons, i),
+                               &layer->neurons[i]);
 
 }
 

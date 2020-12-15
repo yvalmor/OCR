@@ -52,7 +52,7 @@ SDL_Surface* load_image_surface(char *path);
  * saves its processed pixel data in a file
  *
  * @author Souleymane Sentici
- * @param pathttps://cdn.discordapp.com/attachments/623920706115338240/787375585277116416/unknown.pngh the path of the bitmap file to load
+ * @param path the path of the bitmap file to load
  * @see toBlackAndWhite that makes all pixels in the loaded image into either
  *      black or white pixels != to_matrix_bw
  * @see to_matrix_bw that saves a black and white matrix's pixel data in a

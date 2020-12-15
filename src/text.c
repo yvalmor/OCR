@@ -102,8 +102,8 @@ void build_word(List *letters, char **content)
     while (letter != NULL)
     {
         ImagePart *image = letter->val;
-        ImagePart *new_img = imageResize(image, 15, 15);
-        feedForward(net, new_img->img, 15*15);
+        ImagePart *new_img = imageResize(image, 32, 32);
+        feedForward(net, new_img->img, 32*32);
 
         char new_content = get_answer(net);
 
@@ -201,9 +201,9 @@ int build_word_with_training(List *letters, FILE *fp)
 {
     Element *letter = letters->first;
 
-    double expected_result[62];
+    double expected_result[63];
 
-    for (int i = 0; i < 62; i++)
+    for (int i = 0; i < 63; i++)
         expected_result[i] = 0;
 
     while (letter != NULL)
@@ -222,24 +222,23 @@ int build_word_with_training(List *letters, FILE *fp)
             index  = current - 'A' + 10;
         else if (current >= 'a' && current <= 'z')
             index = current - 'a' + 36;
+        else index = 62;
 
-        expected_result[index] = 1;
+        expected_result[(index + 1) % 62] = 1;
 
         ImagePart *image = letter->val;
-        ImagePart *new_img = imageResize(image, 15, 15);
+        ImagePart *new_img = imageResize(image, 32, 32);
 
-        double l = 500;
-        int limit = 400;
+        double l = 0.1;
+        int limit = 2;
         for (int i = 0; i < limit; i++)
         {
-            if (i == 10)
-                l = 0.1;
+            feedForward(net, new_img->img, 32*32);
 
-            for (int p = 0; p < 5; p++)
-            {
-                feedForward(net, new_img->img, 15*15);
-                backpropagation(net, expected_result, l);
-            }
+            if (debugMode)
+                printf("expected: %c, result: %c\n", current, get_answer(net));
+
+            backpropagation(net, expected_result, l);
         }
 
         free(new_img->img);

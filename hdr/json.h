@@ -23,7 +23,8 @@ void write_layer(Layer *layer, int index, int index_max, FILE *fp);
 
 
 /**
- * Writes the network in argument in the "filename" json file, which is created if needed
+ * Writes the network in argument in the "filename" json file,
+ * which is created if needed
  *
  * @author Souleymane Sentici
  */

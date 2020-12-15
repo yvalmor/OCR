@@ -148,7 +148,8 @@ ImagePart *cut_image(ImagePart *image, int x, int y, int w, int h)
 List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
 {
     image = get_all_text(image);
-    saveImageAsBMP(image, "image.bmp");
+    if (debugMode)
+        saveImageAsBMP(image, "borderlessImage.bmp");
 
     int s_index = 0;
     int index = 0;
@@ -173,7 +174,7 @@ List *get_paragraphs_lines(ImagePart *image, int paragraphSpace)
                     char x1 = cpt/1000 + '0',
                          x2 = cpt/100%10 + '0',
                          x3 = cpt/10%10 + '0',
-                         x4 = cpt%1000 + '0';
+                         x4 = cpt%10 + '0';
 
                     char name[20] = {
                         'l', 'i', 'n', 'e', 's', '/',
