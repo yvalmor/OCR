@@ -119,7 +119,8 @@ void loadImage(char *path, int autoRot, int rotationAngle)
 }
 
 
-void loadImage_with_training(char *path, int autoRot, int rotationAngle, FILE *fp)
+void loadImage_with_training(char *path, int autoRot,
+                             int rotationAngle, FILE *fp)
 {
     SDL_Surface *surface = load_image_surface(path);
 
@@ -230,7 +231,8 @@ void saveImageAsBMP(ImagePart *image, char *filename)
         for (unsigned int y = 0; y < rows; y++)
             {
                 int val = image->img[y * image->cols + x];
-                Uint32 value = SDL_MapRGB(surface->format, val*255, val*255, val*255);
+                Uint32 value = SDL_MapRGB(surface->format, val*255,
+                                          val*255, val*255);
                 put_pixel(surface, x, y, value);
             }
 

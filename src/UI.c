@@ -170,25 +170,33 @@ void on_startTrainingButton_clicked(GtkButton *button,
 
     gtk_progress_bar_set_fraction(trainingProgress, value);
 
-    while (trainingList != NULL)
+    int limit = 100;
+    for (int i = 0; i < limit; i++)
     {
-        char *trainingFile = trainingList->data;
-        char *solutionFile = solutionList->data;
-
-        FILE *fp = fopen(solutionFile, "r");
-        if (fp)
+        while (trainingList != NULL)
         {
-            loadImage_with_training(trainingFile, autoRot, rotationAngle, fp);
-            fclose(fp);
+            char *trainingFile = trainingList->data;
+            char *solutionFile = solutionList->data;
+
+            FILE *fp = fopen(solutionFile, "r");
+            if (fp)
+            {
+                loadImage_with_training(trainingFile, autoRot, rotationAngle, fp);
+                fclose(fp);
+            }
+
+            index++;
+
+            value = index / nbTrainingFiles;
+            gtk_progress_bar_set_fraction(trainingProgress, value);
+
+            trainingList = trainingList->next;
+            solutionList = solutionList->next;
         }
-
-        index++;
-
-        value = index / nbTrainingFiles;
-        gtk_progress_bar_set_fraction(trainingProgress, value);
-
-        trainingList = trainingList->next;
-        solutionList = solutionList->next;
+        trainingList = gtk_file_chooser_get_filenames(
+                            GTK_FILE_CHOOSER(trainingFileChooser));
+        solutionList = gtk_file_chooser_get_filenames(
+                            GTK_FILE_CHOOSER(solutionFileChooser));
     }
 
     g_slist_free(trainingList);

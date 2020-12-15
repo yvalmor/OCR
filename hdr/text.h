@@ -115,7 +115,7 @@ int build_paragraph_with_training(List *lines, FILE *fp);
  * @param image, int[]
  * @param rows, int
  * @param cols, int
- * @param fp, FILE
+ * @param filename, char[]
  */
 void build_text_with_training(int *image, int rows, int cols, FILE *fp);
 

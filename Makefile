@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic -lm
+CFLAGS=-Wall -Wextra -Werror -std=c99 -rdynamic -lm -O3
 LIBFLAGS=$(shell pkg-config --libs --cflags gtk+-3.0)
 LDFLAGS=-I"include" -L"lib" -lSDL2 -ljson-c
 
@@ -25,13 +25,9 @@ all: $(EXEC_OCR)
 
 $(EXEC_OCR): $(HDR)
 	@mkdir -p bin
-	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -g -o $(BIN_DIR)/$@
-
-$(EXEC_XOR):
-	@mkdir -p bin
-	@$(CC) -g -lm -Wall -Wextra -std=c99 src/network.c -o $(BIN_DIR)/$@
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(LDFLAGS) $(SRC) -o $(BIN_DIR)/$@
 
 .PHONY: clean
 
 clean:
-	@rm -rf $(OBJ) $(XOR_OBJ) $(wildcard $(BIN_DIR)/*)
+	@rm -rf $(OBJ) $(wildcard $(BIN_DIR)/*)

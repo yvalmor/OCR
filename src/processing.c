@@ -87,8 +87,8 @@ int treshold(int *histo, int size)
     int nbPixel1 = 0;
     int nbPixel2 = 0;
 
-    float vB;
-    float T;
+    float vB = 0;
+    float T = 0;
 
     for(int j = 1;j<255;j++)
     {

@@ -19,10 +19,16 @@ int main(int argc, char **argv)
     if (argc > 2)
         return EXIT_FAILURE;
 
-    debugMode =
-        argc == 2 &&
-        (strcmp(argv[1], "-d") == 0 ||
-         strcmp(argv[1], "--debug") == 0) ? 1 : 0;
+    if (argc == 2)
+        if (strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--debug") == 0)
+            debugMode = 1;
+        else
+        {
+            printf("incorrect flags, valid options are '-d' or '--debug'\n");
+            exit(1);
+        }
+    else
+        debugMode = 0;
 
     if (debugMode)
     {
@@ -43,7 +49,7 @@ int main(int argc, char **argv)
     if (access(network_save, F_OK) == 0)
         parse_network_from_file(network_save, net);
     else
-        create_network(net, 4, 4, 15*15, 62);
+        create_network(net, 4, 64, 32*32, 62);
 
     // GTK+ initialisation
     gtk_init(&argc, &argv);

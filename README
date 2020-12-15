@@ -1,90 +1,79 @@
+# OCR
 
+![epita]()
+![S3]()
+![C]()
+![C version]()
 
-//need to create a main.c lazy :c
-int main()
-{
-    //:%s/foo/bar/gc
-/*
-    srand((unsigned int) time (NULL));
+Our OCR is a text recognition tool developped for the EPITA's 3rd semester
+project.
 
-    Network *NET = malloc(sizeof(Network));
-    create_network(NET, 3, 2, 2, 2);
+This software allows to extract text from an image, through 3 processes:
 
-    NET->input->neurons[0].activated = 0.05;
-    NET->input->neurons[1].activated = 0.10;
+- [x] A binarization of the image.
 
-    NET->layers[1].neurons[0].weights[0] = 0.15;
-    NET->layers[1].neurons[0].weights[1] = 0.20;
-    NET->layers[1].neurons[0].biais = 0.35;
+- [x] A segmentation to analyse each character independtly.
 
-    NET->layers[1].neurons[1].weights[0] = 0.25;
-    NET->layers[1].neurons[1].weights[1] = 0.30;
-    NET->layers[1].neurons[1].biais = 0.35;
+- [x] A recognition of each character through a neural network.
 
-    NET->output->neurons[0].weights[0] = 0.40;
-    NET->output->neurons[0].weights[1] = 0.45;
-    NET->output->neurons[0].biais = 0.60;
+# Getting Started
 
-    NET->output->neurons[1].weights[0] = 0.50;
-    NET->output->neurons[1].weights[1] = 0.55;
-    NET->output->neurons[1].biais = 0.60;
+These instructions will allow you to get a copy of this project and set it up
+on your machine.
 
-    double exxx[2] = {0.01, 0.99};
-    double err = 0;
+## Prerequisites
 
-    for (int i = 0; i < 10000; i++)
-    {
-        propagation_layer(NET->layers + 1);
-        err += backpropagation(NET, exxx, 0.5);
-    }
+- [SDL 2]()
 
-    printf("Error: %f\n", err / 10000);
-    printf("out1 = %f | out2 = %f\n", NET->output->neurons[0].activated, NET->output->neurons[1].activated);
-*/
+- [GTK 3]()
 
+- [JSON-C]()
 
+## Installing
 
-    int INPUT [4][2] = { {0, 0}, {1, 1}, {0, 1}, {1, 0} };
-    double EXPECTED [4][1] = { {0}, {1}, {1}, {1} };
+- Download the project from github
 
-    //:%s/foo/bar/gc
-    srand((unsigned int) time (NULL));
+```
+$ git clone https://github.com/yvalmor/OCR.git
+```
 
-    //allocate memory for whole Network
-    Network *net = malloc(sizeof(Network));
+- Go in the created folder and make
 
-    create_network(net, 4, 4, 2, 1);
+```
+$ cd OCR
+$ make
+```
 
-    double er = 0;
-    double l = 1;
-    int limit = 400;
-    for (int i = 0; i < limit; i++)
-    {
-        if (i == 10)
-            l = 0.1;
+- An ocr executable should be created in the bin folder, go in this folder and
+  execute it.
 
-        int pos = rand() % 4;
-        printf("[%d] In: {%d, %d} |-> ", i, INPUT [pos][0], INPUT [pos][1]);
+```
+$ cd bin
+$ ./ocr
+```
 
-        double e = 0;
-        for (int p = 0; p < 80; p++)
-        {
-            feedForward(net, INPUT[pos], 2);
-            e = backpropagation(net, EXPECTED[pos], l);
-        }
-        er += e;
+## Running
 
-        //printf("%f and %f\n", net->output->neurons[0].activated, net->output->neurons[1].activated);
-        printf("%f\n", net->output->neurons[0].activated);
-        printf("ERROR: %f\n=================================\n", e);
-    }
+Once launched, the software will show you an UI. That UI is composed of two
+main parts: an analysis part, and a training part.
 
-    er *= (1.0 / limit);
-    printf("AND ERROR = %f\n", er);
-    printf("FNISHED\n");
+The analysis part is made to extract text from an image whereas the training
+part is made to train the neural network.
 
-    freeNetwork(net);
-    free(net);
+## Debugging
 
-    return 0;
-}
+Our software can take an additional parameter.
+
+- `--debug` (or `-d`): if specified, the code will save the different steps the
+  image goes through (rotation, segmentation, border removing and segmentation)
+  in the bin folder and prompt the results of the training of the network in
+  the console.
+
+```
+$ ./ocr -d
+```
+
+# Credits
+
+This project was developped by `Eliott Beguet`, `Nael Valin`, `Souleymane
+Sentici` and `Yvon Morice`.

@@ -5,7 +5,8 @@
 
 #define M_PI -3.14159265358979323846
 
-struct result *winner(int maxRho, int maxIndexTheta, int maxIndexRho, int acc[maxIndexTheta][maxIndexRho]) {
+struct result *winner(int maxRho, int maxIndexTheta,
+                      int maxIndexRho, int acc[maxIndexTheta][maxIndexRho]) {
     double max = 0;
     double winrho = 0;
     double wintheta = 0;
@@ -29,7 +30,8 @@ struct result *winner(int maxRho, int maxIndexTheta, int maxIndexRho, int acc[ma
 }
 
 
-void vote(int x, int y, int maxRho, int maxIndexTheta, int maxIndexRho, int acc[maxIndexTheta][maxIndexRho],
+void vote(int x, int y, int maxRho, int maxIndexTheta,
+          int maxIndexRho, int acc[maxIndexTheta][maxIndexRho],
           SDL_Surface *img) {
     int savedX = x, savedY = y;
 
@@ -100,13 +102,16 @@ SDL_Surface *SDL_RotateImage(SDL_Surface *origine, float angle) {
     largeurdest = ceil(origine->w * fabs(tcos) + origine->h * fabs(tsin)),
     hauteurdest = ceil(origine->w * fabs(tsin) + origine->h * fabs(tcos)),
 
-    destination = SDL_CreateRGBSurface(0, largeurdest, hauteurdest, origine->format->BitsPerPixel,
-                                       origine->format->Rmask, origine->format->Gmask, origine->format->Bmask,
+    destination = SDL_CreateRGBSurface(0, largeurdest, hauteurdest,
+                                       origine->format->BitsPerPixel,
+                                       origine->format->Rmask, origine->format->Gmask,
+                                       origine->format->Bmask,
                                        origine->format->Amask);
 
     for (j = 0; j < destination->h; j++) {
         for (i = 0; i < destination->w; i++) {
-            put_pixel(destination, i, j, SDL_MapRGBA(destination->format, 255, 255, 255, 255));
+            put_pixel(destination, i, j, SDL_MapRGBA(destination->format,
+                                                     255, 255, 255, 255));
         }
     }
     if (destination == NULL)

@@ -106,7 +106,8 @@ void create_layer(Layer *layer, int size, Layer *prev, int poss_lenW)
  * @param outputNbneurons, number of neurons wanted for the ouptut layer
  * @return new Network fully operational
  */
-void create_network(Network *net, int nbLayers, int nbNeurons, int inputNbNeurons, int outputNbneurons)
+void create_network(Network *net, int nbLayers, int nbNeurons,
+                    int inputNbNeurons, int outputNbneurons)
 {
     int len = nbLayers;
 
@@ -160,7 +161,7 @@ void feedForward(Network *net, int *value, int len)
 
 char get_answer(Network *net)
 {
-    int max = net->output->neurons[0].activated;
+    double max = net->output->neurons[0].activated;
     int pos = 0;
 
     for (int i = 0; i < net->output->len_neurons; i++)
