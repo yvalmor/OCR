@@ -1,9 +1,9 @@
 # OCR
 
-![epita]()
-![S3]()
-![C]()
-![C version]()
+![epita](https://img.shields.io/badge/EPITA-project-brightgreen)
+![S3](https://img.shields.io/badge/Semester-S3-important)
+![C](https://img.shields.io/badge/Language-C-blueviolet)
+![C version](https://img.shields.io/badge/Version-c99-informational)
 
 Our OCR is a text recognition tool developped for the EPITA's 3rd semester
 project.
@@ -23,11 +23,11 @@ on your machine.
 
 ## Prerequisites
 
-- [SDL 2]()
+- [SDL 2](https://www.libsdl.org/download-2.0.php)
 
-- [GTK 3]()
+- [GTK 3](https://developer.gnome.org/gtk3/stable/)
 
-- [JSON-C]()
+- [JSON-C](https://github.com/json-c/json-c)
 
 ## Installing
 
